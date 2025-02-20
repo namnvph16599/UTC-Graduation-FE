@@ -1,5 +1,7 @@
+import { ListRepairs } from '@/app/admin/repairs/list-repairs';
+
 const Page = () => {
-  return <div>repairs page</div>;
+  return <ListRepairs />;
 };
 
 export default Page;

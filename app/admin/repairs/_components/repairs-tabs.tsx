@@ -1,0 +1,56 @@
+import React from 'react';
+import { RepairStatusEnum } from '@/lib/enum';
+import { cn } from '@/lib/utils';
+
+const tabs = [
+  {
+    label: 'Chờ nhận',
+    value: RepairStatusEnum.WAITING_FOR_CONFIRM,
+  },
+  {
+    label: 'Đã xác nhận',
+    value: RepairStatusEnum.CONFIRMED,
+  },
+  {
+    label: 'Đang xử lý',
+    value: RepairStatusEnum.HANDLING,
+  },
+  {
+    label: 'Chờ thanh toán',
+    value: RepairStatusEnum.PAYMENT,
+  },
+  {
+    label: 'Hoàn thành',
+    value: RepairStatusEnum.FINISHED,
+  },
+  {
+    label: 'Đã hủy',
+    value: RepairStatusEnum.CANCELLED,
+  },
+];
+
+type Props = {
+  activeTab: RepairStatusEnum;
+  onChangeTab: (newTab: RepairStatusEnum) => void;
+};
+
+export const RepairsTabs = ({ activeTab, onChangeTab }: Props) => {
+  return (
+    <div className='flex items-center bg-white pt-4 pl-6'>
+      {tabs.map((tab) => {
+        const isActive = tab.value === activeTab;
+        return (
+          <div
+            className={cn('px-6 py-3', {
+              'font-semibold text-[#F5B102] border-b border-[#F5B102]': isActive,
+              'text-[#202C38]hover:text-[#F5B102] hover:cursor-pointer': !isActive,
+            })}
+            key={tab.value}
+            onClick={() => onChangeTab(tab.value)}>
+            {tab.label}
+          </div>
+        );
+      })}
+    </div>
+  );
+};

@@ -33,7 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className='p-5'>{children}</div>
+        {children}
       </main>
     </SidebarProvider>
   );
