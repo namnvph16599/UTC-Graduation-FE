@@ -10,6 +10,7 @@ export const AppRouter = {
     },
     services: {
       list: '/admin/services',
+      add: '/admin/services/add',
     },
     brands: {
       list: '/admin/brands',

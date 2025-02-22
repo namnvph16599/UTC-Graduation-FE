@@ -32,7 +32,7 @@ const items = [
     icon: PackageSearch,
   },
   {
-    title: 'Dịch vụ',
+    title: 'Dịch vụ sửa chữa',
     url: AppRouter.admin.services.list,
     icon: HandPlatter,
   },
