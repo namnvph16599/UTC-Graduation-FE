@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, ChevronsUpDown, CircleX } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,8 @@ const Combobox = React.forwardRef<
     placeholderSelect?: string;
     onChange: (newValue: string) => void;
   }
->(({ options, placeholderSearch, placeholderSelect, value, onChange, className, ...props }, ref) => {
+  // >(({ options, placeholderSearch, placeholderSelect, value, onChange, className, ...props }, ref) => {
+>(({ options, placeholderSearch, placeholderSelect, value, onChange, className }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
