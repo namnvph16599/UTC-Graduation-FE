@@ -3,6 +3,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { AppRouter } from '@/lib/constant';
 import { formatVND } from '@/lib/utils';
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -55,7 +58,9 @@ export const serviceColumns: ColumnDef<ServiceEntity>[] = [
           <DropdownMenuContent align='end'>
             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Chỉnh sửa</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={AppRouter.admin.services.edit(payment.id)}>Chỉnh sửa</Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
