@@ -27,7 +27,7 @@ const items = [
     icon: Inbox,
   },
   {
-    title: 'Sản phẩm',
+    title: 'Phụ tùng thay thế',
     url: AppRouter.admin.products.list,
     icon: PackageSearch,
   },

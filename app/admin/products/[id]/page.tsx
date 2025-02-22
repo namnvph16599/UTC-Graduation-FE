@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { CreateServiceForm } from '@/app/admin/services/add/_components/create-service-form';
+import { CreateProductForm } from '@/app/admin/products/add/_components/create-product-form';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { AppRouter } from '@/lib/constant';
 
@@ -17,7 +17,7 @@ const Page = async ({ params }: Props) => {
       <AppBreadcrumb
         items={[
           {
-            label: 'Dịch vụ sữa chữa',
+            label: 'Phụ tùng thay thế',
             href: AppRouter.admin.services.list,
           },
           {
@@ -26,7 +26,7 @@ const Page = async ({ params }: Props) => {
           },
         ]}
       />
-      <CreateServiceForm />
+      <CreateProductForm />
     </div>
   );
 };

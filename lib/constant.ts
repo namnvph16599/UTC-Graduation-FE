@@ -7,6 +7,8 @@ export const AppRouter = {
     },
     products: {
       list: '/admin/products',
+      add: '/admin/products/add',
+      edit: (id: string) => '/admin/products/' + id,
     },
     services: {
       list: '/admin/services',
