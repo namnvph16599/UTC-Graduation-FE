@@ -16,7 +16,10 @@ export const AppRouter = {
       edit: (id: string) => '/admin/services/' + id,
     },
     brands: {
+      label: 'Thương hiệu và sản phẩm',
       list: '/admin/brands',
+      add: '/admin/brands/add',
+      edit: (id: string) => '/admin/brands/' + id,
     },
     banners: {
       list: '/admin/banners',

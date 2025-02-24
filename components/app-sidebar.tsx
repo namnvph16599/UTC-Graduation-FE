@@ -37,7 +37,7 @@ const items = [
     icon: HandPlatter,
   },
   {
-    title: 'Hãng xe',
+    title: AppRouter.admin.brands.label,
     url: AppRouter.admin.brands.list,
     icon: Bike,
   },
