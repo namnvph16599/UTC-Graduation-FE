@@ -22,7 +22,10 @@ export const AppRouter = {
       edit: (id: string) => '/admin/brands/' + id,
     },
     banners: {
+      label: 'Banners',
       list: '/admin/banners',
+      add: '/admin/banners/add',
+      edit: (id: string) => '/admin/banners/' + id,
     },
     news: {
       list: '/admin/news',
