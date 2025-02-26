@@ -17,7 +17,7 @@ const eslintConfig = [
       'plugin:react/recommended',
       'plugin:react-hooks/recommended',
       'plugin:@typescript-eslint/recommended',
-      'plugin:prettier/recommended'
+      'plugin:prettier/recommended',
     ],
 
     parserOptions: {
@@ -61,23 +61,21 @@ const eslintConfig = [
       'prettier/prettier': [
         'error',
         {
-          "jsxSingleQuote": true,
-          "singleQuote": true,
-          "semi": true,
-          "tabWidth": 2,
-          "trailingComma": "all",
-          "printWidth": 120,
-          "bracketSameLine": true,
-          "bracketSpacing": true,
-          "useTabs": false,
-          "arrowParens": "always",
-          "endOfLine": "auto"
-        }
-        
+          jsxSingleQuote: true,
+          singleQuote: true,
+          semi: true,
+          tabWidth: 2,
+          trailingComma: 'all',
+          printWidth: 120,
+          bracketSameLine: true,
+          bracketSpacing: true,
+          useTabs: false,
+          arrowParens: 'always',
+          endOfLine: 'auto',
+        },
       ],
     },
   }),
 ];
-
 
 export default eslintConfig;

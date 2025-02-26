@@ -60,6 +60,14 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        black: {
+          '1A': '#1A1A1A',
+          '2A': '#2A2A2A',
+          '3A': '#3A3A3A',
+          '4A': '#4A4A4A',
+          '5A': '#5A5A5A',
+          '6A': '#6A6A6A',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
