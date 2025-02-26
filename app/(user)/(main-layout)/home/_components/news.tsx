@@ -75,7 +75,7 @@ export const News = () => {
     <div className={cn('w-full flex justify-center')}>
       <div className='container'>
         <div className='flex justify-between items-end mb-8 mx-4 lg:mx-0'>
-          <h1 className={'text-[32px] font-bold text-black-1A'}>Tin tức</h1>
+          <h1 className={'text-[32px] font-bold text-secondary-default'}>Tin tức</h1>
           <Link className='font-medium text-black-2A' href={AppRouter.user.news}>
             Xem tất cả
           </Link>
@@ -128,7 +128,7 @@ export const NewsBox = ({ convertedNews }: Props) => {
                 </p>
               </div>
               <Link
-                className='font-semibold mb-3 mt-2 text-black-1A text-md line-clamp-2 leading-[22px]'
+                className='font-semibold mb-3 mt-2 text-secondary-default text-md line-clamp-2 leading-[22px]'
                 href={'/tin-tuc/' + firstNews.id}>
                 {firstNews.title}
               </Link>
@@ -151,7 +151,7 @@ export const NewsBox = ({ convertedNews }: Props) => {
                       </p>
                     </div>
                     <Link
-                      className='font-semibold mb-3 mt-2 text-black-1A text-md line-clamp-2 leading-[22px]'
+                      className='font-semibold mb-3 mt-2 text-secondary-default text-md line-clamp-2 leading-[22px]'
                       href={'/tin-tuc/' + it.id}>
                       {it.title}
                     </Link>

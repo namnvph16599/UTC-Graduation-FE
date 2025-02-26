@@ -33,7 +33,7 @@ export const Services = () => {
             <span>{item.icon}</span>
             <span className='text-primary-default font-semibold text-[20px] leading-[30px]'>{item.label}</span>
           </div>
-          <span className='text-[#2A2A2A]'>{item.desc}</span>
+          <span className='text-secondary-default'>{item.desc}</span>
         </div>
       ))}
     </div>

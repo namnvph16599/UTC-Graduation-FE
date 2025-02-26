@@ -80,7 +80,7 @@ export const Footer = memo(() => {
           <div className='col-span-9 lg:col-span-3'>
             <Logo />
             <div className='mt-3'>
-              <span className='text-black-1A text-base'>
+              <span className='text-secondary-default text-base'>
                 Cung cấp dịch vụ sửa chữa, bảo dưỡng và nâng cấp xe máy chuyên nghiệp, giúp khách hàng yên tâm trên mọi
                 hành trình.
               </span>
@@ -91,7 +91,9 @@ export const Footer = memo(() => {
           </div>
           {footerMenus.map((m) => (
             <div className='col-span-9 lg:col-span-2 lg:mx-3 border-b border-white lg:border-b-0' key={m.key}>
-              <h3 className='font-bold text-[18px] lg:text-[20px] leading-[25px] mb-3 text-black-4A'>{m.title}</h3>
+              <h3 className='font-bold text-[18px] lg:text-[20px] leading-[25px] mb-3 text-secondary-default'>
+                {m.title}
+              </h3>
               {!!m?.children && m?.children?.length > 0 && (
                 <nav>
                   <ul>
@@ -99,7 +101,9 @@ export const Footer = memo(() => {
                       <li className='mb-10px' key={mc?.value}>
                         <div className='flex flex-wrap gap-x-2 text-base'>
                           {mc?.label && <span>{mc?.label}:</span>}
-                          <Link className='text-black-1A font-medium hover:text-primary-default' href={mc.pathname}>
+                          <Link
+                            className='text-secondary-default font-medium hover:text-primary-default'
+                            href={mc.pathname}>
                             {mc.value}
                           </Link>
                         </div>

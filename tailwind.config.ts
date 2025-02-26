@@ -23,8 +23,10 @@ export default {
         primary: {
           default: '#FFC42C',
           disabled: '#FFEFC4',
+          light: '#fff4d9',
         },
         secondary: {
+          default: '#042460',
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
         },

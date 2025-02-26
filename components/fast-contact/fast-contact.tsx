@@ -19,7 +19,7 @@ export const FastContact = async ({ className }: { defaultOptionId?: string; cla
           width={2280}
         />
         <div className='col-span-1'>
-          <h1 className='md:text-[32px] text-[28px] font-bold leading-[40px] mb-[10px] mt-0 tracking-tight'>
+          <h1 className='md:text-[32px] text-[#042460] text-[28px] font-bold leading-[40px] mb-[10px] mt-0 tracking-tight'>
             Đặt lịch tư vấn với <span className='text-primary-default'>{AppInformation.name}</span>
           </h1>
           <span className='text-black-6A text-base leading-[20px]'>

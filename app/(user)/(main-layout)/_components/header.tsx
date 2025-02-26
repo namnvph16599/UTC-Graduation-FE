@@ -1,6 +1,4 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 import { Logo } from '@/components/logo';
 import { AppRouter } from '@/lib/constant';
 
@@ -36,7 +34,7 @@ export const Header = () => {
           {menus.map((menu) => {
             return (
               <Link
-                className='py-6 px-3 text-sm text-black-1A hover:text-primary-default font-semibold'
+                className='py-6 px-3 text-sm text-secondary-default hover:text-primary-default font-semibold'
                 href={menu.href}
                 key={menu.href}>
                 {menu.label}
@@ -44,7 +42,7 @@ export const Header = () => {
             );
           })}
         </nav>
-        <div className='flex items-center gap-x-2 text-sm font-semibold text-black-3A'>
+        <div className='flex items-center gap-x-2 text-sm font-semibold text-secondary-default'>
           <Link className={`py-[10px] px-4`} href={AppRouter.auth.register}>
             Đăng ký miễn phí
           </Link>
