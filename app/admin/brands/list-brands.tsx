@@ -1,13 +1,13 @@
 'use client';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { serviceColumns, ServiceEntity } from '@/app/admin/brands/_components/columns';
+import { BrandEntity, serviceColumns } from '@/app/admin/brands/_components/columns';
 import { DataTable } from '@/app/admin/brands/_components/service-table';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
 import { AppRouter } from '@/lib/constant';
 
-function getData(): ServiceEntity[] {
+function getData(): BrandEntity[] {
   // Fetch data from your API here.
   return [
     {

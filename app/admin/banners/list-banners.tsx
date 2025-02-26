@@ -1,8 +1,8 @@
 'use client';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { BannerEntity, serviceColumns } from '@/app/admin/brands/_components/columns';
-import { DataTable } from '@/app/admin/brands/_components/service-table';
+import { BannerEntity, serviceColumns } from '@/app/admin/banners/_components/columns';
+import { DataTable } from '@/app/admin/banners/_components/service-table';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
 import { AppRouter } from '@/lib/constant';

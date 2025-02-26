@@ -4,7 +4,7 @@ import { Quicksand } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { AppInformation } from '@/lib/constant';
 
-export const inter = Quicksand({ subsets: ['latin'] });
+const inter = Quicksand({ subsets: ['vietnamese'] });
 
 export const metadata: Metadata = {
   title: ' Sửa chữa & bảo dưỡng xe máy ' + AppInformation.name,
