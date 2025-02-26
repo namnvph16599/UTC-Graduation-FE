@@ -64,3 +64,21 @@ export const DATE_FORMAT = {
   fulltime: 'DD/MM/YYYY HH:mm:ss',
   time: 'HH:mm:ss',
 };
+
+export const validationMessages = {
+  required: 'Đây là trường bắt buộc',
+  passwordMatch: 'Mật khẩu mới phải khớp với mật khẩu cũ',
+  emailOrPhoneIsWrong: 'Email hoặc số điện thoại không đúng định dạng',
+  startYearInvalid: 'Năm và tháng bắt đầu cần phải nhỏ hơn năm và tháng kết thúc',
+  requiredSelectMerchant: 'Vui lòng chọn nhà cung cấp',
+  minSixCharacters: 'Vui lòng nhập tối thiểu 6 ký tự',
+  invalidFile: 'File không hợp lệ',
+  invalidEmail: 'Email không đúng định dạng',
+  invalidPhone: 'Số điện thoại không đúng định dạng',
+  oneSpecialCharacters: 'Tối thiểu 1 ký tự đặc biệt',
+  minAuditPeriod: 'Thời gian kiểm toán tối thiểu là 3 tháng',
+  minPoint: 'Số điểm ít nhất là 1',
+  maxLength: (v: number) => `Vui lòng nhập tối đa ${v} ký tự`,
+  minLength: (v: number) => `Vui lòng nhập tối thiểu ${v} ký tự`,
+  equalLength: (v: number) => `Trường này bắt buộc ${v} ký tự`,
+};
