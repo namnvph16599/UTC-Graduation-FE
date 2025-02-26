@@ -1,6 +1,9 @@
+'use client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Logo } from '@/components/logo';
 import { AppRouter } from '@/lib/constant';
+import { cn } from '@/lib/utils';
 
 const menus = [
   {
@@ -17,24 +20,29 @@ const menus = [
   },
   {
     label: 'Tin tức và cẩm nang',
-    href: AppRouter.user.home,
+    href: AppRouter.user.news,
   },
   {
     label: 'Liên hệ',
-    href: AppRouter.user.home,
+    href: AppRouter.user.contact,
   },
 ];
 
 export const Header = () => {
+  const pathname = usePathname();
+
   return (
     <div className='w-full border-b border-input'>
       <div className='mx-auto container flex items-center justify-between'>
         <Logo />
         <nav className='flex items-center'>
           {menus.map((menu) => {
+            const isActive = menu.href === pathname;
             return (
               <Link
-                className='py-6 px-3 text-sm text-secondary-default hover:text-primary-default font-semibold'
+                className={cn('py-6 px-3 text-sm text-secondary-default hover:text-primary-default font-semibold', {
+                  'text-primary-default border-b-2 border-primary-default': isActive,
+                })}
                 href={menu.href}
                 key={menu.href}>
                 {menu.label}
