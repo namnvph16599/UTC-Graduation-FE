@@ -75,7 +75,7 @@ export const News = () => {
     <div className={cn('w-full flex justify-center')}>
       <div className='container'>
         <div className='flex justify-between items-end mb-8 mx-4 lg:mx-0'>
-          <h1 className={'text-[32px] font-bold text-secondary-default'}>Tin tức</h1>
+          <h1 className={'text-[32px] font-bold text-primary-default'}>Tin tức</h1>
           <Link className='font-medium text-black-2A' href={AppRouter.user.news}>
             Xem tất cả
           </Link>
