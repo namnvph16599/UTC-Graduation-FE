@@ -1,10 +1,9 @@
-import Link from 'next/link';
-
 import { NewsBox, NewsEntity } from '@/app/(user)/(main-layout)/_components/news-box';
-import { AppRouter } from '@/lib/constant';
+import { NewsInputSearch } from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/_components/news-input-search';
+import { NewsPagination } from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/_components/news-pagination';
 import { cn } from '@/lib/utils';
 
-export const News = () => {
+const NewsPage = () => {
   const newsData = [
     {
       content: 'Exciting advancements in AI are shaping the future of technology.',
@@ -61,14 +60,19 @@ export const News = () => {
   return (
     <div className={cn('w-full flex justify-center')}>
       <div className='container'>
-        <div className='flex justify-between items-end mb-8 mx-4 lg:mx-0'>
-          <h1 className={'text-[32px] font-bold text-primary-default'}>Tin tức và cẩm nang</h1>
-          <Link className='font-medium text-black-2A' href={AppRouter.user.news}>
-            Xem tất cả
-          </Link>
+        <div className='flex justify-between items-end my-8 mx-4 lg:mx-0'>
+          <h1 className={'text-[32px] font-bold text-secondary-default'}>Tin tức và cẩm nang</h1>
+          <NewsInputSearch />
         </div>
-        <NewsBox convertedNews={[[...newsData]] as NewsEntity[][]} />
+        <div className='flex flex-col gap-4'>
+          <NewsBox convertedNews={[[...newsData], [...newsData]] as NewsEntity[][]} />
+        </div>
+        <div className='flex justify-center'>
+          <NewsPagination />
+        </div>
       </div>
     </div>
   );
 };
+
+export default NewsPage;

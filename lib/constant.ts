@@ -7,7 +7,7 @@ export const AppRouter = {
     home: '/',
     about: '/gioi-thieu',
     booking: '/dat-lich',
-    news: '/tin-tuc',
+    news: '/tin-tuc-va-cam-nang',
     contact: '/lien-he',
   },
   admin: {
