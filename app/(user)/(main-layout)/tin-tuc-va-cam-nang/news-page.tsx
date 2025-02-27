@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { NewsBox, NewsEntity } from '@/app/(user)/(main-layout)/_components/news-box';
 import { NewsInputSearch } from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/_components/news-input-search';
 import { NewsPagination } from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/_components/news-pagination';
@@ -58,20 +59,22 @@ const NewsPage = () => {
   ];
 
   return (
-    <div className={cn('w-full flex justify-center')}>
-      <div className='container'>
-        <div className='flex justify-between items-end my-8 mx-4 lg:mx-0'>
-          <h1 className={'text-[32px] font-bold text-secondary-default'}>Tin tức và cẩm nang</h1>
-          <NewsInputSearch />
-        </div>
-        <div className='flex flex-col gap-4'>
-          <NewsBox convertedNews={[[...newsData], [...newsData]] as NewsEntity[][]} />
-        </div>
-        <div className='flex justify-center'>
-          <NewsPagination />
+    <Suspense>
+      <div className={cn('w-full flex justify-center')}>
+        <div className='container'>
+          <div className='flex justify-between items-end my-8 mx-4 lg:mx-0'>
+            <h1 className={'text-[32px] font-bold text-secondary-default'}>Tin tức và cẩm nang</h1>
+            <NewsInputSearch />
+          </div>
+          <div className='flex flex-col gap-4'>
+            <NewsBox convertedNews={[[...newsData], [...newsData]] as NewsEntity[][]} />
+          </div>
+          <div className='flex justify-center'>
+            <NewsPagination />
+          </div>
         </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 
