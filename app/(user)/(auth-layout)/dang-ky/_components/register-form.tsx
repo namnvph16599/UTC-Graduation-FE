@@ -55,7 +55,7 @@ export function RegisterForm() {
     defaultValues: {},
   });
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const onSubmit = useCallback((data: z.infer<typeof formSchema>) => {
     setOpen(true);
