@@ -14,12 +14,24 @@ import { cn } from '@/lib/utils';
 type Props = {
   field: FieldValues;
   placeholder?: string;
+  hourTypes?: 'all' | 'day' | 'night';
 };
 
-export function DateTimePickerForm({ field }: Props) {
+export function DateTimePickerForm({ field, hourTypes = 'all' }: Props) {
   function handleDateSelect(date: Date | undefined) {
     if (date) {
       field.onChange(date);
+    }
+  }
+
+  function getTimeType() {
+    switch (hourTypes) {
+      case 'day':
+        return ['AM'];
+      case 'night':
+        return ['PM'];
+      default:
+        return ['AM', 'PM'];
     }
   }
 
@@ -51,7 +63,7 @@ export function DateTimePickerForm({ field }: Props) {
           <Button
             className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
             variant={'normalOutline'}>
-            {field.value ? format(field.value, 'MM/dd/yyyy hh:mm aa') : <span>MM/DD/YYYY hh:mm aa</span>}
+            {field.value ? format(field.value, 'dd/MM/yyyy hh:mm aa') : <span>DD/MM/YYYY hh:mm aa</span>}
             <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
           </Button>
         </FormControl>
@@ -94,7 +106,7 @@ export function DateTimePickerForm({ field }: Props) {
             </ScrollArea>
             <ScrollArea className=''>
               <div className='flex sm:flex-col p-2'>
-                {['AM', 'PM'].map((ampm) => (
+                {getTimeType().map((ampm) => (
                   <Button
                     className='sm:w-full shrink-0 aspect-square'
                     key={ampm}

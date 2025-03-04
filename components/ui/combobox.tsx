@@ -15,10 +15,13 @@ const Combobox = React.forwardRef<
     placeholderSearch?: string;
     placeholderSelect?: string;
     onChange: (newValue: string) => void;
+    allowAddingValueSearch?: boolean;
   }
   // >(({ options, placeholderSearch, placeholderSelect, value, onChange, className, ...props }, ref) => {
->(({ options, placeholderSearch, placeholderSelect, value, onChange, className }) => {
+>(({ options, placeholderSearch, placeholderSelect, value, onChange, className, allowAddingValueSearch }) => {
   const [open, setOpen] = React.useState(false);
+
+  const [searchValue, setSearchValue] = React.useState('');
 
   return (
     <div className={cn(className)}>
@@ -33,14 +36,19 @@ const Combobox = React.forwardRef<
             role='combobox'
             variant='normalOutline'>
             {value
-              ? options.find((framework) => framework.value === value)?.label
+              ? (options.find((framework) => framework.value === value)?.label ?? value)
               : (placeholderSelect ?? 'Chọn giá trị')}
             <ChevronsUpDown className='opacity-50' />
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-[--radix-popover-trigger-width] p-0'>
           <Command>
-            <CommandInput className='h-9' placeholder={placeholderSearch ?? 'Tìm kiếm'} />
+            <CommandInput
+              className='h-9'
+              onValueChange={setSearchValue}
+              placeholder={placeholderSearch ?? 'Tìm kiếm'}
+              value={searchValue}
+            />
             <CommandList className='w-full'>
               <CommandEmpty>Không có dữ liệu.</CommandEmpty>
               <CommandGroup>
@@ -56,6 +64,18 @@ const Combobox = React.forwardRef<
                     <Check className={cn('ml-auto', value === framework.value ? 'opacity-100' : 'opacity-0')} />
                   </CommandItem>
                 ))}
+                {allowAddingValueSearch && (
+                  <CommandItem
+                    key={searchValue}
+                    onSelect={() => {
+                      onChange?.(searchValue);
+                      setOpen(false);
+                    }}
+                    value={searchValue}>
+                    {searchValue}
+                    <Check className={cn('ml-auto', value === searchValue ? 'opacity-100' : 'opacity-0')} />
+                  </CommandItem>
+                )}
                 {!!value && (
                   <CommandItem
                     className='border-t'
@@ -77,5 +97,4 @@ const Combobox = React.forwardRef<
 });
 
 Combobox.displayName = 'Combobox';
-
 export { Combobox };

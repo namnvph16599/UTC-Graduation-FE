@@ -295,7 +295,7 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
                   {selectedValues.length > 0 && (
                     <>
                       <CommandItem className='flex-1 justify-center cursor-pointer' onSelect={handleClear}>
-                        Clear
+                        Xóa
                       </CommandItem>
                       <Separator className='flex min-h-6 h-full' orientation='vertical' />
                     </>
@@ -303,7 +303,7 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
                   <CommandItem
                     className='flex-1 justify-center cursor-pointer max-w-full'
                     onSelect={() => setIsPopoverOpen(false)}>
-                    Close
+                    Hủy
                   </CommandItem>
                 </div>
               </CommandGroup>
