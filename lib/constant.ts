@@ -42,7 +42,10 @@ export const AppRouter = {
       list: '/admin/news',
     },
     contacts: {
+      label: 'Liên hệ',
       list: '/admin/contacts',
+      add: '/admin/contacts/add',
+      edit: (id: string) => '/admin/contacts/' + id,
     },
   },
 };
