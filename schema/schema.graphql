@@ -1,0 +1,529 @@
+type AuthEntity {
+  accessToken: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  deviceId: String
+  expiresAt: DateTime
+  id: ID!
+  refreshToken: String!
+  updatedAt: DateTime!
+  user: UserEntity!
+}
+
+input CheckOtpInput {
+  id: String!
+  meta: MetaInput
+  method: OtpMethod!
+  otpCode: String!
+  type: OtpType!
+}
+
+type CommonEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  updatedAt: DateTime!
+}
+
+input CreateOtpInput {
+  email: String
+  method: OtpMethod!
+  phone: String
+  phonePrefix: String
+}
+
+input CreateOtpVerifyEmailOrPhone {
+  email: String
+  otpMethod: OtpMethod!
+  phone: String
+  phonePrefix: String
+  type: OtpType!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type GroupEntity {
+  avatar: MediaEntity
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  name: String!
+  status: GroupStatus!
+  updatedAt: DateTime!
+}
+
+enum GroupRole {
+  Member
+  Owner
+}
+
+enum GroupStatus {
+  Active
+  Disable
+}
+
+type GroupUserEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  group: GroupEntity!
+  id: ID!
+  role: GroupRole!
+  status: GroupUserStatus!
+  updatedAt: DateTime!
+  user: UserEntity!
+}
+
+enum GroupUserStatus {
+  Accept
+  Disable
+  Invited
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+input LoginByPhoneInput {
+  deviceId: String
+  password: String!
+  phoneNumber: String!
+  phonePrefix: String!
+  platform: Platform! = Mobile
+}
+
+type MediaEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  fullUrl: String
+  id: ID!
+  type: MediaType!
+  updatedAt: DateTime!
+  url: String!
+}
+
+enum MediaType {
+  Audio
+  Image
+  Other
+  Video
+}
+
+input MetaInput {
+  value: String
+}
+
+type Mutation {
+  adminLoginByPhone(input: LoginByPhoneInput!): AuthEntity!
+  changeUserEmailOrPhone(input: UpdateUserNewEmailOrPhoneInput!): UserEntity!
+  loginByPhone(input: LoginByPhoneInput!): AuthEntity!
+  logout: Boolean!
+  refreshToken(refreshToken: String!): AuthEntity!
+  registerByPhone(input: RegisterByPhoneInput!): UserEntity!
+  removeMedias(input: RemoveMediasInput!): Boolean!
+  removeNotifications(input: RemoveNotificationInput!): Boolean!
+  removeUser(password: String!): Boolean!
+  removeUserByAdmin(userId: String!): Boolean!
+  seenNotifications(input: SeenNotificationsInput!): Boolean!
+  sendForgotPasswordOtp(input: CreateOtpInput!): String
+  sendOtpVerifyEmailOrPhone(input: CreateOtpVerifyEmailOrPhone!): String
+  sendRegisterOtp(input: CreateOtpInput!): String
+  updateUserAvatar(mediaId: String!): UserEntity!
+  updateUserInformation(input: UpdateUserInformationInput!): UserEntity!
+  updateUserPassword(input: UpdateUserPasswordInput!): UserEntity!
+  updateUsername(username: String!): UserEntity!
+  userChangePassword(input: UserChangePasswordInput!): UserEntity!
+  verifyOtpRegisterAccountByPhone(input: VerifyOtpRegisterAccountByPhoneInput!): Boolean!
+}
+
+input NotificationCollectionFilter {
+  isSeen: Boolean!
+}
+
+type NotificationEntity {
+  attribute: JSON
+  createdAt: DateTime!
+  creator: UserEntity!
+  deletedAt: DateTime
+  id: ID!
+  title: String
+  topic: NotificationTopic!
+  updatedAt: DateTime!
+}
+
+enum NotificationTopic {
+  AddUserToGroup
+  CommentToTask
+  DueTask
+  InviteUserToTask
+  MarkTaskAsCompleted
+  MarkTaskCheckListAsCompleted
+  Other
+  RemindTask
+  RemindingTaskIsBeingExpired
+  RenewSubscriptionForAccount
+  TagToTask
+  UpgradeSubscriptionForAccount
+  UserAcceptToGroup
+  UserAcceptToTask
+}
+
+type NotificationUserConnection {
+  items: [NotificationUserEntity!]!
+  meta: PageMeta!
+}
+
+type NotificationUserEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  isSeen: Boolean!
+  notification: NotificationEntity!
+  updatedAt: DateTime!
+  user: UserEntity!
+}
+
+enum OtpMethod {
+  Email
+  PhoneNumber
+}
+
+enum OtpType {
+  ForgotPassword
+  Other
+  Register
+  VerifyEmailOrPhone
+  VerifyNewEmailOrPhone
+}
+
+type PageCursorInfo {
+  endCursor: String
+  startCursor: String
+}
+
+type PageMeta {
+  currentPage: Int!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  limit: Int!
+  totalItem: Int!
+  totalPage: Int!
+}
+
+input PaginationArgs {
+  limit: Int! = 20
+  page: Int! = 1
+}
+
+type PermissionEntity {
+  code: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  name: String!
+  roles: [RoleEntity!]!
+  updatedAt: DateTime!
+}
+
+enum Platform {
+  Mobile
+  Web
+}
+
+type Query {
+  checkOtp(input: CheckOtpInput!): Boolean!
+  getUserByAdmin(userId: String!): UserEntity!
+  getUserById(userId: String!): UserEntity!
+  me: UserEntity
+  meAdmin: UserEntity
+  media(id: String!): MediaEntity!
+  notificationCollection(filter: NotificationCollectionFilter, pagination: PaginationArgs): NotificationUserConnection!
+  sample(id: String!): [SampleEntity!]!
+  sayHello: String!
+  userCollection(input: UserCollectionFilter, pagination: PaginationArgs): UserConnection!
+  userCollectionByAdmin(filter: UserCollectionFilter, pagination: PaginationArgs): UserConnection!
+}
+
+input RegisterByPhoneInput {
+  otp: CheckOtpInput
+  password: String!
+  passwordConfirm: String!
+  phone: String!
+  phonePrefix: String!
+}
+
+input RemoveMediasInput {
+  ids: [String!]!
+}
+
+input RemoveNotificationInput {
+  notificationUserIds: [String!]!
+}
+
+type RoleEntity {
+  code: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  name: String!
+  permissions: [PermissionEntity!]!
+  updatedAt: DateTime!
+}
+
+type SampleEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  updatedAt: DateTime!
+}
+
+input SeenNotificationsInput {
+  ids: [String!]!
+}
+
+enum StoreProvider {
+  Admin
+  Apple
+  FreeTrial
+  Google
+  Voucher
+}
+
+type SubscriptionEntity {
+  appleProductId: String
+  createdAt: DateTime!
+  deletedAt: DateTime
+  googleProductId: String
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
+}
+
+type SubscriptionOrderEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  orderId: String!
+  price: Float!
+  purchaseDate: DateTime!
+  storeProvider: StoreProvider!
+  subscriptionUser: SubscriptionUserEntity!
+  token: String
+  updatedAt: DateTime!
+}
+
+enum SubscriptionType {
+  Free
+  Premium
+}
+
+type SubscriptionUserEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  expiredDate: DateTime
+  id: ID!
+  subscription: SubscriptionEntity
+  updatedAt: DateTime!
+  user: UserEntity!
+}
+
+type TaskCheckListEntity {
+  content: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  isCompleted: Boolean!
+  task: TaskEntity!
+  updatedAt: DateTime!
+}
+
+type TaskCommentEntity {
+  content: String!
+  createdAt: DateTime!
+  createdBy: UserEntity!
+  deletedAt: DateTime
+  id: ID!
+  task: TaskEntity!
+  updatedAt: DateTime!
+}
+
+type TaskEntity {
+  checkList: [TaskCheckListEntity!]!
+  content: String
+  createdAt: DateTime!
+  createdBy: UserEntity!
+  deletedAt: DateTime
+  id: ID!
+  priority: TaskPriority!
+  progressStatus: TaskProgressStatus!
+  remindedAfter: Int
+  remindedAt: DateTime
+  remindedDates: [DateTime!]
+  remindedDays: [Int!]
+  remindedEndAfterCount: Int
+  remindedEndAt: DateTime
+  remindedOverDueAt: DateTime
+  remindedOverDueType: TaskRemindedOverDueType
+  remindedType: TaskRemindType
+  reminderRepeatType: TaskReminderRepeatType
+  scheduleDate: DateTime
+  status: TaskStatus!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type TaskEntityEdge {
+  cursor: String!
+  node: TaskEntity!
+}
+
+enum TaskPriority {
+  High
+  Low
+  Lowest
+  Medium
+}
+
+enum TaskProgressStatus {
+  Done
+  InProgress
+}
+
+enum TaskRemindType {
+  Custom
+  Day
+  Default
+  Month
+  Week
+}
+
+enum TaskRemindedOverDueType {
+  Day
+  Default
+  Week
+}
+
+enum TaskReminderRepeatType {
+  Custom
+  Daily
+  Monthly
+  Weekday
+  Weekly
+}
+
+enum TaskStatus {
+  Active
+  Archived
+}
+
+input UpdateUserInformationInput {
+  email: String
+  fullName: String
+  username: String
+}
+
+input UpdateUserNewEmailOrPhoneInput {
+  emailNew: String
+  otp: CheckOtpInput!
+  otpMethod: OtpMethod!
+  otpNew: CheckOtpInput!
+  phoneNew: String
+  phonePrefixNew: String
+}
+
+input UpdateUserPasswordInput {
+  email: String
+  otp: CheckOtpInput!
+  password: String!
+  passwordConfirm: String!
+  phone: String
+  phonePrefix: String
+}
+
+input UserChangePasswordInput {
+  passwordConfirm: String!
+  passwordNew: String!
+  passwordOld: String!
+}
+
+input UserCollectionFilter {
+  isDeleted: Boolean
+
+  """
+  search user by name or phone or username
+  """
+  query: String
+  statuses: [UserStatus!]
+  subscriptionId: String
+  subscriptionType: SubscriptionType
+  type: UserType
+}
+
+type UserConnection {
+  items: [UserEntity!]!
+  meta: PageMeta!
+}
+
+type UserEntity {
+  avatar: MediaEntity
+  createdAt: DateTime!
+  deletedAt: DateTime
+  email: String
+  fullName: String
+  id: ID!
+  phoneNumber: String
+  phonePrefix: String
+  status: UserStatus
+  type: UserType!
+  updatedAt: DateTime!
+  username: String
+  uuid: String
+}
+
+enum UserStatus {
+  Active
+  Inactive
+  VerifyNeeded
+}
+
+enum UserType {
+  Admin
+  User
+}
+
+input VerifyOtpRegisterAccountByPhoneInput {
+  otpCode: String!
+  userId: String!
+}
+
+type VoucherEntity {
+  code: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  expiredDate: DateTime!
+  id: ID!
+  name: String
+  providerType: VoucherProviderType!
+  quantity: Int!
+  startDate: DateTime!
+  status: Boolean!
+  subscription: SubscriptionEntity!
+  updatedAt: DateTime!
+}
+
+enum VoucherProviderType {
+  Admin
+  MbBank
+}
+
+type VoucherUserEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  updatedAt: DateTime!
+  user: UserEntity!
+  voucher: VoucherEntity!
+}

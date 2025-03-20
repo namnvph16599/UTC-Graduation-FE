@@ -1,0 +1,5 @@
+mutation registerByPhone($input: RegisterByPhoneInput!) {
+  registerByPhone(input: $input) {
+    uuid
+  }
+}

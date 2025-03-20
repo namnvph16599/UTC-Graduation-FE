@@ -28,8 +28,6 @@ export function DataTable<TData, TValue>({ columns, data, tab }: DataTableProps<
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  console.log('tab', tab);
-
   return (
     <div>
       <div className='rounded-md border'>

@@ -1,8 +1,8 @@
 import Image from 'next/image';
 
-import { FormFastContact } from './form';
 import { AppInformation } from '@/lib/constant';
 import { cn } from '@/lib/utils';
+import { FormFastContact } from './form';
 
 export const FastContact = async ({ className }: { defaultOptionId?: string; className?: string }) => {
   return (

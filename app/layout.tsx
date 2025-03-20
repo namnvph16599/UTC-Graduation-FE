@@ -3,6 +3,8 @@ import './globals.css';
 import { Quicksand } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { AppInformation } from '@/lib/constant';
+import { ApolloWrapper } from '@/src/configs/apollo';
+import { ReactQueryProvider } from '@/src/configs/react-query';
 
 const inter = Quicksand({ subsets: ['vietnamese'] });
 
@@ -20,8 +22,12 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        {children}
-        <Toaster position='top-right' />
+        <ApolloWrapper>
+          <ReactQueryProvider>
+            {children}
+            <Toaster position='top-right' />
+          </ReactQueryProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );

@@ -1,0 +1,22 @@
+mutation loginByPhone($input: LoginByPhoneInput!) {
+  loginByPhone(input: $input) {
+    accessToken
+    expiresAt
+    id
+    refreshToken
+    user {
+      avatar {
+        fullUrl
+      }
+      email
+      fullName
+      id
+      phoneNumber
+      phonePrefix
+      status
+      type
+      username
+      uuid
+    }
+  }
+}

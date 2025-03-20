@@ -2,8 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -19,6 +21,10 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { AppInformation, AppRouter } from '@/lib/constant';
+import { validationMessages } from '@/src/constants/constant';
+import { ErrorMessage } from '@/src/constants/error';
+import { useRegisterByPhoneMutation } from '@/src/graphql/mutations/registerByPhone.generated';
+import { useVerifyOtpRegisterAccountByPhoneMutation } from '@/src/graphql/mutations/verifyOtpRegisterAccountByPhone.generated';
 
 const formSchema = z
   .object({
@@ -52,14 +58,45 @@ const formSchema = z
 export function RegisterForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      password: 'vanhnam042',
+      passwordConfirm: 'vanhnam042',
+      phone: '0376021530',
+    },
   });
 
   const [open, setOpen] = useState(false);
+  const [uuid, setUuid] = useState('');
 
-  const onSubmit = useCallback((data: z.infer<typeof formSchema>) => {
-    setOpen(true);
-  }, []);
+  const [registerMutation, { loading }] = useRegisterByPhoneMutation({
+    onCompleted(data) {
+      const id = data?.registerByPhone?.uuid;
+      if (!id) return;
+      setUuid(id);
+      setOpen(true);
+    },
+    onError(error) {
+      toast.error('Đăng ký thất bại!', {
+        description: error.message,
+      });
+    },
+  });
+
+  const onSubmit = useCallback(
+    async (data: z.infer<typeof formSchema>) => {
+      await registerMutation({
+        variables: {
+          input: {
+            password: data.password,
+            passwordConfirm: data.passwordConfirm,
+            phone: data.phone,
+            phonePrefix: '',
+          },
+        },
+      });
+    },
+    [registerMutation],
+  );
 
   return (
     <div>
@@ -108,7 +145,7 @@ export function RegisterForm() {
             )}
           />
 
-          <Button className='w-full mt-8' type='submit'>
+          <Button className='w-full mt-8' loading={loading} type='submit'>
             Đăng ký
           </Button>
           <div className='flex items-center justify-center gap-1 text-sm mt-9'>
@@ -119,23 +156,30 @@ export function RegisterForm() {
           </div>
         </form>
       </Form>
-      <DialogConfirmOTP open={open} setOpen={setOpen} />
+      <DialogConfirmOTP open={open} setOpen={setOpen} uuid={uuid} />
     </div>
   );
 }
 
 const otpSchema = z.object({
-  otp: z.string().min(6, {
-    message: 'Mã xác thực không đúng định dạng',
-  }),
+  otp: z
+    .string({
+      message: validationMessages.required,
+    })
+    .min(6, {
+      message: validationMessages.required,
+    }),
 });
 
 type DialogConfirmOTPProps = {
   open: boolean;
+  uuid: string;
   setOpen: (value: boolean) => void;
 };
 
-const DialogConfirmOTP = ({ open, setOpen }: DialogConfirmOTPProps) => {
+const DialogConfirmOTP = ({ open, setOpen, uuid }: DialogConfirmOTPProps) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof otpSchema>>({
     resolver: zodResolver(otpSchema),
     defaultValues: {
@@ -143,10 +187,28 @@ const DialogConfirmOTP = ({ open, setOpen }: DialogConfirmOTPProps) => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof otpSchema>) {
-    console.log('data', data.otp);
+  const [verifyMutation, { loading }] = useVerifyOtpRegisterAccountByPhoneMutation({
+    onCompleted() {
+      toast.success('Đăng ký thành công. Vui lòng đăng nhập để sử dụng');
+      setOpen(false);
+      router.push(AppRouter.auth.login);
+    },
+    onError(error) {
+      toast.error(ErrorMessage.default, {
+        description: error.message,
+      });
+    },
+  });
 
-    setOpen(false);
+  async function onSubmit(data: z.infer<typeof otpSchema>) {
+    await verifyMutation({
+      variables: {
+        input: {
+          userId: uuid,
+          otpCode: data.otp,
+        },
+      },
+    });
   }
 
   return (
@@ -188,7 +250,7 @@ const DialogConfirmOTP = ({ open, setOpen }: DialogConfirmOTPProps) => {
           </form>
         </Form>
         <DialogFooter>
-          <Button form='confirm-otp-form' type='submit'>
+          <Button form='confirm-otp-form' loading={loading} type='submit'>
             Xác thực
           </Button>
         </DialogFooter>

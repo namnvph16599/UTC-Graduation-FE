@@ -1,0 +1,3 @@
+mutation verifyOtpRegisterAccountByPhone($input: VerifyOtpRegisterAccountByPhoneInput!) {
+  verifyOtpRegisterAccountByPhone(input: $input)
+}

@@ -18,8 +18,6 @@ type Props = {
 export const UploadImage = ({ title, error, field, width = 400, height = 400 }: Props) => {
   const [preview, setPreview] = React.useState<string | ArrayBuffer | null>('');
 
-  console.log('error', error);
-
   const onDrop = React.useCallback(
     (acceptedFiles: File[]) => {
       const reader = new FileReader();
@@ -28,7 +26,6 @@ export const UploadImage = ({ title, error, field, width = 400, height = 400 }: 
         reader.readAsDataURL(acceptedFiles[0]);
         field.onChange(acceptedFiles[0]);
       } catch (error) {
-        console.log('on drop error:', error);
         setPreview(null);
         field.onChange('');
       }
