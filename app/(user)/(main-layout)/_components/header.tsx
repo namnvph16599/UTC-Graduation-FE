@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Account } from '@/app/(user)/(main-layout)/_components/account';
 import { Logo } from '@/components/logo';
 import { AppRouter } from '@/lib/constant';
 import { cn } from '@/lib/utils';
@@ -50,16 +51,7 @@ export const Header = () => {
             );
           })}
         </nav>
-        <div className='flex items-center gap-x-2 text-sm font-semibold text-secondary-default'>
-          <Link className={`py-[10px] px-4`} href={AppRouter.auth.register}>
-            Đăng ký miễn phí
-          </Link>
-          <Link
-            className={`line-clamp-1 py-[10px] px-4 rounded-md bg-primary-default text-white`}
-            href={AppRouter.auth.login}>
-            Đăng nhập
-          </Link>
-        </div>
+        <Account />
       </div>
     </div>
   );

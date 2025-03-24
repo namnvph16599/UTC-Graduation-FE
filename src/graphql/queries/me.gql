@@ -1,0 +1,13 @@
+query me {
+  me {
+    email
+    fullName
+    id
+    phoneNumber
+    phonePrefix
+    status
+    type
+    username
+    uuid
+  }
+}

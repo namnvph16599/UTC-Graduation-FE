@@ -1,5 +1,6 @@
-import HomePage from '@/app/(user)/(main-layout)/home/page';
+import { redirect } from 'next/navigation';
+import { AppRouter } from '@/src/constants/constant';
 
 export default function Home() {
-  return <HomePage />;
+  redirect(AppRouter.user.home);
 }

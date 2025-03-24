@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Socials } from '@/app/(user)/(main-layout)/_components/socials';
 import { AppInformation } from '@/lib/constant';
 

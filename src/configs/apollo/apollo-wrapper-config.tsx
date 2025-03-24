@@ -1,31 +1,61 @@
 'use client';
 // ^ this file needs the "use client" pragma
 
-import { HttpLink } from '@apollo/client';
-import { ApolloNextAppProvider, ApolloClient, InMemoryCache } from '@apollo/experimental-nextjs-app-support';
+import { ApolloLink, HttpLink } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloNextAppProvider,
+  InMemoryCache,
+  SSRMultipartLink,
+} from '@apollo/experimental-nextjs-app-support';
 import { AppVariables } from '@/src/constants/env';
+import { getItemLocalstorage, LocalStorageKeyEnum } from '@/src/utils/localstorate.util';
 
-const apiUrl = AppVariables.apiUrl;
+export function getHttpLink() {
+  const httpLink = new HttpLink({
+    uri: AppVariables.apiUrl + '/graphql',
+    fetchOptions: { cache: 'no-store' },
+  });
+
+  const authMiddleware = new ApolloLink((operation, forward) => {
+    // Retrieve the latest token (from cookies, local storage, or a secure method)
+    const token = getItemLocalstorage(LocalStorageKeyEnum.AccessToken);
+
+    // Add the Authorization header to the request
+    operation.setContext(({ headers = {} }) => ({
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    }));
+
+    // Pass the request to the next link in the chain
+    return forward(operation);
+  });
+
+  // Combine the middleware and HTTP links
+  return ApolloLink.from([authMiddleware, httpLink]);
+}
 
 // have a function to create a client for you
 function makeClient() {
-  const httpLink = new HttpLink({
-    // this needs to be an absolute url, as relative urls cannot be used in SSR
-    uri: `${apiUrl}/graphql`,
-    // you can disable result caching here if you want to
-    // (this does not work if you are rendering your page with `export const dynamic = "force-static"`)
-    fetchOptions: { cache: 'no-store' },
-    // you can override the default `fetchOptions` on a per query basis
-    // via the `context` property on the options passed as a second argument
-    // to an Apollo Client data fetching hook, e.g.:
-    // const { data } = useSuspenseQuery(MY_QUERY, { context: { fetchOptions: { cache: "force-cache" }}});
-  });
+  const httpLink = getHttpLink();
 
-  // use the `ApolloClient` from "@apollo/experimental-nextjs-app-support"
   return new ApolloClient({
-    // use the `InMemoryCache` from "@apollo/experimental-nextjs-app-support"
+    // use the `NextSSRInMemoryCache`, not the normal `InMemoryCache`
     cache: new InMemoryCache(),
-    link: httpLink,
+    link:
+      typeof window === 'undefined'
+        ? ApolloLink.from([
+            // in a SSR environment, if you use multipart features like
+            // @defer, you need to decide how to handle these.
+            // This strips all interfaces with a `@defer` directive from your queries.
+            new SSRMultipartLink({
+              stripDefer: true,
+            }),
+            httpLink,
+          ])
+        : httpLink,
   });
 }
 

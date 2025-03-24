@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -10,8 +11,11 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { AppRouter } from '@/src/constants/constant';
+import { useAuth } from '@/src/contexts';
 import { useLoginByPhoneMutation } from '@/src/graphql/mutations/loginByPhone.generated';
-import { Platform } from '@/src/graphql/type.interface';
+import { Platform, UserEntity } from '@/src/graphql/type.interface';
+import { LocalStorageKeyEnum, setItemLocalstorage } from '@/src/utils/localstorate.util';
 
 const formSchema = z.object({
   phone: z
@@ -31,14 +35,26 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const router = useRouter();
+
+  const { login } = useAuth();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      phone: '0376021530',
+      password: 'vanhnam042',
+    },
   });
 
   const [loginMutation, { loading }] = useLoginByPhoneMutation({
     onCompleted(data) {
-      console.log('data', data);
+      setItemLocalstorage(LocalStorageKeyEnum.AccessToken, data.loginByPhone.accessToken);
+      setItemLocalstorage(LocalStorageKeyEnum.RefreshToken, data.loginByPhone.refreshToken);
+
+      login(data.loginByPhone.user as UserEntity);
+
+      router.push(AppRouter.user.home);
     },
     onError(error) {
       toast.error('Đăng nhập thất bại!', {

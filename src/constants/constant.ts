@@ -4,7 +4,7 @@ export const AppRouter = {
     register: '/dang-ky',
   },
   user: {
-    home: '/',
+    home: '/trang-chu',
     about: '/gioi-thieu',
     booking: '/dat-lich',
     news: '/tin-tuc-va-cam-nang',
