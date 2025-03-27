@@ -5,10 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useBrandQuery } from '@/src/graphql/queries/brand.generated';
+import { useModelsQuery } from '@/src/graphql/queries/models.generated';
 
 const modelSchema = z.object({
   id: z.string().optional(),
@@ -21,16 +24,48 @@ const modelSchema = z.object({
     }),
 });
 const formSchema = z.object({
-  name: z.string({
-    message: 'Tên thương hiệu là trường bắt buộc',
-  }),
+  name: z
+    .string({
+      message: 'Tên thương hiệu là trường bắt buộc',
+    })
+    .min(1, {
+      message: 'Tên thương hiệu là trường bắt buộc',
+    }),
   models: z.array(modelSchema).refine((values) => values.length > 0, {
     message: 'Loại xe là trường bắt buộc',
   }),
 });
 
-export const BrandForm = () => {
+export const BrandForm = ({ id }: { id: string }) => {
   const router = useRouter();
+
+  const { loading } = useBrandQuery({
+    variables: {
+      id,
+    },
+    onCompleted(brandData) {
+      form.setValue('name', brandData.brand.name);
+    },
+  });
+
+  const { loading: loadingModels } = useModelsQuery({
+    variables: {
+      args: {
+        brand_id: id,
+      },
+    },
+    onCompleted(modelsData) {
+      if (modelsData?.models && modelsData?.models?.length > 0) {
+        for (let idx = 0; idx < modelsData?.models.length; idx++) {
+          const model = modelsData?.models[idx];
+          append({
+            id: model?.id,
+            name: model?.name ?? '',
+          });
+        }
+      }
+    },
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,16 +90,16 @@ export const BrandForm = () => {
   }, []);
 
   useEffect(() => {
-    if (controlledFields?.length <= 0) {
+    if (controlledFields?.length <= 0 && !id) {
       append({
         id: '',
         name: '',
       });
     }
-  }, [append, controlledFields?.length]);
+  }, [append, controlledFields?.length, id]);
 
   return (
-    <>
+    <Loading loading={loading || loadingModels}>
       <div className='p-5 bg-[#F9F9F9]'>
         <div className='p-5 bg-white mb-[93px] max-w-[600px] mx-auto'>
           <Form {...form}>
@@ -152,6 +187,6 @@ export const BrandForm = () => {
         </Button>
         <Button form='repair-form'>Thêm mới</Button>
       </div>
-    </>
+    </Loading>
   );
 };

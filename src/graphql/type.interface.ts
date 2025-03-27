@@ -29,6 +29,21 @@ export type AuthEntity = {
   user: UserEntity;
 };
 
+export type BrandConnection = {
+  __typename?: 'BrandConnection';
+  items: Array<BrandEntity>;
+  meta: PageMeta;
+};
+
+export type BrandEntity = {
+  __typename?: 'BrandEntity';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type CheckOtpInput = {
   id: Scalars['String'];
   meta?: InputMaybe<MetaInput>;
@@ -45,6 +60,24 @@ export type CommonEntity = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type CreateBrandInput = {
+  name: Scalars['String'];
+};
+
+export type CreateModelInput = {
+  brand_id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type CreateMotorcycleInput = {
+  capacity: Scalars['Float'];
+  license_plate: Scalars['String'];
+  manufacture_year: Scalars['String'];
+  model_id: Scalars['String'];
+  name: Scalars['String'];
+  user_id: Scalars['String'];
+};
+
 export type CreateOtpInput = {
   email?: InputMaybe<Scalars['String']>;
   method: OtpMethod;
@@ -58,6 +91,41 @@ export type CreateOtpVerifyEmailOrPhone = {
   phone?: InputMaybe<Scalars['String']>;
   phonePrefix?: InputMaybe<Scalars['String']>;
   type: OtpType;
+};
+
+export type CreateProductInput = {
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  price: Scalars['Float'];
+  quantity: Scalars['Float'];
+};
+
+export type CreateRepairInput = {
+  capacity: Scalars['Float'];
+  description?: InputMaybe<Scalars['String']>;
+  description_of_customer?: InputMaybe<Scalars['String']>;
+  discount_percent?: InputMaybe<Scalars['Float']>;
+  estimated_delivery_time?: InputMaybe<Scalars['DateTime']>;
+  expected_receiving_time?: InputMaybe<Scalars['DateTime']>;
+  license_plate: Scalars['String'];
+  manufacture_year: Scalars['String'];
+  model_id: Scalars['String'];
+  name: Scalars['String'];
+  phone: Scalars['String'];
+  products?: InputMaybe<Array<ProductInput>>;
+  service_ids?: InputMaybe<Array<Scalars['String']>>;
+  status: RepairStatusEnum;
+};
+
+export type CreateServiceInput = {
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  price: Scalars['Float'];
+};
+
+export type GetModelsRequest = {
+  brand_id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type GroupEntity = {
@@ -129,22 +197,73 @@ export type MetaInput = {
   value?: InputMaybe<Scalars['String']>;
 };
 
+export type ModelEntity = {
+  __typename?: 'ModelEntity';
+  brand?: Maybe<BrandEntity>;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type MotorcycleCollectionFilter = {
+  user_id?: InputMaybe<Scalars['String']>;
+};
+
+export type MotorcycleConnection = {
+  __typename?: 'MotorcycleConnection';
+  items: Array<MotorcycleEntity>;
+  meta: PageMeta;
+};
+
+export type MotorcycleEntity = {
+  __typename?: 'MotorcycleEntity';
+  capacity: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  license_plate: Scalars['String'];
+  manufacture_year: Scalars['String'];
+  model?: Maybe<ModelEntity>;
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  user: UserEntity;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   adminLoginByPhone: AuthEntity;
   changeUserEmailOrPhone: UserEntity;
+  createBrand: BrandEntity;
+  createModel: ModelEntity;
+  createMotorcycle: MotorcycleEntity;
+  createProduct: ProductEntity;
+  createRepairRequest: RepairEntity;
+  createService: ServicesEntity;
   loginByPhone: AuthEntity;
   logout: Scalars['Boolean'];
   refreshToken: AuthEntity;
   registerByPhone: UserEntity;
+  removeBrand: Scalars['Boolean'];
   removeMedias: Scalars['Boolean'];
+  removeModel: Scalars['Boolean'];
+  removeMotorcycle: Scalars['Boolean'];
   removeNotifications: Scalars['Boolean'];
+  removeProduct: Scalars['Boolean'];
+  removeService: Scalars['Boolean'];
   removeUser: Scalars['Boolean'];
   removeUserByAdmin: Scalars['Boolean'];
   seenNotifications: Scalars['Boolean'];
   sendForgotPasswordOtp?: Maybe<Scalars['String']>;
   sendOtpVerifyEmailOrPhone?: Maybe<Scalars['String']>;
   sendRegisterOtp?: Maybe<Scalars['String']>;
+  updateBrand: BrandEntity;
+  updateModel: ModelEntity;
+  updateMotorcycle: MotorcycleEntity;
+  updateProduct: ProductEntity;
+  updateRepairRequest: RepairEntity;
+  updateService: ServicesEntity;
   updateUserAvatar: UserEntity;
   updateUserInformation: UserEntity;
   updateUserPassword: UserEntity;
@@ -161,6 +280,30 @@ export type MutationChangeUserEmailOrPhoneArgs = {
   input: UpdateUserNewEmailOrPhoneInput;
 };
 
+export type MutationCreateBrandArgs = {
+  args: CreateBrandInput;
+};
+
+export type MutationCreateModelArgs = {
+  args: CreateModelInput;
+};
+
+export type MutationCreateMotorcycleArgs = {
+  input: CreateMotorcycleInput;
+};
+
+export type MutationCreateProductArgs = {
+  args: CreateProductInput;
+};
+
+export type MutationCreateRepairRequestArgs = {
+  input: CreateRepairInput;
+};
+
+export type MutationCreateServiceArgs = {
+  args: CreateServiceInput;
+};
+
 export type MutationLoginByPhoneArgs = {
   input: LoginByPhoneInput;
 };
@@ -173,12 +316,32 @@ export type MutationRegisterByPhoneArgs = {
   input: RegisterByPhoneInput;
 };
 
+export type MutationRemoveBrandArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationRemoveMediasArgs = {
   input: RemoveMediasInput;
 };
 
+export type MutationRemoveModelArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationRemoveMotorcycleArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationRemoveNotificationsArgs = {
   input: RemoveNotificationInput;
+};
+
+export type MutationRemoveProductArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationRemoveServiceArgs = {
+  id: Scalars['String'];
 };
 
 export type MutationRemoveUserArgs = {
@@ -203,6 +366,30 @@ export type MutationSendOtpVerifyEmailOrPhoneArgs = {
 
 export type MutationSendRegisterOtpArgs = {
   input: CreateOtpInput;
+};
+
+export type MutationUpdateBrandArgs = {
+  args: UpdateBrandInput;
+};
+
+export type MutationUpdateModelArgs = {
+  args: UpdateModelInput;
+};
+
+export type MutationUpdateMotorcycleArgs = {
+  input: UpdateMotorcycleInput;
+};
+
+export type MutationUpdateProductArgs = {
+  args: UpdateProductInput;
+};
+
+export type MutationUpdateRepairRequestArgs = {
+  input: UpdateRepairInput;
+};
+
+export type MutationUpdateServiceArgs = {
+  args: UpdateServiceInput;
 };
 
 export type MutationUpdateUserAvatarArgs = {
@@ -311,6 +498,7 @@ export type PageMeta = {
 export type PaginationArgs = {
   limit?: Scalars['Int'];
   page?: Scalars['Int'];
+  search?: InputMaybe<Scalars['String']>;
 };
 
 export type PermissionEntity = {
@@ -329,19 +517,56 @@ export enum Platform {
   WEB = 'Web',
 }
 
+export type ProductEntity = {
+  __typename?: 'ProductEntity';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  price: Scalars['Float'];
+  quantity: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type ProductInput = {
+  id: Scalars['String'];
+  quantity: Scalars['Float'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  brand: BrandEntity;
+  brandCollection: BrandConnection;
   checkOtp: Scalars['Boolean'];
   getUserByAdmin: UserEntity;
   getUserById: UserEntity;
   me?: Maybe<UserEntity>;
   meAdmin?: Maybe<UserEntity>;
   media: MediaEntity;
+  model: ModelEntity;
+  models: Array<ModelEntity>;
+  motorcycle: MotorcycleEntity;
+  motorcycleCollection: MotorcycleConnection;
   notificationCollection: NotificationUserConnection;
+  product: ProductEntity;
+  products: Array<ProductEntity>;
+  repair: RepairEntity;
+  repairCollection: RepairConnection;
   sample: Array<SampleEntity>;
   sayHello: Scalars['String'];
+  service: ServicesEntity;
+  services: Array<ServicesEntity>;
   userCollection: UserConnection;
   userCollectionByAdmin: UserConnection;
+};
+
+export type QueryBrandArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryBrandCollectionArgs = {
+  pagination?: InputMaybe<PaginationArgs>;
 };
 
 export type QueryCheckOtpArgs = {
@@ -360,12 +585,46 @@ export type QueryMediaArgs = {
   id: Scalars['String'];
 };
 
+export type QueryModelArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryModelsArgs = {
+  args?: InputMaybe<GetModelsRequest>;
+};
+
+export type QueryMotorcycleArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryMotorcycleCollectionArgs = {
+  filterArgs?: InputMaybe<MotorcycleCollectionFilter>;
+  pagination?: InputMaybe<PaginationArgs>;
+};
+
 export type QueryNotificationCollectionArgs = {
   filter?: InputMaybe<NotificationCollectionFilter>;
   pagination?: InputMaybe<PaginationArgs>;
 };
 
+export type QueryProductArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryRepairArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryRepairCollectionArgs = {
+  input?: InputMaybe<RepairCollectionFilter>;
+  pagination?: InputMaybe<PaginationArgs>;
+};
+
 export type QuerySampleArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryServiceArgs = {
   id: Scalars['String'];
 };
 
@@ -395,6 +654,73 @@ export type RemoveNotificationInput = {
   notificationUserIds: Array<Scalars['String']>;
 };
 
+export type RepairCollectionFilter = {
+  status?: InputMaybe<RepairStatusEnum>;
+};
+
+export type RepairConnection = {
+  __typename?: 'RepairConnection';
+  items: Array<RepairEntity>;
+  meta: PageMeta;
+};
+
+export type RepairEntity = {
+  __typename?: 'RepairEntity';
+  cancelled_description?: Maybe<Scalars['String']>;
+  capacity: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  description_of_customer?: Maybe<Scalars['String']>;
+  discount_percent?: Maybe<Scalars['Float']>;
+  estimated_delivery_time?: Maybe<Scalars['DateTime']>;
+  expected_receiving_time?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  license_plate: Scalars['String'];
+  manufacture_year: Scalars['String'];
+  model?: Maybe<ModelEntity>;
+  name: Scalars['String'];
+  phone: Scalars['String'];
+  products: Array<RepairM2MProductEntity>;
+  services: Array<RepairM2MServiceEntity>;
+  staff?: Maybe<UserEntity>;
+  status: RepairStatusEnum;
+  updatedAt: Scalars['DateTime'];
+  user?: Maybe<UserEntity>;
+};
+
+export type RepairM2MProductEntity = {
+  __typename?: 'RepairM2MProductEntity';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  price: Scalars['Float'];
+  product: ProductEntity;
+  quantity: Scalars['Float'];
+  repair: RepairEntity;
+  updatedAt: Scalars['DateTime'];
+};
+
+export type RepairM2MServiceEntity = {
+  __typename?: 'RepairM2MServiceEntity';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  price: Scalars['Float'];
+  repair: RepairEntity;
+  service: ServicesEntity;
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum RepairStatusEnum {
+  CANCELLED = 'CANCELLED',
+  CONFIRMED = 'CONFIRMED',
+  FINISHED = 'FINISHED',
+  HANDLING = 'HANDLING',
+  WAITING_FOR_CONFIRM = 'WAITING_FOR_CONFIRM',
+  WAITING_FOR_PAYMENT = 'WAITING_FOR_PAYMENT',
+}
+
 export type RoleEntity = {
   __typename?: 'RoleEntity';
   code: Scalars['String'];
@@ -416,6 +742,17 @@ export type SampleEntity = {
 
 export type SeenNotificationsInput = {
   ids: Array<Scalars['String']>;
+};
+
+export type ServicesEntity = {
+  __typename?: 'ServicesEntity';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  price: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
 };
 
 export enum StoreProvider {
@@ -559,6 +896,60 @@ export enum TaskStatus {
   ACTIVE = 'Active',
   ARCHIVED = 'Archived',
 }
+
+export type UpdateBrandInput = {
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type UpdateModelInput = {
+  brand_id: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type UpdateMotorcycleInput = {
+  capacity?: InputMaybe<Scalars['Float']>;
+  id: Scalars['String'];
+  license_plate?: InputMaybe<Scalars['String']>;
+  manufacture_year?: InputMaybe<Scalars['String']>;
+  model_id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateProductInput = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  price: Scalars['Float'];
+  quantity: Scalars['Float'];
+};
+
+export type UpdateRepairInput = {
+  capacity: Scalars['Float'];
+  description?: InputMaybe<Scalars['String']>;
+  description_of_customer?: InputMaybe<Scalars['String']>;
+  discount_percent?: InputMaybe<Scalars['Float']>;
+  estimated_delivery_time?: InputMaybe<Scalars['DateTime']>;
+  expected_receiving_time?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  license_plate: Scalars['String'];
+  manufacture_year: Scalars['String'];
+  model_id: Scalars['String'];
+  name: Scalars['String'];
+  phone: Scalars['String'];
+  products?: InputMaybe<Array<ProductInput>>;
+  service_ids?: InputMaybe<Array<Scalars['String']>>;
+  status: RepairStatusEnum;
+};
+
+export type UpdateServiceInput = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  price: Scalars['Float'];
+};
 
 export type UpdateUserInformationInput = {
   email?: InputMaybe<Scalars['String']>;

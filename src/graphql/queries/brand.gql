@@ -1,0 +1,9 @@
+query brand($id: String!) {
+  brand(id: $id) {
+    createdAt
+    deletedAt
+    id
+    name
+    updatedAt
+  }
+}

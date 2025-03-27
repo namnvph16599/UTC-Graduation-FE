@@ -10,6 +10,19 @@ type AuthEntity {
   user: UserEntity!
 }
 
+type BrandConnection {
+  items: [BrandEntity!]!
+  meta: PageMeta!
+}
+
+type BrandEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
+}
+
 input CheckOtpInput {
   id: String!
   meta: MetaInput
@@ -23,6 +36,24 @@ type CommonEntity {
   deletedAt: DateTime
   id: ID!
   updatedAt: DateTime!
+}
+
+input CreateBrandInput {
+  name: String!
+}
+
+input CreateModelInput {
+  brand_id: String!
+  name: String!
+}
+
+input CreateMotorcycleInput {
+  capacity: Float!
+  license_plate: String!
+  manufacture_year: String!
+  model_id: String!
+  name: String!
+  user_id: String!
 }
 
 input CreateOtpInput {
@@ -40,10 +71,45 @@ input CreateOtpVerifyEmailOrPhone {
   type: OtpType!
 }
 
+input CreateProductInput {
+  description: String
+  name: String!
+  price: Float!
+  quantity: Float!
+}
+
+input CreateRepairInput {
+  capacity: Float!
+  description: String
+  description_of_customer: String
+  discount_percent: Float
+  estimated_delivery_time: DateTime
+  expected_receiving_time: DateTime
+  license_plate: String!
+  manufacture_year: String!
+  model_id: String!
+  name: String!
+  phone: String!
+  products: [ProductInput!]
+  service_ids: [String!]
+  status: RepairStatusEnum!
+}
+
+input CreateServiceInput {
+  description: String
+  name: String!
+  price: Float!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input GetModelsRequest {
+  brand_id: String
+  name: String
+}
 
 type GroupEntity {
   avatar: MediaEntity
@@ -116,21 +182,69 @@ input MetaInput {
   value: String
 }
 
+type ModelEntity {
+  brand: BrandEntity
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
+}
+
+input MotorcycleCollectionFilter {
+  user_id: String
+}
+
+type MotorcycleConnection {
+  items: [MotorcycleEntity!]!
+  meta: PageMeta!
+}
+
+type MotorcycleEntity {
+  capacity: Float!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  license_plate: String!
+  manufacture_year: String!
+  model: ModelEntity
+  name: String!
+  updatedAt: DateTime!
+  user: UserEntity!
+}
+
 type Mutation {
   adminLoginByPhone(input: LoginByPhoneInput!): AuthEntity!
   changeUserEmailOrPhone(input: UpdateUserNewEmailOrPhoneInput!): UserEntity!
+  createBrand(args: CreateBrandInput!): BrandEntity!
+  createModel(args: CreateModelInput!): ModelEntity!
+  createMotorcycle(input: CreateMotorcycleInput!): MotorcycleEntity!
+  createProduct(args: CreateProductInput!): ProductEntity!
+  createRepairRequest(input: CreateRepairInput!): RepairEntity!
+  createService(args: CreateServiceInput!): ServicesEntity!
   loginByPhone(input: LoginByPhoneInput!): AuthEntity!
   logout: Boolean!
   refreshToken(refreshToken: String!): AuthEntity!
   registerByPhone(input: RegisterByPhoneInput!): UserEntity!
+  removeBrand(id: String!): Boolean!
   removeMedias(input: RemoveMediasInput!): Boolean!
+  removeModel(id: String!): Boolean!
+  removeMotorcycle(id: String!): Boolean!
   removeNotifications(input: RemoveNotificationInput!): Boolean!
+  removeProduct(id: String!): Boolean!
+  removeService(id: String!): Boolean!
   removeUser(password: String!): Boolean!
   removeUserByAdmin(userId: String!): Boolean!
   seenNotifications(input: SeenNotificationsInput!): Boolean!
   sendForgotPasswordOtp(input: CreateOtpInput!): String
   sendOtpVerifyEmailOrPhone(input: CreateOtpVerifyEmailOrPhone!): String
   sendRegisterOtp(input: CreateOtpInput!): String
+  updateBrand(args: UpdateBrandInput!): BrandEntity!
+  updateModel(args: UpdateModelInput!): ModelEntity!
+  updateMotorcycle(input: UpdateMotorcycleInput!): MotorcycleEntity!
+  updateProduct(args: UpdateProductInput!): ProductEntity!
+  updateRepairRequest(input: UpdateRepairInput!): RepairEntity!
+  updateService(args: UpdateServiceInput!): ServicesEntity!
   updateUserAvatar(mediaId: String!): UserEntity!
   updateUserInformation(input: UpdateUserInformationInput!): UserEntity!
   updateUserPassword(input: UpdateUserPasswordInput!): UserEntity!
@@ -216,6 +330,7 @@ type PageMeta {
 input PaginationArgs {
   limit: Int! = 20
   page: Int! = 1
+  search: String
 }
 
 type PermissionEntity {
@@ -233,16 +348,44 @@ enum Platform {
   Web
 }
 
+type ProductEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  description: String
+  id: ID!
+  name: String!
+  price: Float!
+  quantity: Float!
+  updatedAt: DateTime!
+}
+
+input ProductInput {
+  id: String!
+  quantity: Float!
+}
+
 type Query {
+  brand(id: String!): BrandEntity!
+  brandCollection(pagination: PaginationArgs): BrandConnection!
   checkOtp(input: CheckOtpInput!): Boolean!
   getUserByAdmin(userId: String!): UserEntity!
   getUserById(userId: String!): UserEntity!
   me: UserEntity
   meAdmin: UserEntity
   media(id: String!): MediaEntity!
+  model(id: String!): ModelEntity!
+  models(args: GetModelsRequest): [ModelEntity!]!
+  motorcycle(id: String!): MotorcycleEntity!
+  motorcycleCollection(filterArgs: MotorcycleCollectionFilter, pagination: PaginationArgs): MotorcycleConnection!
   notificationCollection(filter: NotificationCollectionFilter, pagination: PaginationArgs): NotificationUserConnection!
+  product(id: String!): ProductEntity!
+  products: [ProductEntity!]!
+  repair(id: String!): RepairEntity!
+  repairCollection(input: RepairCollectionFilter, pagination: PaginationArgs): RepairConnection!
   sample(id: String!): [SampleEntity!]!
   sayHello: String!
+  service(id: String!): ServicesEntity!
+  services: [ServicesEntity!]!
   userCollection(input: UserCollectionFilter, pagination: PaginationArgs): UserConnection!
   userCollectionByAdmin(filter: UserCollectionFilter, pagination: PaginationArgs): UserConnection!
 }
@@ -261,6 +404,69 @@ input RemoveMediasInput {
 
 input RemoveNotificationInput {
   notificationUserIds: [String!]!
+}
+
+input RepairCollectionFilter {
+  status: RepairStatusEnum
+}
+
+type RepairConnection {
+  items: [RepairEntity!]!
+  meta: PageMeta!
+}
+
+type RepairEntity {
+  cancelled_description: String
+  capacity: Float!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  description: String
+  description_of_customer: String
+  discount_percent: Float
+  estimated_delivery_time: DateTime
+  expected_receiving_time: DateTime
+  id: ID!
+  license_plate: String!
+  manufacture_year: String!
+  model: ModelEntity
+  name: String!
+  phone: String!
+  products: [RepairM2MProductEntity!]!
+  services: [RepairM2MServiceEntity!]!
+  staff: UserEntity
+  status: RepairStatusEnum!
+  updatedAt: DateTime!
+  user: UserEntity
+}
+
+type RepairM2MProductEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  price: Float!
+  product: ProductEntity!
+  quantity: Float!
+  repair: RepairEntity!
+  updatedAt: DateTime!
+}
+
+type RepairM2MServiceEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  price: Float!
+  repair: RepairEntity!
+  service: ServicesEntity!
+  updatedAt: DateTime!
+}
+
+enum RepairStatusEnum {
+  CANCELLED
+  CONFIRMED
+  FINISHED
+  HANDLING
+  WAITING_FOR_CONFIRM
+  WAITING_FOR_PAYMENT
 }
 
 type RoleEntity {
@@ -282,6 +488,16 @@ type SampleEntity {
 
 input SeenNotificationsInput {
   ids: [String!]!
+}
+
+type ServicesEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  description: String
+  id: ID!
+  name: String!
+  price: Float!
+  updatedAt: DateTime!
 }
 
 enum StoreProvider {
@@ -417,6 +633,60 @@ enum TaskReminderRepeatType {
 enum TaskStatus {
   Active
   Archived
+}
+
+input UpdateBrandInput {
+  id: String!
+  name: String!
+}
+
+input UpdateModelInput {
+  brand_id: String!
+  id: String!
+  name: String!
+}
+
+input UpdateMotorcycleInput {
+  capacity: Float
+  id: String!
+  license_plate: String
+  manufacture_year: String
+  model_id: String
+  name: String
+  user_id: String
+}
+
+input UpdateProductInput {
+  description: String
+  id: String!
+  name: String!
+  price: Float!
+  quantity: Float!
+}
+
+input UpdateRepairInput {
+  capacity: Float!
+  description: String
+  description_of_customer: String
+  discount_percent: Float
+  estimated_delivery_time: DateTime
+  expected_receiving_time: DateTime
+  id: String!
+  license_plate: String!
+  manufacture_year: String!
+  model_id: String!
+  name: String!
+  phone: String!
+  products: [ProductInput!]
+  service_ids: [String!]
+  status: RepairStatusEnum!
+}
+
+input UpdateServiceInput {
+  description: String
+  id: String!
+  name: String!
+  price: Float!
 }
 
 input UpdateUserInformationInput {

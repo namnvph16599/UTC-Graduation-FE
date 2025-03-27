@@ -1,0 +1,16 @@
+query models($args: GetModelsRequest) {
+  models(args: $args) {
+    brand {
+      createdAt
+      deletedAt
+      id
+      name
+      updatedAt
+    }
+    createdAt
+    deletedAt
+    id
+    name
+    updatedAt
+  }
+}

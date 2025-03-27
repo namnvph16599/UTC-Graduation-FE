@@ -1,0 +1,19 @@
+query brandCollection($pagination: PaginationArgs) {
+  brandCollection(pagination: $pagination) {
+    items {
+      createdAt
+      deletedAt
+      id
+      name
+      updatedAt
+    }
+    meta {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      totalItem
+      totalPage
+    }
+  }
+}

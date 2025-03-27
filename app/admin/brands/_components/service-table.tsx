@@ -2,23 +2,18 @@
 
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+import { AppPagination } from '@/components/app-pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { PageMeta } from '@/src/graphql/type.interface';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  pageMeta: PageMeta;
+  handleChangePage: (value: number) => void;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, pageMeta, handleChangePage }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -64,30 +59,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-      <Pagination className='flex justify-end mt-3'>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href='#' />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#'>1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#' isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#'>3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href='#' />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <div className='flex justify-end'>
+        <AppPagination
+          currentPage={pageMeta?.currentPage ?? 0}
+          onChangePage={handleChangePage}
+          totalPage={pageMeta?.totalPage ?? 0}
+        />
+      </div>
     </div>
   );
 }

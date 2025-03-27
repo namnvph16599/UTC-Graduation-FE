@@ -26,7 +26,7 @@ const Page = async ({ params }: Props) => {
           },
         ]}
       />
-      <BrandForm />
+      <BrandForm id={id as string} />
     </div>
   );
 };
