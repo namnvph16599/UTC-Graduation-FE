@@ -24,6 +24,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      pagination: { pageSize: data.length, pageIndex: 0 }, // Show all items
+    },
   });
 
   return (

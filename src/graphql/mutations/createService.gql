@@ -1,0 +1,5 @@
+mutation createService($args: CreateServiceInput!) {
+  createService(args: $args) {
+    id
+  }
+}

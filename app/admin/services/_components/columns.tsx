@@ -14,16 +14,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AppRouter } from '@/lib/constant';
 import { formatVND } from '@/lib/utils';
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type ServiceEntity = {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-};
+import { ServicesEntity } from '@/src/graphql/type.interface';
 
-export const serviceColumns: ColumnDef<ServiceEntity>[] = [
+export const serviceColumns: ColumnDef<ServicesEntity>[] = [
   {
     accessorKey: 'name',
     header: 'Tên dịch vụ',

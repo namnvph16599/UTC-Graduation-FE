@@ -26,7 +26,7 @@ const Page = async ({ params }: Props) => {
           },
         ]}
       />
-      <CreateServiceForm />
+      <CreateServiceForm id={id} />
     </div>
   );
 };

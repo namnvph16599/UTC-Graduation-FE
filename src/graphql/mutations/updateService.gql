@@ -1,0 +1,5 @@
+mutation updateService($args: UpdateServiceInput!) {
+  updateService(args: $args) {
+    id
+  }
+}

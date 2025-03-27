@@ -3,12 +3,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
+import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input, InputFormatter } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { numberWithDots, numberWithUnDots } from '@/lib/utils';
+import { useCreateServiceMutation } from '@/src/graphql/mutations/createService.generated';
+import { useUpdateServiceMutation } from '@/src/graphql/mutations/updateService.generated';
+import { ServiceDocument, useServiceQuery } from '@/src/graphql/queries/service.generated';
+import { ServicesDocument } from '@/src/graphql/queries/services.generated';
 
 const formSchema = z.object({
   name: z.string({
@@ -24,7 +30,7 @@ const formSchema = z.object({
   description: z.string().optional(),
 });
 
-export const CreateServiceForm = () => {
+export const CreateServiceForm = ({ id }: { id?: string }) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -32,11 +38,73 @@ export const CreateServiceForm = () => {
     defaultValues: {},
   });
 
-  const onSubmit = useCallback((data: z.infer<typeof formSchema>) => {
-    console.log('data', data);
-  }, []);
+  const { loading } = useServiceQuery({
+    variables: {
+      id: id ?? '',
+    },
+    skip: !id,
+    onCompleted(data) {
+      const values = data?.service;
+      form.setValue('description', values?.description ?? '');
+      form.setValue('name', values?.name);
+      form.setValue('price', values?.price?.toString());
+    },
+  });
+
+  const [updateServiceMutation, { loading: updating }] = useUpdateServiceMutation({
+    onCompleted() {
+      toast.error('Cập nhật thành công!');
+      router.back();
+    },
+    onError(error) {
+      toast.error('Đã có lỗi xảy ra', {
+        description: error.message,
+      });
+    },
+    refetchQueries: [ServicesDocument, ServiceDocument],
+  });
+
+  const [creatingServiceMutation, { loading: creating }] = useCreateServiceMutation({
+    onCompleted() {
+      toast.error('Thêm mới thành công!');
+      router.back();
+    },
+    onError(error) {
+      toast.error('Đã có lỗi xảy ra', {
+        description: error.message,
+      });
+    },
+    refetchQueries: [ServicesDocument, ServiceDocument],
+  });
+
+  const onSubmit = useCallback(
+    async (input: z.infer<typeof formSchema>) => {
+      const data = {
+        ...input,
+        price: Number(input.price),
+      };
+      if (id) {
+        return await updateServiceMutation({
+          variables: {
+            args: {
+              id: id,
+              ...data,
+            },
+          },
+        });
+      }
+
+      return await creatingServiceMutation({
+        variables: {
+          args: data,
+        },
+      });
+    },
+    [creatingServiceMutation, id, updateServiceMutation],
+  );
+
   return (
-    <>
+    <Loading loading={loading}>
       <div className='p-5 bg-[#F9F9F9]'>
         <div className='p-5 bg-white mb-[93px] max-w-[600px] mx-auto'>
           <Form {...form}>
@@ -96,8 +164,10 @@ export const CreateServiceForm = () => {
         <Button onClick={() => router.back()} variant='outline'>
           Hủy
         </Button>
-        <Button form='repair-form'>Thêm mới</Button>
+        <Button disabled={updating || creating} form='repair-form'>
+          {id ? 'Lưu' : 'Thêm mới'}
+        </Button>
       </div>
-    </>
+    </Loading>
   );
 };
