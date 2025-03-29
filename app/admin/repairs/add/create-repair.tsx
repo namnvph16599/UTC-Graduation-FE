@@ -1,10 +1,8 @@
-import { CreateRepairForm } from '@/app/admin/repairs/add/_components/create-repair-form';
+import { CreateRepairForm } from '@/app/admin/repairs/add/_components/repair-form';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { AppRouter } from '@/lib/constant';
 
-type Props = {};
-
-export const CreateRepair = (props: Props) => {
+export const CreateRepair = () => {
   return (
     <div className='relative'>
       <AppBreadcrumb

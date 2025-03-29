@@ -5,7 +5,6 @@ import { useCallback, useState } from 'react';
 import {
   cancelledStatusColumns,
   finishedStatusColumns,
-  Payment,
   waitingStatusColumns,
 } from '@/app/admin/repairs/_components/columns';
 import { DataTable } from '@/app/admin/repairs/_components/repairs-table';
@@ -13,26 +12,12 @@ import { RepairsTabs } from '@/app/admin/repairs/_components/repairs-tabs';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
 import { AppRouter } from '@/lib/constant';
-import { RepairStatusEnum } from '@/lib/enum';
-
-function getData(): Payment[] {
-  // Fetch data from your API here.
-  return [
-    {
-      id: '728ed52f',
-      amount: 100,
-      status: 'pending',
-      email: 'm@example.com',
-    },
-    // ...
-  ];
-}
+import { useRepairCollectionQuery } from '@/src/graphql/queries/repairCollection.generated';
+import { PageMeta, RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
 
 export const ListRepairs = () => {
   const router = useRouter();
   const [tab, setTab] = useState(RepairStatusEnum.WAITING_FOR_CONFIRM);
-
-  const data = getData();
 
   const getColumnsByActiveTab = useCallback(() => {
     switch (tab) {
@@ -45,6 +30,23 @@ export const ListRepairs = () => {
         return waitingStatusColumns;
     }
   }, [tab]);
+
+  const [page, setPage] = useState(1);
+
+  const { data } = useRepairCollectionQuery({
+    variables: {
+      input: {
+        status: tab,
+      },
+      pagination: {
+        page: page,
+        limit: 10,
+      },
+    },
+  });
+
+  const repairs = data?.repairCollection?.items ?? [];
+  const pageMeta = data?.repairCollection?.meta;
 
   return (
     <div>
@@ -65,11 +67,23 @@ export const ListRepairs = () => {
           </Button>
         }
       />
-      <RepairsTabs activeTab={tab} onChangeTab={setTab} />
+      <RepairsTabs
+        activeTab={tab}
+        onChangeTab={(newTab) => {
+          setTab(newTab);
+          setPage(1);
+        }}
+      />
       <div className='p-5 bg-[#F9F9F9]'>
         <div className='p-5 bg-white'>
-          <p className='font-semibold text-[#202C38] mt-0 mb-5'>10 yêu cầu</p>
-          <DataTable columns={getColumnsByActiveTab()} data={data} tab={tab} />
+          <p className='font-semibold text-[#202C38] mt-0 mb-5'>{pageMeta?.totalItem ?? 0} yêu cầu</p>
+          <DataTable
+            columns={getColumnsByActiveTab()}
+            data={repairs as RepairEntity[]}
+            onChangePage={setPage}
+            pageMeta={pageMeta as PageMeta}
+            tab={tab}
+          />
         </div>
       </div>
     </div>

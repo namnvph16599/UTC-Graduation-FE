@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import React from 'react';
+import { CreateRepairForm } from '@/app/admin/repairs/add/_components/repair-form';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -10,7 +11,7 @@ const Page = async ({ params }: Props) => {
   if (!id) {
     redirect('/login');
   }
-  return <div>Page {id}</div>;
+  return <CreateRepairForm id={id} />;
 };
 
 export default Page;

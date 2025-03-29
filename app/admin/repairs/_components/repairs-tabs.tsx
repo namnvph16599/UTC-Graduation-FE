@@ -1,6 +1,6 @@
 import React from 'react';
-import { RepairStatusEnum } from '@/lib/enum';
 import { cn } from '@/lib/utils';
+import { RepairStatusEnum } from '@/src/graphql/type.interface';
 
 const tabs = [
   {
@@ -17,7 +17,7 @@ const tabs = [
   },
   {
     label: 'Chờ thanh toán',
-    value: RepairStatusEnum.PAYMENT,
+    value: RepairStatusEnum.WAITING_FOR_PAYMENT,
   },
   {
     label: 'Hoàn thành',

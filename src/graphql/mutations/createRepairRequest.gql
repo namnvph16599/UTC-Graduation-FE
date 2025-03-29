@@ -1,0 +1,5 @@
+mutation createRepairRequest($input: CreateRepairInput!) {
+  createRepairRequest(input: $input) {
+    id
+  }
+}

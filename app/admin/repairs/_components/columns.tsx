@@ -1,27 +1,24 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
+import dayjs from 'dayjs';
 import { MoreHorizontal } from 'lucide-react';
 
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { AppRouter } from '@/src/constants/constant';
+import { RepairEntity } from '@/src/graphql/type.interface';
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
-  id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
-  email: string;
-};
 
-export const waitingStatusColumns: ColumnDef<Payment>[] = [
+export const waitingStatusColumns: ColumnDef<RepairEntity>[] = [
   {
     accessorKey: 'name',
     header: 'Tên KH',
@@ -33,33 +30,59 @@ export const waitingStatusColumns: ColumnDef<Payment>[] = [
   {
     accessorKey: 'services',
     header: 'Dịch vụ',
+    cell: ({ row }) => {
+      const services = row.original.services ?? [];
+      return services.map((s) => s.service.name).join(', ');
+    },
   },
   {
     accessorKey: 'products',
-    header: 'Sản phẩm thêm',
+    header: 'Phụ tùng thay thế',
+    cell: ({ row }) => {
+      const products = row.original.products ?? [];
+      return products.map((s) => s.product.name).join(', ');
+    },
   },
   {
     accessorKey: 'brand',
     header: 'Hãng',
+    cell: ({ row }) => {
+      const model = row.original.model;
+      return model?.brand?.name;
+    },
   },
   {
     accessorKey: 'model',
     header: 'Loại xe',
+    cell: ({ row }) => {
+      const model = row.original.model;
+      return model?.name;
+    },
   },
   {
-    accessorKey: 'year',
+    accessorKey: 'manufacture_year',
     header: 'Năm sản xuất',
   },
   {
     accessorKey: 'estimated_delivery_time',
     header: 'Thời gian giao xe',
+    cell: ({ row }) => {
+      const estimated_delivery_time = row.original.estimated_delivery_time;
+      if (!estimated_delivery_time) return '';
+      return dayjs(estimated_delivery_time).format('HH:mm DD/MM/YYYY');
+    },
   },
   {
     accessorKey: 'expected_receiving_time',
     header: 'Thời gian lấy xe',
+    cell: ({ row }) => {
+      const expected_receiving_time = row.original.expected_receiving_time;
+      if (!expected_receiving_time) return '';
+      return dayjs(expected_receiving_time).format('HH:mm DD/MM/YYYY');
+    },
   },
   {
-    accessorKey: 'note',
+    accessorKey: 'description_of_customer',
     header: 'KH ghi chú',
   },
   {
@@ -76,13 +99,12 @@ export const waitingStatusColumns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Chỉnh sửa</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -90,7 +112,7 @@ export const waitingStatusColumns: ColumnDef<Payment>[] = [
   },
 ];
 
-export const cancelledStatusColumns: ColumnDef<Payment>[] = [
+export const cancelledStatusColumns: ColumnDef<RepairEntity>[] = [
   {
     accessorKey: 'name',
     header: 'Tên KH',
@@ -102,18 +124,36 @@ export const cancelledStatusColumns: ColumnDef<Payment>[] = [
   {
     accessorKey: 'services',
     header: 'Dịch vụ',
+    cell: ({ row }) => {
+      const services = row.original.services ?? [];
+      return services.map((s) => s.service.name).join(', ');
+    },
   },
   {
     accessorKey: 'products',
-    header: 'Sản phẩm thêm',
+    header: 'Phụ tùng thay thế',
+    cell: ({ row }) => {
+      const products = row.original.products ?? [];
+      return products.map((s) => s.product.name).join(', ');
+    },
   },
   {
     accessorKey: 'estimated_delivery_time',
     header: 'Thời gian giao xe',
+    cell: ({ row }) => {
+      const estimated_delivery_time = row.original.estimated_delivery_time;
+      if (!estimated_delivery_time) return '';
+      return dayjs(estimated_delivery_time).format('HH:mm DD/MM/YYYY');
+    },
   },
   {
     accessorKey: 'expected_receiving_time',
     header: 'Thời gian lấy xe',
+    cell: ({ row }) => {
+      const expected_receiving_time = row.original.expected_receiving_time;
+      if (!expected_receiving_time) return '';
+      return dayjs(expected_receiving_time).format('HH:mm DD/MM/YYYY');
+    },
   },
   {
     accessorKey: 'note',
@@ -137,13 +177,12 @@ export const cancelledStatusColumns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Chỉnh sửa</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -151,7 +190,7 @@ export const cancelledStatusColumns: ColumnDef<Payment>[] = [
   },
 ];
 
-export const finishedStatusColumns: ColumnDef<Payment>[] = [
+export const finishedStatusColumns: ColumnDef<RepairEntity>[] = [
   {
     accessorKey: 'name',
     header: 'Tên KH',
@@ -163,10 +202,18 @@ export const finishedStatusColumns: ColumnDef<Payment>[] = [
   {
     accessorKey: 'services',
     header: 'Dịch vụ',
+    cell: ({ row }) => {
+      const services = row.original.services ?? [];
+      return services.map((s) => s.service.name).join(', ');
+    },
   },
   {
     accessorKey: 'products',
-    header: 'Sản phẩm thêm',
+    header: 'Phụ tùng thay thế',
+    cell: ({ row }) => {
+      const products = row.original.products ?? [];
+      return products.map((s) => s.product.name).join(', ');
+    },
   },
   {
     accessorKey: 'discount',
@@ -190,13 +237,12 @@ export const finishedStatusColumns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Chỉnh sửa</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

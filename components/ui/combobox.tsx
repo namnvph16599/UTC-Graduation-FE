@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 const Combobox = React.forwardRef<
   HTMLInputElement,
   React.ComponentProps<'input'> & {
-    options: { label: string; value: string }[];
+    options: { label: string; value: string; disable?: boolean }[];
     placeholderSearch?: string;
     placeholderSelect?: string;
     onChange: (newValue: string) => void;
@@ -54,8 +54,12 @@ const Combobox = React.forwardRef<
               <CommandGroup>
                 {options.map((framework) => (
                   <CommandItem
+                    className={cn({
+                      'cursor-not-allowed': !!framework.disable,
+                    })}
                     key={framework.value}
                     onSelect={(currentValue) => {
+                      if (framework.disable === true) return;
                       onChange?.(currentValue === value ? '' : currentValue);
                       setOpen(false);
                     }}

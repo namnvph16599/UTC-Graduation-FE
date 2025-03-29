@@ -1,9 +1,6 @@
 query services {
   services {
-    createdAt
-    description
     id
     name
-    price
   }
 }

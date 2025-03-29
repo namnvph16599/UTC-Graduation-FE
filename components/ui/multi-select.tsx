@@ -123,9 +123,12 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
     },
     ref,
   ) => {
+    console.log('defaultValue', defaultValue);
+
     const [selectedValues, setSelectedValues] = React.useState<string[]>(defaultValue);
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
     const [isAnimating, setIsAnimating] = React.useState(false);
+    console.log('selectedValues', selectedValues);
 
     const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
@@ -170,6 +173,10 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
         onValueChange(allValues);
       }
     };
+
+    React.useEffect(() => {
+      setSelectedValues(defaultValue);
+    }, [defaultValue]);
 
     return (
       <Popover modal={modalPopover} onOpenChange={setIsPopoverOpen} open={isPopoverOpen}>
@@ -255,7 +262,7 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
           <Command>
             <CommandInput onKeyDown={handleInputKeyDown} placeholder='Tìm kiếm...' />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>Không tìm thấy kết quả phù hợp.</CommandEmpty>
               <CommandGroup>
                 <CommandItem className='cursor-pointer' key='all' onSelect={toggleAll}>
                   <div
@@ -267,7 +274,7 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
                     )}>
                     <CheckIcon className='h-4 w-4' />
                   </div>
-                  <span>(Select All)</span>
+                  <span>(Chọn tất cả)</span>
                 </CommandItem>
                 {options.map((option) => {
                   const isSelected = selectedValues.includes(option.value);

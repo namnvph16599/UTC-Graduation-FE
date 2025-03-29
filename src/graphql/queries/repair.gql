@@ -1,0 +1,42 @@
+query repair($id: String!) {
+  repair(id: $id) {
+    cancelled_description
+    capacity
+    createdAt
+    deletedAt
+    description
+    description_of_customer
+    discount_percent
+    estimated_delivery_time
+    expected_receiving_time
+    id
+    license_plate
+    manufacture_year
+    model {
+      brand {
+        id
+        name
+      }
+      id
+      name
+    }
+    name
+    phone
+    products {
+      id
+      price
+      product {
+        id
+      }
+      quantity
+    }
+    services {
+      id
+      price
+      service {
+        id
+      }
+    }
+    status
+  }
+}

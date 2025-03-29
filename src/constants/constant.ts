@@ -15,6 +15,7 @@ export const AppRouter = {
     repairs: {
       list: '/admin/repairs',
       add: '/admin/repairs/add',
+      edit: (id: string) => '/admin/repairs/' + id,
     },
     products: {
       list: '/admin/products',

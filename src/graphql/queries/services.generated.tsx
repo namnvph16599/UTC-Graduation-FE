@@ -10,7 +10,7 @@ export type ServicesQueryResponse = (
   { __typename?: 'Query' }
   & { services: Array<(
     { __typename?: 'ServicesEntity' }
-    & Pick<Types.ServicesEntity, 'createdAt' | 'description' | 'id' | 'name' | 'price'>
+    & Pick<Types.ServicesEntity, 'id' | 'name'>
   )> }
 );
 
@@ -18,11 +18,8 @@ export type ServicesQueryResponse = (
 export const ServicesDocument = gql`
     query services {
   services {
-    createdAt
-    description
     id
     name
-    price
   }
 }
     `;

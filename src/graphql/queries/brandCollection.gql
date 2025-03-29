@@ -4,6 +4,7 @@ query brandCollection($pagination: PaginationArgs) {
       id
       name
       models {
+        id
         name
       }
     }

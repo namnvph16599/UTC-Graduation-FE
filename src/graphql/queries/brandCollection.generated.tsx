@@ -17,7 +17,7 @@ export type BrandCollectionQueryResponse = (
       & Pick<Types.BrandEntity, 'id' | 'name'>
       & { models?: Types.Maybe<Array<(
         { __typename?: 'ModelEntity' }
-        & Pick<Types.ModelEntity, 'name'>
+        & Pick<Types.ModelEntity, 'id' | 'name'>
       )>> }
     )>, meta: (
       { __typename?: 'PageMeta' }
@@ -34,6 +34,7 @@ export const BrandCollectionDocument = gql`
       id
       name
       models {
+        id
         name
       }
     }
