@@ -40,6 +40,7 @@ export type BrandEntity = {
   createdAt: Scalars['DateTime'];
   deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
+  models?: Maybe<Array<ModelEntity>>;
   name: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
@@ -61,11 +62,7 @@ export type CommonEntity = {
 };
 
 export type CreateBrandInput = {
-  name: Scalars['String'];
-};
-
-export type CreateModelInput = {
-  brand_id: Scalars['String'];
+  model_names: Array<Scalars['String']>;
   name: Scalars['String'];
 };
 
@@ -121,11 +118,6 @@ export type CreateServiceInput = {
   description?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   price: Scalars['Float'];
-};
-
-export type GetModelsRequest = {
-  brand_id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
 };
 
 export type GroupEntity = {
@@ -207,6 +199,11 @@ export type ModelEntity = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type ModelOfUpdateBrandInput = {
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type MotorcycleCollectionFilter = {
   user_id?: InputMaybe<Scalars['String']>;
 };
@@ -236,7 +233,6 @@ export type Mutation = {
   adminLoginByPhone: AuthEntity;
   changeUserEmailOrPhone: UserEntity;
   createBrand: BrandEntity;
-  createModel: ModelEntity;
   createMotorcycle: MotorcycleEntity;
   createProduct: ProductEntity;
   createRepairRequest: RepairEntity;
@@ -247,7 +243,6 @@ export type Mutation = {
   registerByPhone: UserEntity;
   removeBrand: Scalars['Boolean'];
   removeMedias: Scalars['Boolean'];
-  removeModel: Scalars['Boolean'];
   removeMotorcycle: Scalars['Boolean'];
   removeNotifications: Scalars['Boolean'];
   removeProduct: Scalars['Boolean'];
@@ -259,7 +254,6 @@ export type Mutation = {
   sendOtpVerifyEmailOrPhone?: Maybe<Scalars['String']>;
   sendRegisterOtp?: Maybe<Scalars['String']>;
   updateBrand: BrandEntity;
-  updateModel: ModelEntity;
   updateMotorcycle: MotorcycleEntity;
   updateProduct: ProductEntity;
   updateRepairRequest: RepairEntity;
@@ -282,10 +276,6 @@ export type MutationChangeUserEmailOrPhoneArgs = {
 
 export type MutationCreateBrandArgs = {
   args: CreateBrandInput;
-};
-
-export type MutationCreateModelArgs = {
-  args: CreateModelInput;
 };
 
 export type MutationCreateMotorcycleArgs = {
@@ -322,10 +312,6 @@ export type MutationRemoveBrandArgs = {
 
 export type MutationRemoveMediasArgs = {
   input: RemoveMediasInput;
-};
-
-export type MutationRemoveModelArgs = {
-  id: Scalars['String'];
 };
 
 export type MutationRemoveMotorcycleArgs = {
@@ -370,10 +356,6 @@ export type MutationSendRegisterOtpArgs = {
 
 export type MutationUpdateBrandArgs = {
   args: UpdateBrandInput;
-};
-
-export type MutationUpdateModelArgs = {
-  args: UpdateModelInput;
 };
 
 export type MutationUpdateMotorcycleArgs = {
@@ -517,6 +499,12 @@ export enum Platform {
   WEB = 'Web',
 }
 
+export type ProductConnection = {
+  __typename?: 'ProductConnection';
+  items: Array<ProductEntity>;
+  meta: PageMeta;
+};
+
 export type ProductEntity = {
   __typename?: 'ProductEntity';
   createdAt: Scalars['DateTime'];
@@ -544,18 +532,18 @@ export type Query = {
   me?: Maybe<UserEntity>;
   meAdmin?: Maybe<UserEntity>;
   media: MediaEntity;
-  model: ModelEntity;
-  models: Array<ModelEntity>;
   motorcycle: MotorcycleEntity;
   motorcycleCollection: MotorcycleConnection;
   notificationCollection: NotificationUserConnection;
   product: ProductEntity;
+  productCollection: ProductConnection;
   products: Array<ProductEntity>;
   repair: RepairEntity;
   repairCollection: RepairConnection;
   sample: Array<SampleEntity>;
   sayHello: Scalars['String'];
   service: ServicesEntity;
+  serviceCollection: ServiceConnection;
   services: Array<ServicesEntity>;
   userCollection: UserConnection;
   userCollectionByAdmin: UserConnection;
@@ -585,14 +573,6 @@ export type QueryMediaArgs = {
   id: Scalars['String'];
 };
 
-export type QueryModelArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryModelsArgs = {
-  args?: InputMaybe<GetModelsRequest>;
-};
-
 export type QueryMotorcycleArgs = {
   id: Scalars['String'];
 };
@@ -611,6 +591,10 @@ export type QueryProductArgs = {
   id: Scalars['String'];
 };
 
+export type QueryProductCollectionArgs = {
+  paginationArgs?: InputMaybe<PaginationArgs>;
+};
+
 export type QueryRepairArgs = {
   id: Scalars['String'];
 };
@@ -626,6 +610,10 @@ export type QuerySampleArgs = {
 
 export type QueryServiceArgs = {
   id: Scalars['String'];
+};
+
+export type QueryServiceCollectionArgs = {
+  paginationArgs?: InputMaybe<PaginationArgs>;
 };
 
 export type QueryUserCollectionArgs = {
@@ -742,6 +730,12 @@ export type SampleEntity = {
 
 export type SeenNotificationsInput = {
   ids: Array<Scalars['String']>;
+};
+
+export type ServiceConnection = {
+  __typename?: 'ServiceConnection';
+  items: Array<ServicesEntity>;
+  meta: PageMeta;
 };
 
 export type ServicesEntity = {
@@ -899,12 +893,7 @@ export enum TaskStatus {
 
 export type UpdateBrandInput = {
   id: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type UpdateModelInput = {
-  brand_id: Scalars['String'];
-  id: Scalars['String'];
+  models: Array<ModelOfUpdateBrandInput>;
   name: Scalars['String'];
 };
 

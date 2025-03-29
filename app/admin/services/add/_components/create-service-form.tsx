@@ -14,7 +14,7 @@ import { numberWithDots, numberWithUnDots } from '@/lib/utils';
 import { useCreateServiceMutation } from '@/src/graphql/mutations/createService.generated';
 import { useUpdateServiceMutation } from '@/src/graphql/mutations/updateService.generated';
 import { ServiceDocument, useServiceQuery } from '@/src/graphql/queries/service.generated';
-import { ServicesDocument } from '@/src/graphql/queries/services.generated';
+import { ServiceCollectionDocument } from '@/src/graphql/queries/serviceCollection.generated';
 
 const formSchema = z.object({
   name: z.string({
@@ -61,7 +61,7 @@ export const CreateServiceForm = ({ id }: { id?: string }) => {
         description: error.message,
       });
     },
-    refetchQueries: [ServicesDocument, ServiceDocument],
+    refetchQueries: [ServiceCollectionDocument, ServiceDocument],
   });
 
   const [creatingServiceMutation, { loading: creating }] = useCreateServiceMutation({
@@ -74,7 +74,7 @@ export const CreateServiceForm = ({ id }: { id?: string }) => {
         description: error.message,
       });
     },
-    refetchQueries: [ServicesDocument, ServiceDocument],
+    refetchQueries: [ServiceCollectionDocument, ServiceDocument],
   });
 
   const onSubmit = useCallback(

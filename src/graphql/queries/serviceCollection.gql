@@ -1,0 +1,21 @@
+query serviceCollection($paginationArgs: PaginationArgs) {
+  serviceCollection(paginationArgs: $paginationArgs) {
+    items {
+      createdAt
+      deletedAt
+      description
+      id
+      name
+      price
+      updatedAt
+    }
+    meta {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      totalItem
+      totalPage
+    }
+  }
+}

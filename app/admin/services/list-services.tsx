@@ -1,22 +1,31 @@
 'use client';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { serviceColumns } from '@/app/admin/services/_components/columns';
 import { DataTable } from '@/app/admin/services/_components/service-table';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
 import { AppRouter } from '@/lib/constant';
-import { useServicesQuery } from '@/src/graphql/queries/services.generated';
-import { ServicesEntity } from '@/src/graphql/type.interface';
+import { useServiceCollectionQuery } from '@/src/graphql/queries/serviceCollection.generated';
+import { PageMeta, ServicesEntity } from '@/src/graphql/type.interface';
 
 export const ListServices = () => {
   const router = useRouter();
 
-  const { data } = useServicesQuery({
-    variables: {},
+  const [page, setPage] = useState(1);
+
+  const { data } = useServiceCollectionQuery({
+    variables: {
+      paginationArgs: {
+        limit: 10,
+        page: page,
+      },
+    },
   });
 
-  const services = data?.services ?? [];
+  const services = data?.serviceCollection.items ?? [];
+  const total = data?.serviceCollection.meta?.totalItem ?? [];
 
   return (
     <div>
@@ -39,8 +48,13 @@ export const ListServices = () => {
       />
       <div className='p-5 bg-[#F9F9F9]'>
         <div className='p-5 bg-white'>
-          <p className='font-semibold text-[#202C38] mt-0 mb-5'>10 dịch vụ</p>
-          <DataTable columns={serviceColumns} data={services as ServicesEntity[]} />
+          <p className='font-semibold text-[#202C38] mt-0 mb-5'>{total} dịch vụ</p>
+          <DataTable
+            columns={serviceColumns}
+            data={services as ServicesEntity[]}
+            onChangePage={setPage}
+            pageMeta={data?.serviceCollection?.meta as PageMeta}
+          />
         </div>
       </div>
     </div>

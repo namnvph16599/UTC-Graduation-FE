@@ -19,6 +19,7 @@ type BrandEntity {
   createdAt: DateTime!
   deletedAt: DateTime
   id: ID!
+  models: [ModelEntity!]
   name: String!
   updatedAt: DateTime!
 }
@@ -39,11 +40,7 @@ type CommonEntity {
 }
 
 input CreateBrandInput {
-  name: String!
-}
-
-input CreateModelInput {
-  brand_id: String!
+  model_names: [String!]!
   name: String!
 }
 
@@ -105,11 +102,6 @@ input CreateServiceInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-input GetModelsRequest {
-  brand_id: String
-  name: String
-}
 
 type GroupEntity {
   avatar: MediaEntity
@@ -191,6 +183,11 @@ type ModelEntity {
   updatedAt: DateTime!
 }
 
+input ModelOfUpdateBrandInput {
+  id: String!
+  name: String!
+}
+
 input MotorcycleCollectionFilter {
   user_id: String
 }
@@ -217,7 +214,6 @@ type Mutation {
   adminLoginByPhone(input: LoginByPhoneInput!): AuthEntity!
   changeUserEmailOrPhone(input: UpdateUserNewEmailOrPhoneInput!): UserEntity!
   createBrand(args: CreateBrandInput!): BrandEntity!
-  createModel(args: CreateModelInput!): ModelEntity!
   createMotorcycle(input: CreateMotorcycleInput!): MotorcycleEntity!
   createProduct(args: CreateProductInput!): ProductEntity!
   createRepairRequest(input: CreateRepairInput!): RepairEntity!
@@ -228,7 +224,6 @@ type Mutation {
   registerByPhone(input: RegisterByPhoneInput!): UserEntity!
   removeBrand(id: String!): Boolean!
   removeMedias(input: RemoveMediasInput!): Boolean!
-  removeModel(id: String!): Boolean!
   removeMotorcycle(id: String!): Boolean!
   removeNotifications(input: RemoveNotificationInput!): Boolean!
   removeProduct(id: String!): Boolean!
@@ -240,7 +235,6 @@ type Mutation {
   sendOtpVerifyEmailOrPhone(input: CreateOtpVerifyEmailOrPhone!): String
   sendRegisterOtp(input: CreateOtpInput!): String
   updateBrand(args: UpdateBrandInput!): BrandEntity!
-  updateModel(args: UpdateModelInput!): ModelEntity!
   updateMotorcycle(input: UpdateMotorcycleInput!): MotorcycleEntity!
   updateProduct(args: UpdateProductInput!): ProductEntity!
   updateRepairRequest(input: UpdateRepairInput!): RepairEntity!
@@ -348,6 +342,11 @@ enum Platform {
   Web
 }
 
+type ProductConnection {
+  items: [ProductEntity!]!
+  meta: PageMeta!
+}
+
 type ProductEntity {
   createdAt: DateTime!
   deletedAt: DateTime
@@ -373,18 +372,18 @@ type Query {
   me: UserEntity
   meAdmin: UserEntity
   media(id: String!): MediaEntity!
-  model(id: String!): ModelEntity!
-  models(args: GetModelsRequest): [ModelEntity!]!
   motorcycle(id: String!): MotorcycleEntity!
   motorcycleCollection(filterArgs: MotorcycleCollectionFilter, pagination: PaginationArgs): MotorcycleConnection!
   notificationCollection(filter: NotificationCollectionFilter, pagination: PaginationArgs): NotificationUserConnection!
   product(id: String!): ProductEntity!
+  productCollection(paginationArgs: PaginationArgs): ProductConnection!
   products: [ProductEntity!]!
   repair(id: String!): RepairEntity!
   repairCollection(input: RepairCollectionFilter, pagination: PaginationArgs): RepairConnection!
   sample(id: String!): [SampleEntity!]!
   sayHello: String!
   service(id: String!): ServicesEntity!
+  serviceCollection(paginationArgs: PaginationArgs): ServiceConnection!
   services: [ServicesEntity!]!
   userCollection(input: UserCollectionFilter, pagination: PaginationArgs): UserConnection!
   userCollectionByAdmin(filter: UserCollectionFilter, pagination: PaginationArgs): UserConnection!
@@ -488,6 +487,11 @@ type SampleEntity {
 
 input SeenNotificationsInput {
   ids: [String!]!
+}
+
+type ServiceConnection {
+  items: [ServicesEntity!]!
+  meta: PageMeta!
 }
 
 type ServicesEntity {
@@ -637,12 +641,7 @@ enum TaskStatus {
 
 input UpdateBrandInput {
   id: String!
-  name: String!
-}
-
-input UpdateModelInput {
-  brand_id: String!
-  id: String!
+  models: [ModelOfUpdateBrandInput!]!
   name: String!
 }
 

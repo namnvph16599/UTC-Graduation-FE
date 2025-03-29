@@ -2,31 +2,24 @@
 
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+import { AppPagination } from '@/components/app-pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { PageMeta } from '@/src/graphql/type.interface';
+import { TOnChangePage } from '@/src/types';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  pageMeta: PageMeta;
+  onChangePage: TOnChangePage;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, onChangePage, pageMeta }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    state: {
-      pagination: { pageSize: data.length, pageIndex: 0 }, // Show all items
-    },
   });
 
   return (
@@ -67,30 +60,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-      <Pagination className='flex justify-end mt-3'>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href='#' />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#'>1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#' isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#'>3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href='#' />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <AppPagination
+        className='justify-end'
+        currentPage={pageMeta?.currentPage}
+        onChangePage={onChangePage}
+        totalPage={pageMeta?.totalPage}
+      />
     </div>
   );
 }

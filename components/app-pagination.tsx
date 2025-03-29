@@ -1,14 +1,16 @@
 'use client';
 import React, { useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { TOnChangePage } from '@/src/types';
 
 type Props = {
   readonly currentPage: number;
-  readonly onChangePage: (newPage: number) => void;
+  readonly onChangePage: TOnChangePage;
   readonly totalPage: number;
+  className?: string;
 };
 
-export function AppPagination({ currentPage, onChangePage, totalPage }: Props) {
+export function AppPagination({ currentPage, onChangePage, totalPage, className }: Props) {
   const renderContent = useCallback(() => {
     const pagesToShow = 3;
     const pages: number[] = [];
@@ -25,7 +27,7 @@ export function AppPagination({ currentPage, onChangePage, totalPage }: Props) {
     }
 
     return (
-      <div className='flex justify-center items-center gap-1 mt-6'>
+      <div className={cn('flex justify-center items-center gap-1 mt-6', className)}>
         <span
           className='inline-block w-[34px] h-[30px] text-center leading-[30px] hover:cursor-pointer text-sm font-semibold text-secondary-default'
           onClick={() => onChangePage(1)}>
