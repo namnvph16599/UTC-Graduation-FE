@@ -4,6 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 
 import Link from 'next/link';
+import { CellRemove } from '@/app/admin/services/_components/cell-remove';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -52,6 +53,9 @@ export const serviceColumns: ColumnDef<ServicesEntity>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link href={AppRouter.admin.services.edit(payment.id)}>Chỉnh sửa</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <CellRemove id={payment.id} />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </DropdownMenuContent>
