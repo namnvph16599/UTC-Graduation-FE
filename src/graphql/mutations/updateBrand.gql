@@ -1,0 +1,5 @@
+mutation updateBrand($args: UpdateBrandInput!) {
+  updateBrand(args: $args) {
+    id
+  }
+}

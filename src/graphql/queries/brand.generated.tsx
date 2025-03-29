@@ -12,7 +12,11 @@ export type BrandQueryResponse = (
   { __typename?: 'Query' }
   & { brand: (
     { __typename?: 'BrandEntity' }
-    & Pick<Types.BrandEntity, 'createdAt' | 'deletedAt' | 'id' | 'name' | 'updatedAt'>
+    & Pick<Types.BrandEntity, 'id' | 'name'>
+    & { models?: Types.Maybe<Array<(
+      { __typename?: 'ModelEntity' }
+      & Pick<Types.ModelEntity, 'id' | 'name'>
+    )>> }
   ) }
 );
 
@@ -20,11 +24,12 @@ export type BrandQueryResponse = (
 export const BrandDocument = gql`
     query brand($id: String!) {
   brand(id: $id) {
-    createdAt
-    deletedAt
     id
     name
-    updatedAt
+    models {
+      id
+      name
+    }
   }
 }
     `;

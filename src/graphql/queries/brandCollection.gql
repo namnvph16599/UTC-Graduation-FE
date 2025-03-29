@@ -1,11 +1,11 @@
 query brandCollection($pagination: PaginationArgs) {
   brandCollection(pagination: $pagination) {
     items {
-      createdAt
-      deletedAt
       id
       name
-      updatedAt
+      models {
+        name
+      }
     }
     meta {
       currentPage

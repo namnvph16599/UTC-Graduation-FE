@@ -8,7 +8,7 @@ import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
 import { AppRouter } from '@/lib/constant';
 import { useBrandCollectionQuery } from '@/src/graphql/queries/brandCollection.generated';
-import { PageMeta } from '@/src/graphql/type.interface';
+import { BrandEntity, PageMeta } from '@/src/graphql/type.interface';
 
 export const ListBrands = () => {
   const router = useRouter();
@@ -49,7 +49,12 @@ export const ListBrands = () => {
       <div className='p-5 bg-[#F9F9F9]'>
         <div className='p-5 bg-white'>
           <p className='font-semibold text-[#202C38] mt-0 mb-5'>{total} hãng </p>
-          <DataTable columns={serviceColumns} data={brands} handleChangePage={setPage} pageMeta={meta as PageMeta} />
+          <DataTable
+            columns={serviceColumns as BrandEntity[]}
+            data={brands}
+            handleChangePage={setPage}
+            pageMeta={meta as PageMeta}
+          />
         </div>
       </div>
     </div>

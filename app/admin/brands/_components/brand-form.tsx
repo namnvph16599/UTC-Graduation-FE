@@ -4,14 +4,19 @@ import { CircleX } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { useBrandQuery } from '@/src/graphql/queries/brand.generated';
-import { useModelsQuery } from '@/src/graphql/queries/models.generated';
+import { useCreateBrandMutation } from '@/src/graphql/mutations/createBrand.generated';
+import { useUpdateBrandMutation } from '@/src/graphql/mutations/updateBrand.generated';
+import { BrandDocument, useBrandQuery } from '@/src/graphql/queries/brand.generated';
+import { BrandCollectionDocument } from '@/src/graphql/queries/brandCollection.generated';
+import { ModelOfUpdateBrandInput } from '@/src/graphql/type.interface';
+import { TDetailPageProps } from '@/src/types';
 
 const modelSchema = z.object({
   id: z.string().optional(),
@@ -36,28 +41,21 @@ const formSchema = z.object({
   }),
 });
 
-export const BrandForm = ({ id }: { id: string }) => {
+export const BrandForm = ({ id }: TDetailPageProps) => {
   const router = useRouter();
 
   const { loading } = useBrandQuery({
     variables: {
-      id,
+      id: id as string,
     },
+    skip: !id,
     onCompleted(brandData) {
-      form.setValue('name', brandData.brand.name);
-    },
-  });
+      const data = brandData?.brand;
+      form.setValue('name', data.name);
 
-  const { loading: loadingModels } = useModelsQuery({
-    variables: {
-      args: {
-        brand_id: id,
-      },
-    },
-    onCompleted(modelsData) {
-      if (modelsData?.models && modelsData?.models?.length > 0) {
-        for (let idx = 0; idx < modelsData?.models.length; idx++) {
-          const model = modelsData?.models[idx];
+      if (data?.models && data?.models?.length > 0) {
+        for (let idx = 0; idx < data?.models.length; idx++) {
+          const model = data?.models[idx];
           append({
             id: model?.id,
             name: model?.name ?? '',
@@ -85,9 +83,57 @@ export const BrandForm = ({ id }: { id: string }) => {
     };
   });
 
-  const onSubmit = useCallback((data: z.infer<typeof formSchema>) => {
-    console.log('data', data);
-  }, []);
+  const [updateBrandMutation, { loading: updating }] = useUpdateBrandMutation({
+    onCompleted() {
+      toast.error('Cập nhật thành công!');
+      router.back();
+    },
+    onError(error) {
+      toast.error('Đã có lỗi xảy ra', {
+        description: error.message,
+      });
+    },
+    refetchQueries: [BrandCollectionDocument, BrandDocument],
+  });
+
+  const [createBrandMutation, { loading: creating }] = useCreateBrandMutation({
+    onCompleted() {
+      toast.error('Thêm mới thành công!');
+      router.back();
+    },
+    onError(error) {
+      toast.error('Đã có lỗi xảy ra', {
+        description: error.message,
+      });
+    },
+    refetchQueries: [BrandCollectionDocument, BrandDocument],
+  });
+
+  const onSubmit = useCallback(
+    async (data: z.infer<typeof formSchema>) => {
+      if (id) {
+        return await updateBrandMutation({
+          variables: {
+            args: {
+              id,
+              name: data.name,
+              models: (data.models ?? []) as ModelOfUpdateBrandInput[],
+            },
+          },
+        });
+      }
+
+      return await createBrandMutation({
+        variables: {
+          args: {
+            name: data.name,
+            model_names: data.models.map((m) => m.name),
+          },
+        },
+      });
+    },
+    [createBrandMutation, id, updateBrandMutation],
+  );
 
   useEffect(() => {
     if (controlledFields?.length <= 0 && !id) {
@@ -99,7 +145,7 @@ export const BrandForm = ({ id }: { id: string }) => {
   }, [append, controlledFields?.length, id]);
 
   return (
-    <Loading loading={loading || loadingModels}>
+    <Loading loading={loading}>
       <div className='p-5 bg-[#F9F9F9]'>
         <div className='p-5 bg-white mb-[93px] max-w-[600px] mx-auto'>
           <Form {...form}>
@@ -185,7 +231,9 @@ export const BrandForm = ({ id }: { id: string }) => {
         <Button onClick={() => router.back()} variant='outline'>
           Hủy
         </Button>
-        <Button form='repair-form'>Thêm mới</Button>
+        <Button form='repair-form' loading={updating || creating}>
+          Lưu
+        </Button>
       </div>
     </Loading>
   );

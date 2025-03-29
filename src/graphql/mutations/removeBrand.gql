@@ -1,0 +1,3 @@
+mutation removeBrand($id: String!){
+    removeBrand(id: $id)
+}

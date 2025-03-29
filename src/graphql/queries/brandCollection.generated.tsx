@@ -14,7 +14,11 @@ export type BrandCollectionQueryResponse = (
     { __typename?: 'BrandConnection' }
     & { items: Array<(
       { __typename?: 'BrandEntity' }
-      & Pick<Types.BrandEntity, 'createdAt' | 'deletedAt' | 'id' | 'name' | 'updatedAt'>
+      & Pick<Types.BrandEntity, 'id' | 'name'>
+      & { models?: Types.Maybe<Array<(
+        { __typename?: 'ModelEntity' }
+        & Pick<Types.ModelEntity, 'name'>
+      )>> }
     )>, meta: (
       { __typename?: 'PageMeta' }
       & Pick<Types.PageMeta, 'currentPage' | 'hasNextPage' | 'hasPreviousPage' | 'limit' | 'totalItem' | 'totalPage'>
@@ -27,11 +31,11 @@ export const BrandCollectionDocument = gql`
     query brandCollection($pagination: PaginationArgs) {
   brandCollection(pagination: $pagination) {
     items {
-      createdAt
-      deletedAt
       id
       name
-      updatedAt
+      models {
+        name
+      }
     }
     meta {
       currentPage
