@@ -50,8 +50,8 @@ export const ListBrands = () => {
         <div className='p-5 bg-white'>
           <p className='font-semibold text-[#202C38] mt-0 mb-5'>{total} hãng </p>
           <DataTable
-            columns={serviceColumns as BrandEntity[]}
-            data={brands}
+            columns={serviceColumns}
+            data={brands as BrandEntity[]}
             handleChangePage={setPage}
             pageMeta={meta as PageMeta}
           />

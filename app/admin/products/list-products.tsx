@@ -8,7 +8,7 @@ import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
 import { AppRouter } from '@/lib/constant';
 import { useProductCollectionQuery } from '@/src/graphql/queries/productCollection.generated';
-import { PageMeta } from '@/src/graphql/type.interface';
+import { PageMeta, ProductEntity } from '@/src/graphql/type.interface';
 
 export const ListProducts = () => {
   const router = useRouter();
@@ -48,7 +48,12 @@ export const ListProducts = () => {
       <div className='p-5 bg-[#F9F9F9]'>
         <div className='p-5 bg-white'>
           <p className='font-semibold text-[#202C38] mt-0 mb-5'>{pageMeta?.totalItem} phụ tùng</p>
-          <DataTable columns={serviceColumns} data={products} onChangePage={setPage} pageMeta={pageMeta as PageMeta} />
+          <DataTable
+            columns={serviceColumns}
+            data={products as ProductEntity[]}
+            onChangePage={setPage}
+            pageMeta={pageMeta as PageMeta}
+          />
         </div>
       </div>
     </div>
