@@ -4,6 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 
 import Link from 'next/link';
+import { CellRemove } from '@/app/admin/products/_components/cell-remove';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,14 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AppRouter } from '@/lib/constant';
 import { formatVND } from '@/lib/utils';
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type ProductEntity = {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-};
+import { ProductEntity } from '@/src/graphql/type.interface';
 
 export const serviceColumns: ColumnDef<ProductEntity>[] = [
   {
@@ -40,7 +34,7 @@ export const serviceColumns: ColumnDef<ProductEntity>[] = [
     accessorKey: 'quantity',
     header: 'Số lượng',
     cell: ({ row }) => {
-      const value = row.original.price;
+      const value = row.original.quantity;
       return formatVND(value as unknown as number);
     },
   },
@@ -63,6 +57,9 @@ export const serviceColumns: ColumnDef<ProductEntity>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link href={AppRouter.admin.products.edit(payment.id)}>Chỉnh sửa</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <CellRemove id={payment.id} />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </DropdownMenuContent>

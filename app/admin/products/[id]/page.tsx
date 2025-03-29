@@ -26,7 +26,7 @@ const Page = async ({ params }: Props) => {
           },
         ]}
       />
-      <CreateProductForm />
+      <CreateProductForm id={id} />
     </div>
   );
 };

@@ -1,0 +1,19 @@
+query productCollection($paginationArgs: PaginationArgs) {
+  productCollection(paginationArgs: $paginationArgs) {
+    items {
+      description
+      id
+      name
+      price
+      quantity
+    }
+    meta {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      totalItem
+      totalPage
+    }
+  }
+}

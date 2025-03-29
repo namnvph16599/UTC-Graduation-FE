@@ -3,11 +3,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input, InputFormatter } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { numberWithDots, numberWithUnDots } from '@/lib/utils';
+import { useCreateProductMutation } from '@/src/graphql/mutations/createProduct.generated';
+import { useUpdateProductMutation } from '@/src/graphql/mutations/updateProduct.generated';
+import { ProductDocument, useProductQuery } from '@/src/graphql/queries/product.generated';
+import { ProductCollectionDocument } from '@/src/graphql/queries/productCollection.generated';
+import { CreateProductInput } from '@/src/graphql/type.interface';
+import { TDetailPageProps } from '@/src/types';
 
 const formSchema = z.object({
   name: z.string({
@@ -23,9 +31,10 @@ const formSchema = z.object({
   quantity: z.string({
     message: 'Giá là trường bắt buộc',
   }),
+  description: z.string().optional(),
 });
 
-export const CreateProductForm = () => {
+export const CreateProductForm = ({ id }: TDetailPageProps) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -33,9 +42,74 @@ export const CreateProductForm = () => {
     defaultValues: {},
   });
 
-  const onSubmit = useCallback((data: z.infer<typeof formSchema>) => {
-    console.log('data', data);
-  }, []);
+  const {} = useProductQuery({
+    variables: {
+      id: id as string,
+    },
+    skip: !id,
+    onCompleted(data) {
+      form.setValue('description', data?.product?.description ?? '');
+      form.setValue('name', data?.product?.name);
+      form.setValue('quantity', data?.product?.quantity?.toString());
+      form.setValue('price', data?.product?.price?.toString());
+    },
+  });
+
+  const [updateProductMutation, { loading: updating }] = useUpdateProductMutation({
+    onCompleted() {
+      toast.error('Cập nhật thành công!');
+      router.back();
+    },
+    onError(error) {
+      toast.error('Đã có lỗi xảy ra', {
+        description: error.message,
+      });
+    },
+    refetchQueries: [ProductCollectionDocument, ProductDocument],
+  });
+
+  const [createProductMutation, { loading: creating }] = useCreateProductMutation({
+    onCompleted() {
+      toast.error('Thêm mới thành công!');
+      router.back();
+    },
+    onError(error) {
+      toast.error('Đã có lỗi xảy ra', {
+        description: error.message,
+      });
+    },
+    refetchQueries: [ProductCollectionDocument, ProductDocument],
+  });
+
+  const onSubmit = useCallback(
+    async (data: z.infer<typeof formSchema>) => {
+      console.log('data', data);
+      const input: CreateProductInput = {
+        name: data.name,
+        price: Number(data.price),
+        quantity: Number(data.quantity),
+        description: data?.description,
+      };
+
+      if (id) {
+        return await updateProductMutation({
+          variables: {
+            args: {
+              id,
+              ...input,
+            },
+          },
+        });
+      }
+
+      return await createProductMutation({
+        variables: {
+          args: input,
+        },
+      });
+    },
+    [createProductMutation, id, updateProductMutation],
+  );
   return (
     <>
       <div className='p-5 bg-[#F9F9F9]'>
@@ -94,6 +168,19 @@ export const CreateProductForm = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name='description'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ghi chú</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder='Nhập mô tả' rows={4} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </form>
           </Form>
         </div>
@@ -102,7 +189,9 @@ export const CreateProductForm = () => {
         <Button onClick={() => router.back()} variant='outline'>
           Hủy
         </Button>
-        <Button form='repair-form'>Thêm mới</Button>
+        <Button form='repair-form' loading={updating || creating}>
+          Lưu
+        </Button>
       </div>
     </>
   );

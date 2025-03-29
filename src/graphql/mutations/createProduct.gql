@@ -1,0 +1,5 @@
+mutation createProduct($args: CreateProductInput!) {
+  createProduct(args: $args) {
+    id
+  }
+}
