@@ -1,5 +1,6 @@
 query repair($id: String!) {
   repair(id: $id) {
+    total
     cancelled_description
     capacity
     createdAt

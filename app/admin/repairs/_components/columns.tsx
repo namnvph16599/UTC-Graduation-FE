@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppRouter } from '@/src/constants/constant';
+import { formatVND } from '@/src/constants/utils';
 import { RepairEntity } from '@/src/graphql/type.interface';
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -156,7 +157,7 @@ export const cancelledStatusColumns: ColumnDef<RepairEntity>[] = [
     },
   },
   {
-    accessorKey: 'note',
+    accessorKey: 'description_of_customer',
     header: 'KH ghi chú',
   },
   {
@@ -200,28 +201,32 @@ export const finishedStatusColumns: ColumnDef<RepairEntity>[] = [
     header: 'SĐT',
   },
   {
-    accessorKey: 'services',
-    header: 'Dịch vụ',
-    cell: ({ row }) => {
-      const services = row.original.services ?? [];
-      return services.map((s) => s.service.name).join(', ');
-    },
-  },
-  {
-    accessorKey: 'products',
-    header: 'Phụ tùng thay thế',
+    accessorKey: 'discount_percent',
+    header: 'Giá phụ tùng',
     cell: ({ row }) => {
       const products = row.original.products ?? [];
-      return products.map((s) => s.product.name).join(', ');
+      return formatVND(products.reduce((sum, currentValue) => sum + currentValue?.quantity * currentValue?.price, 0));
     },
   },
   {
-    accessorKey: 'discount',
+    accessorKey: 'discount_percent',
+    header: 'Giá dịch vụ',
+    cell: ({ row }) => {
+      const services = row.original.services ?? [];
+      return formatVND(services.reduce((sum, currentValue) => sum + currentValue.price, 0));
+    },
+  },
+  {
+    accessorKey: 'discount_percent',
     header: 'Giảm giá',
   },
   {
     accessorKey: 'total',
     header: 'Tổng tiền',
+    cell: ({ row }) => {
+      const total = row.original.total;
+      return formatVND(total ?? 0);
+    },
   },
   {
     id: 'actions',

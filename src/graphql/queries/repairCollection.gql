@@ -1,6 +1,7 @@
 query repairCollection($input: RepairCollectionFilter, $pagination: PaginationArgs) {
   repairCollection(input: $input, pagination: $pagination) {
     items {
+      total
       cancelled_description
       capacity
       createdAt
@@ -24,6 +25,7 @@ query repairCollection($input: RepairCollectionFilter, $pagination: PaginationAr
       products {
         id
         price
+        quantity
         product {
           name
         }

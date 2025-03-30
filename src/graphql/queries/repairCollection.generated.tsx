@@ -15,7 +15,7 @@ export type RepairCollectionQueryResponse = (
     { __typename?: 'RepairConnection' }
     & { items: Array<(
       { __typename?: 'RepairEntity' }
-      & Pick<Types.RepairEntity, 'cancelled_description' | 'capacity' | 'createdAt' | 'deletedAt' | 'description' | 'description_of_customer' | 'discount_percent' | 'estimated_delivery_time' | 'expected_receiving_time' | 'id' | 'license_plate' | 'manufacture_year' | 'name' | 'phone' | 'status' | 'updatedAt'>
+      & Pick<Types.RepairEntity, 'total' | 'cancelled_description' | 'capacity' | 'createdAt' | 'deletedAt' | 'description' | 'description_of_customer' | 'discount_percent' | 'estimated_delivery_time' | 'expected_receiving_time' | 'id' | 'license_plate' | 'manufacture_year' | 'name' | 'phone' | 'status' | 'updatedAt'>
       & { model?: Types.Maybe<(
         { __typename?: 'ModelEntity' }
         & Pick<Types.ModelEntity, 'name'>
@@ -25,7 +25,7 @@ export type RepairCollectionQueryResponse = (
         )> }
       )>, products: Array<(
         { __typename?: 'RepairM2MProductEntity' }
-        & Pick<Types.RepairM2MProductEntity, 'id' | 'price'>
+        & Pick<Types.RepairM2MProductEntity, 'id' | 'price' | 'quantity'>
         & { product: (
           { __typename?: 'ProductEntity' }
           & Pick<Types.ProductEntity, 'name'>
@@ -50,6 +50,7 @@ export const RepairCollectionDocument = gql`
     query repairCollection($input: RepairCollectionFilter, $pagination: PaginationArgs) {
   repairCollection(input: $input, pagination: $pagination) {
     items {
+      total
       cancelled_description
       capacity
       createdAt
@@ -73,6 +74,7 @@ export const RepairCollectionDocument = gql`
       products {
         id
         price
+        quantity
         product {
           name
         }

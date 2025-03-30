@@ -89,7 +89,9 @@ input CreateRepairInput {
   phone: String!
   products: [ProductInput!]
   service_ids: [String!]
+  staff_id: String
   status: RepairStatusEnum!
+  vehicle_id: String
 }
 
 input CreateServiceInput {
@@ -102,6 +104,11 @@ input CreateServiceInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input GetModelsRequest {
+  brand_id: String
+  name: String
+}
 
 type GroupEntity {
   avatar: MediaEntity
@@ -372,6 +379,7 @@ type Query {
   me: UserEntity
   meAdmin: UserEntity
   media(id: String!): MediaEntity!
+  models(args: GetModelsRequest): [ModelEntity!]!
   motorcycle(id: String!): MotorcycleEntity!
   motorcycleCollection(filterArgs: MotorcycleCollectionFilter, pagination: PaginationArgs): MotorcycleConnection!
   notificationCollection(filter: NotificationCollectionFilter, pagination: PaginationArgs): NotificationUserConnection!
@@ -434,6 +442,7 @@ type RepairEntity {
   services: [RepairM2MServiceEntity!]!
   staff: UserEntity
   status: RepairStatusEnum!
+  total: Float
   updatedAt: DateTime!
   user: UserEntity
 }
@@ -664,6 +673,7 @@ input UpdateProductInput {
 }
 
 input UpdateRepairInput {
+  cancelled_description: String
   capacity: Float!
   description: String
   description_of_customer: String
@@ -678,7 +688,9 @@ input UpdateRepairInput {
   phone: String!
   products: [ProductInput!]
   service_ids: [String!]
+  staff_id: String
   status: RepairStatusEnum!
+  vehicle_id: String
 }
 
 input UpdateServiceInput {

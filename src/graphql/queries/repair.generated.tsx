@@ -12,7 +12,7 @@ export type RepairQueryResponse = (
   { __typename?: 'Query' }
   & { repair: (
     { __typename?: 'RepairEntity' }
-    & Pick<Types.RepairEntity, 'cancelled_description' | 'capacity' | 'createdAt' | 'deletedAt' | 'description' | 'description_of_customer' | 'discount_percent' | 'estimated_delivery_time' | 'expected_receiving_time' | 'id' | 'license_plate' | 'manufacture_year' | 'name' | 'phone' | 'status'>
+    & Pick<Types.RepairEntity, 'total' | 'cancelled_description' | 'capacity' | 'createdAt' | 'deletedAt' | 'description' | 'description_of_customer' | 'discount_percent' | 'estimated_delivery_time' | 'expected_receiving_time' | 'id' | 'license_plate' | 'manufacture_year' | 'name' | 'phone' | 'status'>
     & { model?: Types.Maybe<(
       { __typename?: 'ModelEntity' }
       & Pick<Types.ModelEntity, 'id' | 'name'>
@@ -42,6 +42,7 @@ export type RepairQueryResponse = (
 export const RepairDocument = gql`
     query repair($id: String!) {
   repair(id: $id) {
+    total
     cancelled_description
     capacity
     createdAt

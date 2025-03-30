@@ -111,13 +111,20 @@ export type CreateRepairInput = {
   phone: Scalars['String'];
   products?: InputMaybe<Array<ProductInput>>;
   service_ids?: InputMaybe<Array<Scalars['String']>>;
+  staff_id?: InputMaybe<Scalars['String']>;
   status: RepairStatusEnum;
+  vehicle_id?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateServiceInput = {
   description?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   price: Scalars['Float'];
+};
+
+export type GetModelsRequest = {
+  brand_id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type GroupEntity = {
@@ -532,6 +539,7 @@ export type Query = {
   me?: Maybe<UserEntity>;
   meAdmin?: Maybe<UserEntity>;
   media: MediaEntity;
+  models: Array<ModelEntity>;
   motorcycle: MotorcycleEntity;
   motorcycleCollection: MotorcycleConnection;
   notificationCollection: NotificationUserConnection;
@@ -571,6 +579,10 @@ export type QueryGetUserByIdArgs = {
 
 export type QueryMediaArgs = {
   id: Scalars['String'];
+};
+
+export type QueryModelsArgs = {
+  args?: InputMaybe<GetModelsRequest>;
 };
 
 export type QueryMotorcycleArgs = {
@@ -673,6 +685,7 @@ export type RepairEntity = {
   services: Array<RepairM2MServiceEntity>;
   staff?: Maybe<UserEntity>;
   status: RepairStatusEnum;
+  total?: Maybe<Scalars['Float']>;
   updatedAt: Scalars['DateTime'];
   user?: Maybe<UserEntity>;
 };
@@ -916,6 +929,7 @@ export type UpdateProductInput = {
 };
 
 export type UpdateRepairInput = {
+  cancelled_description?: InputMaybe<Scalars['String']>;
   capacity: Scalars['Float'];
   description?: InputMaybe<Scalars['String']>;
   description_of_customer?: InputMaybe<Scalars['String']>;
@@ -930,7 +944,9 @@ export type UpdateRepairInput = {
   phone: Scalars['String'];
   products?: InputMaybe<Array<ProductInput>>;
   service_ids?: InputMaybe<Array<Scalars['String']>>;
+  staff_id?: InputMaybe<Scalars['String']>;
   status: RepairStatusEnum;
+  vehicle_id?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateServiceInput = {

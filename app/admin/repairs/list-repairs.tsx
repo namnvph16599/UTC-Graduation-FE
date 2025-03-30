@@ -1,7 +1,7 @@
 'use client';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   cancelledStatusColumns,
   finishedStatusColumns,
@@ -21,13 +21,18 @@ export const ListRepairs = () => {
 
   const getColumnsByActiveTab = useCallback(() => {
     switch (tab) {
+      case RepairStatusEnum.WAITING_FOR_CONFIRM:
+      case RepairStatusEnum.CONFIRMED:
+      case RepairStatusEnum.HANDLING:
+        return waitingStatusColumns;
+      case RepairStatusEnum.FINISHED:
+      case RepairStatusEnum.WAITING_FOR_PAYMENT:
+        return finishedStatusColumns;
       case RepairStatusEnum.CANCELLED:
         return cancelledStatusColumns;
-      case RepairStatusEnum.FINISHED:
-        return finishedStatusColumns;
 
       default:
-        return waitingStatusColumns;
+        return [];
     }
   }, [tab]);
 
@@ -45,8 +50,21 @@ export const ListRepairs = () => {
     },
   });
 
-  const repairs = data?.repairCollection?.items ?? [];
-  const pageMeta = data?.repairCollection?.meta;
+  const repairs = useMemo(() => data?.repairCollection?.items ?? [], [data?.repairCollection?.items]);
+  const pageMeta = useMemo(() => data?.repairCollection?.meta, [data?.repairCollection?.meta]);
+
+  const renderTableByTab = useCallback(
+    () => (
+      <DataTable
+        columns={getColumnsByActiveTab()}
+        data={repairs as RepairEntity[]}
+        onChangePage={setPage}
+        pageMeta={pageMeta as PageMeta}
+        tab={tab}
+      />
+    ),
+    [getColumnsByActiveTab, pageMeta, repairs, tab],
+  );
 
   return (
     <div>
@@ -77,13 +95,7 @@ export const ListRepairs = () => {
       <div className='p-5 bg-[#F9F9F9]'>
         <div className='p-5 bg-white'>
           <p className='font-semibold text-[#202C38] mt-0 mb-5'>{pageMeta?.totalItem ?? 0} yêu cầu</p>
-          <DataTable
-            columns={getColumnsByActiveTab()}
-            data={repairs as RepairEntity[]}
-            onChangePage={setPage}
-            pageMeta={pageMeta as PageMeta}
-            tab={tab}
-          />
+          {renderTableByTab()}
         </div>
       </div>
     </div>

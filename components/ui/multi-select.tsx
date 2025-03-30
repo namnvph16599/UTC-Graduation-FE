@@ -1,5 +1,4 @@
-// src/components/multi-select.tsx
-
+'use client';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { CheckIcon, XCircle, ChevronDown, XIcon, WandSparkles } from 'lucide-react';
 import * as React from 'react';
@@ -112,7 +111,7 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
       options,
       onValueChange,
       variant,
-      defaultValue = [],
+      defaultValue: selectedValues = [],
       placeholder = 'Chọn giá trị',
       animation = 0,
       maxCount = 3,
@@ -123,12 +122,8 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
     },
     ref,
   ) => {
-    console.log('defaultValue', defaultValue);
-
-    const [selectedValues, setSelectedValues] = React.useState<string[]>(defaultValue);
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
     const [isAnimating, setIsAnimating] = React.useState(false);
-    console.log('selectedValues', selectedValues);
 
     const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
@@ -136,7 +131,6 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
       } else if (event.key === 'Backspace' && !event.currentTarget.value) {
         const newSelectedValues = [...selectedValues];
         newSelectedValues.pop();
-        setSelectedValues(newSelectedValues);
         onValueChange(newSelectedValues);
       }
     };
@@ -145,12 +139,10 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
       const newSelectedValues = selectedValues.includes(option)
         ? selectedValues.filter((value) => value !== option)
         : [...selectedValues, option];
-      setSelectedValues(newSelectedValues);
       onValueChange(newSelectedValues);
     };
 
     const handleClear = () => {
-      setSelectedValues([]);
       onValueChange([]);
     };
 
@@ -160,7 +152,6 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
 
     const clearExtraOptions = () => {
       const newSelectedValues = selectedValues.slice(0, maxCount);
-      setSelectedValues(newSelectedValues);
       onValueChange(newSelectedValues);
     };
 
@@ -169,14 +160,9 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
         handleClear();
       } else {
         const allValues = options.map((option) => option.value);
-        setSelectedValues(allValues);
         onValueChange(allValues);
       }
     };
-
-    React.useEffect(() => {
-      setSelectedValues(defaultValue);
-    }, [defaultValue]);
 
     return (
       <Popover modal={modalPopover} onOpenChange={setIsPopoverOpen} open={isPopoverOpen}>

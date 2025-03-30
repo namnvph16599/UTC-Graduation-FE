@@ -8,17 +8,21 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
-const Combobox = React.forwardRef<
-  HTMLInputElement,
-  React.ComponentProps<'input'> & {
-    options: { label: string; value: string; disable?: boolean }[];
-    placeholderSearch?: string;
-    placeholderSelect?: string;
-    onChange: (newValue: string) => void;
-    allowAddingValueSearch?: boolean;
-  }
-  // >(({ options, placeholderSearch, placeholderSelect, value, onChange, className, ...props }, ref) => {
->(({ options, placeholderSearch, placeholderSelect, value, onChange, className, allowAddingValueSearch }) => {
+const Combobox = ({
+  options,
+  placeholderSearch,
+  placeholderSelect,
+  value,
+  onChange,
+  className,
+  allowAddingValueSearch,
+}: React.ComponentProps<'input'> & {
+  options: { label: string; value: string; disable?: boolean }[];
+  placeholderSearch?: string;
+  placeholderSelect?: string;
+  onChange: (newValue: string) => void;
+  allowAddingValueSearch?: boolean;
+}) => {
   const [open, setOpen] = React.useState(false);
 
   const [searchValue, setSearchValue] = React.useState('');
@@ -98,7 +102,7 @@ const Combobox = React.forwardRef<
       </Popover>
     </div>
   );
-});
+};
 
 Combobox.displayName = 'Combobox';
 export { Combobox };

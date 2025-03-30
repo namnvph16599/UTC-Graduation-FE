@@ -26,6 +26,7 @@ import { RepairCollectionDocument } from '@/src/graphql/queries/repairCollection
 import { useServicesQuery } from '@/src/graphql/queries/services.generated';
 import { RepairStatusEnum } from '@/src/graphql/type.interface';
 import { TDetailPageProps } from '@/src/types';
+import { convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 
 const productSchema = z.object({
   id: z.string({
@@ -65,6 +66,7 @@ const formSchema = z.object({
   manufacture_year: z.string({ message: validationMessages.required }),
   description_of_customer: z.string().optional(),
   description: z.string().optional(),
+  cancelled_description: z.string().optional(),
   capacity: z
     .string({
       message: validationMessages.required,
@@ -202,8 +204,6 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
     },
   });
 
-  console.log('1111', form.getValues());
-
   const [updateRepairRequestMutation, { loading: updating }] = useUpdateRepairRequestMutation({
     onCompleted() {
       toast.error('Cập nhật thành công!');
@@ -282,7 +282,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                   name='name'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tên khách hàng</FormLabel>
+                      <FormLabel required>Tên khách hàng</FormLabel>
                       <FormControl>
                         <Input placeholder='Nhập tên khách hàng' {...field} />
                       </FormControl>
@@ -295,7 +295,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                   name='phone'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Số điện thoại</FormLabel>
+                      <FormLabel required>Số điện thoại</FormLabel>
                       <FormControl>
                         <Input placeholder='Số điện thoại' {...field} />
                       </FormControl>
@@ -308,7 +308,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                   name='brand_id'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Hãng xe</FormLabel>
+                      <FormLabel required>Hãng xe</FormLabel>
                       <FormControl>
                         <Combobox
                           className='block'
@@ -326,7 +326,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                   name='model_id'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Dòng xe</FormLabel>
+                      <FormLabel required>Dòng xe</FormLabel>
                       <FormControl>
                         <Combobox
                           className='block'
@@ -344,7 +344,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                   name='capacity'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Dung tích</FormLabel>
+                      <FormLabel required>Dung tích</FormLabel>
                       <FormControl>
                         <Input placeholder='Nhập dung tích' {...field} />
                       </FormControl>
@@ -357,7 +357,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                   name='manufacture_year'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Năm sản xuất</FormLabel>
+                      <FormLabel required>Năm sản xuất</FormLabel>
                       <FormControl>
                         <Input placeholder='Nhập năm sản xuất' type='number' {...field} />
                       </FormControl>
@@ -370,7 +370,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                   name='license_plate'
                   render={({ field }) => (
                     <FormItem className='col-span-2'>
-                      <FormLabel>Biển số xe</FormLabel>
+                      <FormLabel required>Biển số xe</FormLabel>
                       <FormControl>
                         <Input placeholder='Nhập biển số xe' {...field} />
                       </FormControl>
@@ -422,7 +422,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                   name='service_ids'
                   render={({ field }) => (
                     <FormItem className='col-span-2'>
-                      <FormLabel>Dịch vụ sửa chữa</FormLabel>
+                      <FormLabel required>Dịch vụ sửa chữa</FormLabel>
                       <FormControl>
                         <MultipleSelect
                           className='block'
@@ -437,7 +437,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                 />
 
                 <div className='col-span-2'>
-                  <FormLabel>Phụ tùng thay thế</FormLabel>
+                  <FormLabel required>Phụ tùng thay thế</FormLabel>
                   {controlledFields.map((field, index) => {
                     return (
                       <div className='grid grid-cols-9 items-center gap-4 mt-2' key={field.tempId}>
@@ -514,7 +514,10 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                           className='block'
                           {...field}
                           onChange={(val) => field.onChange(val)}
-                          options={Object.values(RepairStatusEnum).map((v) => ({ label: v, value: v }))}
+                          options={Object.values(RepairStatusEnum).map((v) => ({
+                            label: convertRepairStatusEnum(v),
+                            value: v,
+                          }))}
                         />
                       </FormControl>
                       <FormMessage />
@@ -548,6 +551,21 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                     </FormItem>
                   )}
                 />
+                {id && (
+                  <FormField
+                    control={form.control}
+                    name='cancelled_description'
+                    render={({ field }) => (
+                      <FormItem className='col-span-2'>
+                        <FormLabel>Lý do hủy (nếu có)</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder='Nhập lý do' rows={4} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
             </form>
           </Form>
