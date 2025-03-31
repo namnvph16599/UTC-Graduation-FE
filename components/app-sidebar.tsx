@@ -9,6 +9,7 @@ import {
   PackageSearch,
   Image as ImageIcon,
   UsersRound,
+  BadgeJapaneseYen,
 } from 'lucide-react';
 
 import Image from 'next/image';
@@ -30,6 +31,11 @@ const items = [
     title: 'Tổng quan',
     url: AppRouter.admin.dashboard,
     icon: Home,
+  },
+  {
+    title: AppRouter.admin.revenue.label,
+    url: AppRouter.admin.revenue.path,
+    icon: BadgeJapaneseYen,
   },
   {
     title: 'Yêu cầu sửa chữa',

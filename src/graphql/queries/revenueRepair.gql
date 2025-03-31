@@ -1,0 +1,8 @@
+query revenueRepair($year: String!) {
+  revenueRepair(year: $year) {
+    endDate
+    price
+    startDate
+    time
+  }
+}

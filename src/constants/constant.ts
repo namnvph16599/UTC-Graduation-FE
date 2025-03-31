@@ -12,6 +12,10 @@ export const AppRouter = {
   },
   admin: {
     dashboard: '/admin/dashboard',
+    revenue: {
+      label: 'Thống kê',
+      path: '/admin/revenue',
+    },
     repairs: {
       list: '/admin/repairs',
       add: '/admin/repairs/add',

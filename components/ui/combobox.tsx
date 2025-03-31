@@ -16,12 +16,14 @@ const Combobox = ({
   onChange,
   className,
   allowAddingValueSearch,
+  removable = true,
 }: React.ComponentProps<'input'> & {
   options: { label: string; value: string; disable?: boolean }[];
   placeholderSearch?: string;
   placeholderSelect?: string;
   onChange: (newValue: string) => void;
   allowAddingValueSearch?: boolean;
+  removable?: boolean;
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -84,7 +86,7 @@ const Combobox = ({
                     <Check className={cn('ml-auto', value === searchValue ? 'opacity-100' : 'opacity-0')} />
                   </CommandItem>
                 )}
-                {!!value && (
+                {!!value && removable && (
                   <CommandItem
                     className='border-t'
                     key={'remove'}
