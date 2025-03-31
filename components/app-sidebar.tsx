@@ -1,5 +1,15 @@
 'use client';
-import { Bike, HandPlatter, Home, Inbox, Mails, Newspaper, PackageSearch, Image as ImageIcon } from 'lucide-react';
+import {
+  Bike,
+  HandPlatter,
+  Home,
+  Inbox,
+  Mails,
+  Newspaper,
+  PackageSearch,
+  Image as ImageIcon,
+  UsersRound,
+} from 'lucide-react';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -40,6 +50,11 @@ const items = [
     title: AppRouter.admin.brands.label,
     url: AppRouter.admin.brands.list,
     icon: Bike,
+  },
+  {
+    title: AppRouter.admin.staff.label,
+    url: AppRouter.admin.staff.list,
+    icon: UsersRound,
   },
   {
     title: 'Banner',

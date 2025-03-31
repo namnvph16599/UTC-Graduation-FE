@@ -39,6 +39,11 @@ type CommonEntity {
   updatedAt: DateTime!
 }
 
+type CountRepairByStatus {
+  status: RepairStatusEnum!
+  total: Float!
+}
+
 input CreateBrandInput {
   model_names: [String!]!
   name: String!
@@ -98,6 +103,15 @@ input CreateServiceInput {
   description: String
   name: String!
   price: Float!
+}
+
+input CreateUserByAdminInput {
+  email: String
+  fullName: String!
+  password: String!
+  phoneNumber: String!
+  phonePrefix: String!
+  status: UserStatus
 }
 
 """
@@ -225,6 +239,7 @@ type Mutation {
   createProduct(args: CreateProductInput!): ProductEntity!
   createRepairRequest(input: CreateRepairInput!): RepairEntity!
   createService(args: CreateServiceInput!): ServicesEntity!
+  createUserByAdmin(input: CreateUserByAdminInput!): UserEntity!
   loginByPhone(input: LoginByPhoneInput!): AuthEntity!
   logout: Boolean!
   refreshToken(refreshToken: String!): AuthEntity!
@@ -247,6 +262,7 @@ type Mutation {
   updateRepairRequest(input: UpdateRepairInput!): RepairEntity!
   updateService(args: UpdateServiceInput!): ServicesEntity!
   updateUserAvatar(mediaId: String!): UserEntity!
+  updateUserByAdmin(input: UpdateUserByAdminInput!): UserEntity!
   updateUserInformation(input: UpdateUserInformationInput!): UserEntity!
   updateUserPassword(input: UpdateUserPasswordInput!): UserEntity!
   updateUsername(username: String!): UserEntity!
@@ -374,7 +390,8 @@ type Query {
   brand(id: String!): BrandEntity!
   brandCollection(pagination: PaginationArgs): BrandConnection!
   checkOtp(input: CheckOtpInput!): Boolean!
-  getUserByAdmin(userId: String!): UserEntity!
+  countRepairsByStatuses: [CountRepairByStatus!]!
+  getStaffByAdmin(staffId: String!): UserEntity!
   getUserById(userId: String!): UserEntity!
   me: UserEntity
   meAdmin: UserEntity
@@ -388,13 +405,14 @@ type Query {
   products: [ProductEntity!]!
   repair(id: String!): RepairEntity!
   repairCollection(input: RepairCollectionFilter, pagination: PaginationArgs): RepairConnection!
+  revenueRepair(year: String!): [RevenueRepair!]!
   sample(id: String!): [SampleEntity!]!
   sayHello: String!
   service(id: String!): ServicesEntity!
   serviceCollection(paginationArgs: PaginationArgs): ServiceConnection!
   services: [ServicesEntity!]!
   userCollection(input: UserCollectionFilter, pagination: PaginationArgs): UserConnection!
-  userCollectionByAdmin(filter: UserCollectionFilter, pagination: PaginationArgs): UserConnection!
+  userCollectionByAdmin(filterArgs: UserCollectionFilter, paginationArgs: PaginationArgs): UserConnection!
 }
 
 input RegisterByPhoneInput {
@@ -414,6 +432,8 @@ input RemoveNotificationInput {
 }
 
 input RepairCollectionFilter {
+  endDate: DateTime
+  startDate: DateTime
   status: RepairStatusEnum
 }
 
@@ -436,13 +456,14 @@ type RepairEntity {
   license_plate: String!
   manufacture_year: String!
   model: ModelEntity
+  motorcycle: MotorcycleEntity
   name: String!
   phone: String!
   products: [RepairM2MProductEntity!]!
   services: [RepairM2MServiceEntity!]!
   staff: UserEntity
   status: RepairStatusEnum!
-  total: Float
+  total: Float!
   updatedAt: DateTime!
   user: UserEntity
 }
@@ -475,6 +496,13 @@ enum RepairStatusEnum {
   HANDLING
   WAITING_FOR_CONFIRM
   WAITING_FOR_PAYMENT
+}
+
+type RevenueRepair {
+  endDate: String!
+  price: Float!
+  startDate: String!
+  time: String!
 }
 
 type RoleEntity {
@@ -542,11 +570,6 @@ type SubscriptionOrderEntity {
   subscriptionUser: SubscriptionUserEntity!
   token: String
   updatedAt: DateTime!
-}
-
-enum SubscriptionType {
-  Free
-  Premium
 }
 
 type SubscriptionUserEntity {
@@ -700,6 +723,16 @@ input UpdateServiceInput {
   price: Float!
 }
 
+input UpdateUserByAdminInput {
+  email: String
+  fullName: String
+  id: String!
+  password: String
+  phoneNumber: String
+  phonePrefix: String
+  status: UserStatus
+}
+
 input UpdateUserInformationInput {
   email: String
   fullName: String
@@ -731,15 +764,11 @@ input UserChangePasswordInput {
 }
 
 input UserCollectionFilter {
-  isDeleted: Boolean
-
   """
   search user by name or phone or username
   """
   query: String
   statuses: [UserStatus!]
-  subscriptionId: String
-  subscriptionType: SubscriptionType
   type: UserType
 }
 
@@ -772,6 +801,7 @@ enum UserStatus {
 
 enum UserType {
   Admin
+  Staff
   User
 }
 

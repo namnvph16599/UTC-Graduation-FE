@@ -1,0 +1,5 @@
+mutation createUserByAdmin($input: CreateUserByAdminInput!) {
+  createUserByAdmin(input: $input) {
+    id
+  }
+}

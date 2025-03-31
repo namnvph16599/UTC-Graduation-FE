@@ -61,6 +61,12 @@ export type CommonEntity = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type CountRepairByStatus = {
+  __typename?: 'CountRepairByStatus';
+  status: RepairStatusEnum;
+  total: Scalars['Float'];
+};
+
 export type CreateBrandInput = {
   model_names: Array<Scalars['String']>;
   name: Scalars['String'];
@@ -120,6 +126,15 @@ export type CreateServiceInput = {
   description?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   price: Scalars['Float'];
+};
+
+export type CreateUserByAdminInput = {
+  email?: InputMaybe<Scalars['String']>;
+  fullName: Scalars['String'];
+  password: Scalars['String'];
+  phoneNumber: Scalars['String'];
+  phonePrefix: Scalars['String'];
+  status?: InputMaybe<UserStatus>;
 };
 
 export type GetModelsRequest = {
@@ -244,6 +259,7 @@ export type Mutation = {
   createProduct: ProductEntity;
   createRepairRequest: RepairEntity;
   createService: ServicesEntity;
+  createUserByAdmin: UserEntity;
   loginByPhone: AuthEntity;
   logout: Scalars['Boolean'];
   refreshToken: AuthEntity;
@@ -266,6 +282,7 @@ export type Mutation = {
   updateRepairRequest: RepairEntity;
   updateService: ServicesEntity;
   updateUserAvatar: UserEntity;
+  updateUserByAdmin: UserEntity;
   updateUserInformation: UserEntity;
   updateUserPassword: UserEntity;
   updateUsername: UserEntity;
@@ -299,6 +316,10 @@ export type MutationCreateRepairRequestArgs = {
 
 export type MutationCreateServiceArgs = {
   args: CreateServiceInput;
+};
+
+export type MutationCreateUserByAdminArgs = {
+  input: CreateUserByAdminInput;
 };
 
 export type MutationLoginByPhoneArgs = {
@@ -383,6 +404,10 @@ export type MutationUpdateServiceArgs = {
 
 export type MutationUpdateUserAvatarArgs = {
   mediaId: Scalars['String'];
+};
+
+export type MutationUpdateUserByAdminArgs = {
+  input: UpdateUserByAdminInput;
 };
 
 export type MutationUpdateUserInformationArgs = {
@@ -534,7 +559,8 @@ export type Query = {
   brand: BrandEntity;
   brandCollection: BrandConnection;
   checkOtp: Scalars['Boolean'];
-  getUserByAdmin: UserEntity;
+  countRepairsByStatuses: Array<CountRepairByStatus>;
+  getStaffByAdmin: UserEntity;
   getUserById: UserEntity;
   me?: Maybe<UserEntity>;
   meAdmin?: Maybe<UserEntity>;
@@ -548,6 +574,7 @@ export type Query = {
   products: Array<ProductEntity>;
   repair: RepairEntity;
   repairCollection: RepairConnection;
+  revenueRepair: Array<RevenueRepair>;
   sample: Array<SampleEntity>;
   sayHello: Scalars['String'];
   service: ServicesEntity;
@@ -569,8 +596,8 @@ export type QueryCheckOtpArgs = {
   input: CheckOtpInput;
 };
 
-export type QueryGetUserByAdminArgs = {
-  userId: Scalars['String'];
+export type QueryGetStaffByAdminArgs = {
+  staffId: Scalars['String'];
 };
 
 export type QueryGetUserByIdArgs = {
@@ -616,6 +643,10 @@ export type QueryRepairCollectionArgs = {
   pagination?: InputMaybe<PaginationArgs>;
 };
 
+export type QueryRevenueRepairArgs = {
+  year: Scalars['String'];
+};
+
 export type QuerySampleArgs = {
   id: Scalars['String'];
 };
@@ -634,8 +665,8 @@ export type QueryUserCollectionArgs = {
 };
 
 export type QueryUserCollectionByAdminArgs = {
-  filter?: InputMaybe<UserCollectionFilter>;
-  pagination?: InputMaybe<PaginationArgs>;
+  filterArgs?: InputMaybe<UserCollectionFilter>;
+  paginationArgs?: InputMaybe<PaginationArgs>;
 };
 
 export type RegisterByPhoneInput = {
@@ -655,6 +686,8 @@ export type RemoveNotificationInput = {
 };
 
 export type RepairCollectionFilter = {
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<RepairStatusEnum>;
 };
 
@@ -679,13 +712,14 @@ export type RepairEntity = {
   license_plate: Scalars['String'];
   manufacture_year: Scalars['String'];
   model?: Maybe<ModelEntity>;
+  motorcycle?: Maybe<MotorcycleEntity>;
   name: Scalars['String'];
   phone: Scalars['String'];
   products: Array<RepairM2MProductEntity>;
   services: Array<RepairM2MServiceEntity>;
   staff?: Maybe<UserEntity>;
   status: RepairStatusEnum;
-  total?: Maybe<Scalars['Float']>;
+  total: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
   user?: Maybe<UserEntity>;
 };
@@ -721,6 +755,14 @@ export enum RepairStatusEnum {
   WAITING_FOR_CONFIRM = 'WAITING_FOR_CONFIRM',
   WAITING_FOR_PAYMENT = 'WAITING_FOR_PAYMENT',
 }
+
+export type RevenueRepair = {
+  __typename?: 'RevenueRepair';
+  endDate: Scalars['String'];
+  price: Scalars['Float'];
+  startDate: Scalars['String'];
+  time: Scalars['String'];
+};
 
 export type RoleEntity = {
   __typename?: 'RoleEntity';
@@ -794,11 +836,6 @@ export type SubscriptionOrderEntity = {
   token?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
 };
-
-export enum SubscriptionType {
-  FREE = 'Free',
-  PREMIUM = 'Premium',
-}
 
 export type SubscriptionUserEntity = {
   __typename?: 'SubscriptionUserEntity';
@@ -956,6 +993,16 @@ export type UpdateServiceInput = {
   price: Scalars['Float'];
 };
 
+export type UpdateUserByAdminInput = {
+  email?: InputMaybe<Scalars['String']>;
+  fullName?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
+  phoneNumber?: InputMaybe<Scalars['String']>;
+  phonePrefix?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<UserStatus>;
+};
+
 export type UpdateUserInformationInput = {
   email?: InputMaybe<Scalars['String']>;
   fullName?: InputMaybe<Scalars['String']>;
@@ -987,12 +1034,9 @@ export type UserChangePasswordInput = {
 };
 
 export type UserCollectionFilter = {
-  isDeleted?: InputMaybe<Scalars['Boolean']>;
   /** search user by name or phone or username */
   query?: InputMaybe<Scalars['String']>;
   statuses?: InputMaybe<Array<UserStatus>>;
-  subscriptionId?: InputMaybe<Scalars['String']>;
-  subscriptionType?: InputMaybe<SubscriptionType>;
   type?: InputMaybe<UserType>;
 };
 
@@ -1027,6 +1071,7 @@ export enum UserStatus {
 
 export enum UserType {
   ADMIN = 'Admin',
+  STAFF = 'Staff',
   USER = 'User',
 }
 

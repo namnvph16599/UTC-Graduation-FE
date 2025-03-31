@@ -1,0 +1,11 @@
+query getStaffByAdmin($staffId: String!) {
+  getStaffByAdmin(staffId: $staffId) {
+    email
+    fullName
+    id
+    phoneNumber
+    phonePrefix
+    status
+    type
+  }
+}

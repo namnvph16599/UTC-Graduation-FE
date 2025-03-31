@@ -1,0 +1,22 @@
+query userCollectionByAdmin($filterArgs: UserCollectionFilter, $paginationArgs: PaginationArgs) {
+  userCollectionByAdmin(filterArgs: $filterArgs, paginationArgs: $paginationArgs) {
+    items {
+      email
+      fullName
+      id
+      phoneNumber
+      phonePrefix
+      status
+      type
+      uuid
+    }
+    meta {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      totalItem
+      totalPage
+    }
+  }
+}
