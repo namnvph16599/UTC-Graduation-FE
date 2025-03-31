@@ -9,7 +9,7 @@ const Page = () => {
         items={[
           {
             label: AppRouter.admin.staff.label,
-            href: AppRouter.admin.services.list,
+            href: AppRouter.admin.staff.list,
           },
           {
             label: 'Thêm mới',

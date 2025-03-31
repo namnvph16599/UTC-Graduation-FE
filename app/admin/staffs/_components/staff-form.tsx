@@ -35,7 +35,9 @@ const formSchema = z.object({
       message: validationMessages.invalidEmail,
     })
     .optional(),
-  status: z.enum(Object.values(UserStatus) as [string, ...string[]]),
+  status: z.enum(Object.values(UserStatus) as [string, ...string[]], {
+    message: validationMessages.required,
+  }),
 });
 
 export const StaffForm = ({ id }: { id?: string }) => {

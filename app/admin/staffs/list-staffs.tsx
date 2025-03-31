@@ -32,7 +32,7 @@ export const ListStaffs = () => {
       <AppBreadcrumb
         items={[
           {
-            label: 'Dịch vụ sửa chữa',
+            label: AppRouter.admin.staff.label,
             href: '#',
           },
         ]}
