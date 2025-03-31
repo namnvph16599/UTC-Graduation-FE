@@ -11,7 +11,7 @@ import { DataTable } from '@/app/admin/repairs/_components/repairs-table';
 import { RepairsTabs } from '@/app/admin/repairs/_components/repairs-tabs';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 import { useRepairCollectionQuery } from '@/src/graphql/queries/repairCollection.generated';
 import { PageMeta, RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
 

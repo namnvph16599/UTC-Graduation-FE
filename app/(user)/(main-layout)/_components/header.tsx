@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Account } from '@/app/(user)/(main-layout)/_components/account';
 import { Logo } from '@/components/logo';
-import { AppRouter } from '@/lib/constant';
-import { cn } from '@/lib/utils';
+import { AppRouter } from '@/src/constants/constant';
+import { cn } from '@/src/constants/utils';
 
 const menus = [
   {

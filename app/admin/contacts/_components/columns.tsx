@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { AppRouter, DATE_FORMAT } from '@/lib/constant';
+import { AppRouter, DATE_FORMAT } from '@/src/constants/constant';
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type ContactEntity = {

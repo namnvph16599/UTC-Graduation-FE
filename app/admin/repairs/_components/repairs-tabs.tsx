@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/src/constants/utils';
 import { RepairStatusEnum } from '@/src/graphql/type.interface';
 
 const tabs = [

@@ -20,8 +20,7 @@ import {
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
-import { AppInformation, AppRouter } from '@/lib/constant';
-import { validationMessages } from '@/src/constants/constant';
+import { AppInformation, AppRouter, validationMessages } from '@/src/constants/constant';
 import { ErrorMessage } from '@/src/constants/error';
 import { useRegisterByPhoneMutation } from '@/src/graphql/mutations/registerByPhone.generated';
 import { useVerifyOtpRegisterAccountByPhoneMutation } from '@/src/graphql/mutations/verifyOtpRegisterAccountByPhone.generated';

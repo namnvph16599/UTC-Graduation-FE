@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { validationMessages } from '@/lib/constant';
-import { REGEX } from '@/lib/regex';
+import { validationMessages } from '@/src/constants/constant';
+import { REGEX } from '@/src/constants/regex';
 const validationSchema = z.object({
   email: z
     .string()

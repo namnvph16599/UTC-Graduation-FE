@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { memo, ReactNode } from 'react';
 import { Socials } from '@/app/(user)/(main-layout)/_components/socials';
 import { Logo } from '@/components/logo';
-import { AppInformation, AppRouter } from '@/lib/constant';
+import { AppInformation, AppRouter } from '@/src/constants/constant';
 
 export const footerMenus = [
   {

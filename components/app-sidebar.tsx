@@ -23,7 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 
 const items = [
   {

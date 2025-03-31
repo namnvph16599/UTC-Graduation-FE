@@ -6,7 +6,7 @@ import { serviceColumns } from '@/app/admin/services/_components/columns';
 import { DataTable } from '@/app/admin/services/_components/service-table';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 import { useServiceCollectionQuery } from '@/src/graphql/queries/serviceCollection.generated';
 import { PageMeta, ServicesEntity } from '@/src/graphql/type.interface';
 

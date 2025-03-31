@@ -13,8 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { AppRouter } from '@/lib/constant';
-import { formatVND } from '@/lib/utils';
+import { AppRouter } from '@/src/constants/constant';
+import { formatVND } from '@/src/constants/utils';
 import { ServicesEntity } from '@/src/graphql/type.interface';
 
 export const serviceColumns: ColumnDef<ServicesEntity>[] = [

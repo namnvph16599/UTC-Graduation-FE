@@ -48,6 +48,12 @@ export const AppRouter = {
       add: '/admin/contacts/add',
       edit: (id: string) => '/admin/contacts/' + id,
     },
+    staff: {
+      label: 'Nhân viên',
+      list: '/admin/staffs',
+      add: '/admin/staffs/add',
+      edit: (id: string) => '/admin/staffs/' + id,
+    },
   },
 };
 

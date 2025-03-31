@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Quicksand } from 'next/font/google';
 import { Toaster } from 'sonner';
-import { AppInformation } from '@/lib/constant';
 import { ApolloWrapper } from '@/src/configs/apollo';
 import { ReactQueryProvider } from '@/src/configs/react-query';
+import { AppInformation } from '@/src/constants/constant';
 
 const inter = Quicksand({ subsets: ['vietnamese'] });
 

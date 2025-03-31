@@ -1,5 +1,5 @@
 import { Socials } from '@/app/(user)/(main-layout)/_components/socials';
-import { AppInformation } from '@/lib/constant';
+import { AppInformation } from '@/src/constants/constant';
 
 export default function ContactPage() {
   const inforContact = [

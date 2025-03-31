@@ -1,6 +1,6 @@
 import { BannerForm } from '@/app/admin/banners/_components/banner-form';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 
 export const CreateBanner = () => {
   return (

@@ -6,7 +6,7 @@ import { serviceColumns } from '@/app/admin/products/_components/columns';
 import { DataTable } from '@/app/admin/products/_components/service-table';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 import { useProductCollectionQuery } from '@/src/graphql/queries/productCollection.generated';
 import { PageMeta, ProductEntity } from '@/src/graphql/type.interface';
 

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input, InputFormatter } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { numberWithDots, numberWithUnDots } from '@/lib/utils';
+import { numberWithDots, numberWithUnDots } from '@/src/constants/utils';
 import { useCreateProductMutation } from '@/src/graphql/mutations/createProduct.generated';
 import { useUpdateProductMutation } from '@/src/graphql/mutations/updateProduct.generated';
 import { ProductDocument, useProductQuery } from '@/src/graphql/queries/product.generated';

@@ -1,6 +1,6 @@
 import { StaffForm } from '@/app/admin/staffs/_components/staff-form';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 
 const Page = () => {
   return (

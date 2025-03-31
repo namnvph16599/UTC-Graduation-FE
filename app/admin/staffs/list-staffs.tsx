@@ -6,7 +6,7 @@ import { staffColumns } from '@/app/admin/staffs/_components/columns';
 import { DataTable } from '@/app/admin/staffs/_components/table';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 import { useUserCollectionByAdminQuery } from '@/src/graphql/queries/userCollectionByAdmin.generated';
 import { PageMeta, UserEntity } from '@/src/graphql/type.interface';
 

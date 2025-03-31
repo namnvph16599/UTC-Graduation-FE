@@ -1,6 +1,6 @@
 import { CreateServiceForm } from '@/app/admin/services/add/_components/create-service-form';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 
 export const CreateService = () => {
   return (

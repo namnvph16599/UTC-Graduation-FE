@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 import { UserEntity } from '@/src/graphql/type.interface';
 
 export const staffColumns: ColumnDef<UserEntity>[] = [

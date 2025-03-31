@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 import { NewsBox, NewsEntity } from '@/app/(user)/(main-layout)/_components/news-box';
-import { AppRouter } from '@/lib/constant';
-import { cn } from '@/lib/utils';
+import { AppRouter } from '@/src/constants/constant';
+import { cn } from '@/src/constants/utils';
 
 export const News = () => {
   const newsData = [

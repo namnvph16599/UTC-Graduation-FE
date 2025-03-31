@@ -5,7 +5,7 @@ import { BannerEntity, serviceColumns } from '@/app/admin/banners/_components/co
 import { DataTable } from '@/app/admin/banners/_components/service-table';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 
 function getData(): BannerEntity[] {
   // Fetch data from your API here.

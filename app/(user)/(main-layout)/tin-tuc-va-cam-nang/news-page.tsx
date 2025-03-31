@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { NewsBox, NewsEntity } from '@/app/(user)/(main-layout)/_components/news-box';
 import { NewsInputSearch } from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/_components/news-input-search';
 import { NewsPagination } from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/_components/news-pagination';
-import { cn } from '@/lib/utils';
+import { cn } from '@/src/constants/utils';
 
 const NewsPage = () => {
   const newsData = [

@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import Image, { ImageProps } from 'next/image';
 import Link from 'next/link';
-import { DATE_FORMAT } from '@/lib/constant';
-import { cn } from '@/lib/utils';
+import { DATE_FORMAT } from '@/src/constants/constant';
+import { cn } from '@/src/constants/utils';
 
 export type NewsEntity = {
   content: string;

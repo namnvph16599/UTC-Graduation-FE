@@ -1,6 +1,6 @@
 import { CreateProductForm } from '@/app/admin/products/add/_components/create-product-form';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 
 export const CreateProductPage = () => {
   return (

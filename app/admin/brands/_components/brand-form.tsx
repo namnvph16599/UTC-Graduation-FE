@@ -10,7 +10,7 @@ import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn } from '@/src/constants/utils';
 import { useCreateBrandMutation } from '@/src/graphql/mutations/createBrand.generated';
 import { useUpdateBrandMutation } from '@/src/graphql/mutations/updateBrand.generated';
 import { BrandDocument, useBrandQuery } from '@/src/graphql/queries/brand.generated';

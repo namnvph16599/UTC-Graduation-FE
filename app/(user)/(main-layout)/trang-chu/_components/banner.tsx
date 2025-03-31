@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { AppInformation, AppRouter } from '@/lib/constant';
+import { AppInformation, AppRouter } from '@/src/constants/constant';
 
 export function Banner() {
   const banners = [

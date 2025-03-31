@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { BrandForm } from '@/app/admin/brands/_components/brand-form';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 
 type Props = {
   params: Promise<{ id: string }>;

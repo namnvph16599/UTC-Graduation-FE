@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input, InputFormatter } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { numberWithDots, numberWithUnDots } from '@/lib/utils';
+import { numberWithDots, numberWithUnDots } from '@/src/constants/utils';
 import { useCreateServiceMutation } from '@/src/graphql/mutations/createService.generated';
 import { useUpdateServiceMutation } from '@/src/graphql/mutations/updateService.generated';
 import { ServiceDocument, useServiceQuery } from '@/src/graphql/queries/service.generated';

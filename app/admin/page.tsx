@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 
 const Page = () => {
   redirect(AppRouter.admin.dashboard);

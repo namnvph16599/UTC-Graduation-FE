@@ -6,7 +6,7 @@ import { contactColumns, ContactEntity } from '@/app/admin/contacts/_components/
 import { DataTable } from '@/app/admin/contacts/_components/table';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
-import { AppRouter } from '@/lib/constant';
+import { AppRouter } from '@/src/constants/constant';
 
 function getData(): ContactEntity[] {
   // Fetch data from your API here.

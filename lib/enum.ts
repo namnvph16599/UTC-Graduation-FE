@@ -1,8 +1,0 @@
-export enum RepairStatusEnum {
-  WAITING_FOR_CONFIRM,
-  CONFIRMED,
-  HANDLING,
-  PAYMENT,
-  FINISHED,
-  CANCELLED,
-}
