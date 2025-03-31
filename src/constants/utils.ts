@@ -6,7 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatVND(amount: number | string, currency?: boolean) {
-  if (!amount) return '';
+  if (!amount) {
+    if (currency) return (0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+    return '';
+  }
   return amount.toLocaleString('vi-VN', currency ? { style: 'currency', currency: 'VND' } : {});
 }
 

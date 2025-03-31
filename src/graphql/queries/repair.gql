@@ -26,6 +26,7 @@ query repair($id: String!) {
     products {
       id
       price
+      quantity
       product {
         id
       }
@@ -37,6 +38,9 @@ query repair($id: String!) {
       service {
         id
       }
+    }
+    staff {
+      id
     }
     status
   }

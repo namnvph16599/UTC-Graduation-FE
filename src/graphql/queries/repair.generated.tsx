@@ -34,6 +34,9 @@ export type RepairQueryResponse = (
         { __typename?: 'ServicesEntity' }
         & Pick<Types.ServicesEntity, 'id'>
       ) }
+    )>, staff?: Types.Maybe<(
+      { __typename?: 'UserEntity' }
+      & Pick<Types.UserEntity, 'id'>
     )> }
   ) }
 );
@@ -68,6 +71,7 @@ export const RepairDocument = gql`
     products {
       id
       price
+      quantity
       product {
         id
       }
@@ -79,6 +83,9 @@ export const RepairDocument = gql`
       service {
         id
       }
+    }
+    staff {
+      id
     }
     status
   }

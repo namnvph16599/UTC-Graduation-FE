@@ -2,11 +2,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { CircleX } from 'lucide-react';
+import { tree } from 'next/dist/build/templates/app-page';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { RenderFeeOfRepair } from '@/app/admin/repairs/add/_components/render-fee-of-repair';
 import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
@@ -15,8 +17,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { MultipleSelect } from '@/components/ui/multi-select';
 import { Textarea } from '@/components/ui/textarea';
-import { validationMessages } from '@/src/constants/constant';
-import { cn } from '@/src/constants/utils';
+import { AppRouter, validationMessages } from '@/src/constants/constant';
+import { cn, formatVND } from '@/src/constants/utils';
 import { useCreateRepairRequestMutation } from '@/src/graphql/mutations/createRepairRequest.generated';
 import { useUpdateRepairRequestMutation } from '@/src/graphql/mutations/updateRepairRequest.generated';
 import { useBrandCollectionQuery } from '@/src/graphql/queries/brandCollection.generated';
@@ -24,7 +26,8 @@ import { useProductCollectionQuery } from '@/src/graphql/queries/productCollecti
 import { RepairDocument, useRepairQuery } from '@/src/graphql/queries/repair.generated';
 import { RepairCollectionDocument } from '@/src/graphql/queries/repairCollection.generated';
 import { useServicesQuery } from '@/src/graphql/queries/services.generated';
-import { RepairStatusEnum } from '@/src/graphql/type.interface';
+import { useUserCollectionByAdminQuery } from '@/src/graphql/queries/userCollectionByAdmin.generated';
+import { RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
 import { TDetailPageProps } from '@/src/types';
 import { convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 
@@ -58,6 +61,9 @@ const formSchema = z.object({
   model_id: z.string({ message: validationMessages.required }).min(1, {
     message: validationMessages.required,
   }),
+  staff_id: z.string({ message: validationMessages.required }).min(1, {
+    message: validationMessages.required,
+  }),
   estimated_delivery_time: z.date().optional(),
   expected_receiving_time: z.date().optional(),
   service_ids: z.array(z.string()).optional(),
@@ -81,11 +87,30 @@ const formSchema = z.object({
     .min(1, {
       message: validationMessages.required,
     }),
-  status: z.enum(Object.values(RepairStatusEnum) as [string, ...string[]]),
+  status: z.enum(Object.values(RepairStatusEnum) as [string, ...string[]], {
+    message: validationMessages.required,
+  }),
 });
 
 export const CreateRepairForm = ({ id }: TDetailPageProps) => {
   const router = useRouter();
+
+  const { data: staffData } = useUserCollectionByAdminQuery({
+    variables: {
+      paginationArgs: {
+        limit: 1000000,
+        page: 1,
+      },
+    },
+  });
+  const staffOptions = useMemo(
+    () =>
+      (staffData?.userCollectionByAdmin?.items ?? []).map((u) => ({
+        label: (u.fullName ?? u.phoneNumber) as string,
+        value: u.id,
+      })),
+    [staffData?.userCollectionByAdmin?.items],
+  );
 
   const { data: serviceData } = useServicesQuery();
   const serviceOptions = useMemo(
@@ -149,7 +174,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
   const productOptions = useMemo(
     () =>
       (productData?.productCollection?.items ?? []).map((v) => ({
-        label: v.name,
+        label: v.name + '(' + v.quantity + ')',
         value: v.id,
         disable: !!controlledFields.find((i) => i.id == v.id),
       })),
@@ -167,7 +192,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
     [brands, currentBrandId],
   );
 
-  const { loading } = useRepairQuery({
+  const { data, loading } = useRepairQuery({
     variables: {
       id: id as string,
     },
@@ -201,13 +226,16 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
         (defaultData?.services ?? []).map((p) => p.service.id),
       );
       form.setValue('status', defaultData?.status);
+      form.setValue('staff_id', defaultData?.staff?.id ?? '');
     },
   });
+
+  const repair = useMemo(() => data?.repair, [data?.repair]);
 
   const [updateRepairRequestMutation, { loading: updating }] = useUpdateRepairRequestMutation({
     onCompleted() {
       toast.error('Cập nhật thành công!');
-      router.back();
+      router.push(AppRouter.admin.repairs.list);
     },
     onError(error) {
       toast.error('Đã có lỗi xảy ra', {
@@ -220,7 +248,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
   const [createRepairRequestMutation, { loading: creating }] = useCreateRepairRequestMutation({
     onCompleted() {
       toast.error('Thêm mới thành công!');
-      router.back();
+      router.push(AppRouter.admin.repairs.list);
     },
     onError(error) {
       toast.error('Đã có lỗi xảy ra', {
@@ -270,305 +298,337 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
   return (
     <Loading loading={loading}>
       <div className='p-5 bg-[#F9F9F9]'>
-        <div className='p-5 bg-white mb-[93px]'>
-          <Form {...form}>
-            <form
-              className='grid grid-cols-2 items-start gap-6'
-              id='repair-form'
-              onSubmit={form.handleSubmit(onSubmit)}>
-              <div className='grid grid-cols-2 gap-6'>
-                <FormField
-                  control={form.control}
-                  name='name'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Tên khách hàng</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Nhập tên khách hàng' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='phone'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Số điện thoại</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Số điện thoại' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='brand_id'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Hãng xe</FormLabel>
-                      <FormControl>
-                        <Combobox
-                          className='block'
-                          {...field}
-                          onChange={(val) => field.onChange(val)}
-                          options={brandOptions}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='model_id'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Dòng xe</FormLabel>
-                      <FormControl>
-                        <Combobox
-                          className='block'
-                          {...field}
-                          onChange={(val) => field.onChange(val)}
-                          options={modelOptions}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='capacity'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Dung tích</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Nhập dung tích' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='manufacture_year'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Năm sản xuất</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Nhập năm sản xuất' type='number' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='license_plate'
-                  render={({ field }) => (
-                    <FormItem className='col-span-2'>
-                      <FormLabel required>Biển số xe</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Nhập biển số xe' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name='estimated_delivery_time'
-                  render={({ field }) => (
-                    <FormItem className='flex flex-col gap-1'>
-                      <FormLabel>Thời gian dự kiến giao xe</FormLabel>
-                      <DateTimePickerForm field={field} />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='expected_receiving_time'
-                  render={({ field }) => (
-                    <FormItem className='flex flex-col gap-1'>
-                      <FormLabel>Thời gian dự kiến nhận xe</FormLabel>
-                      <DateTimePickerForm field={field} />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name='description_of_customer'
-                  render={({ field }) => (
-                    <FormItem className='col-span-2'>
-                      <FormLabel>Ghi chú của khách hàng</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder='Nhập ghi chú của khách hàng' rows={4} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className='grid grid-cols-2 gap-6'>
-                <FormField
-                  control={form.control}
-                  name='service_ids'
-                  render={({ field }) => (
-                    <FormItem className='col-span-2'>
-                      <FormLabel required>Dịch vụ sửa chữa</FormLabel>
-                      <FormControl>
-                        <MultipleSelect
-                          className='block'
-                          defaultValue={field.value}
-                          onValueChange={(val) => field.onChange(val)}
-                          options={serviceOptions}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className='col-span-2'>
-                  <FormLabel required>Phụ tùng thay thế</FormLabel>
-                  {controlledFields.map((field, index) => {
-                    return (
-                      <div className='grid grid-cols-9 items-center gap-4 mt-2' key={field.tempId}>
-                        <div className='col-span-4'>
-                          <FormField
-                            control={form.control}
-                            name={`products.${index}.id`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Combobox
-                                    className='block'
-                                    {...field}
-                                    onChange={(val) => field.onChange(val)}
-                                    options={productOptions}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div className='col-span-4'>
-                          <FormField
-                            control={form.control}
-                            name={`products.${index}.quantity`}
-                            render={({ field }) => (
-                              <FormItem className='w-full'>
-                                <FormControl>
-                                  <Input placeholder='Nhập số lượng' type='number' {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <CircleX
-                          className={cn({
-                            'hover:cursor-pointer': controlledFields?.length > 1,
-                            'hover:cursor-not-allowed': controlledFields?.length <= 1,
-                          })}
-                          color='rgb(32,44,56)'
-                          onClick={() => {
-                            if (controlledFields?.length < 1) return;
-                            remove(index);
-                          }}
-                        />
-                      </div>
-                    );
-                  })}
-                  <div className='flex justify-end mt-2'>
-                    <Button
-                      onClick={() =>
-                        append({
-                          id: '',
-                          quantity: '',
-                        })
-                      }
-                      size={'md'}
-                      type='button'>
-                      Thêm phụ tùng
-                    </Button>
-                  </div>
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name='status'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Trạng thái</FormLabel>
-                      <FormControl>
-                        <Combobox
-                          className='block'
-                          {...field}
-                          onChange={(val) => field.onChange(val)}
-                          options={Object.values(RepairStatusEnum).map((v) => ({
-                            label: convertRepairStatusEnum(v),
-                            value: v,
-                          }))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='discount_percent'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Giảm giá(%)</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Nhập giảm giá' type='input' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name='description'
-                  render={({ field }) => (
-                    <FormItem className='col-span-2'>
-                      <FormLabel>Ghi chú</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder='Nhập ghi chú' rows={4} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {id && (
+        <div className='grid grid-cols-10 gap-8'>
+          <div
+            className={cn(' p-5 bg-white mb-[93px]', {
+              'col-span-8': !!id,
+              'col-span-10': !id,
+            })}>
+            <Form {...form}>
+              <form
+                className='grid grid-cols-2 items-start gap-6'
+                id='repair-form'
+                onSubmit={form.handleSubmit(onSubmit)}>
+                <div className='grid grid-cols-2 gap-6'>
                   <FormField
                     control={form.control}
-                    name='cancelled_description'
+                    name='name'
                     render={({ field }) => (
-                      <FormItem className='col-span-2'>
-                        <FormLabel>Lý do hủy (nếu có)</FormLabel>
+                      <FormItem>
+                        <FormLabel required>Tên khách hàng</FormLabel>
                         <FormControl>
-                          <Textarea placeholder='Nhập lý do' rows={4} {...field} />
+                          <Input placeholder='Nhập tên khách hàng' {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                )}
-              </div>
-            </form>
-          </Form>
+                  <FormField
+                    control={form.control}
+                    name='phone'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Số điện thoại</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Số điện thoại' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='brand_id'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Hãng xe</FormLabel>
+                        <FormControl>
+                          <Combobox
+                            className='block'
+                            {...field}
+                            onChange={(val) => field.onChange(val)}
+                            options={brandOptions}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='model_id'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Dòng xe</FormLabel>
+                        <FormControl>
+                          <Combobox
+                            className='block'
+                            {...field}
+                            onChange={(val) => field.onChange(val)}
+                            options={modelOptions}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='capacity'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Dung tích</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Nhập dung tích' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='manufacture_year'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Năm sản xuất</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Nhập năm sản xuất' type='number' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='license_plate'
+                    render={({ field }) => (
+                      <FormItem className='col-span-2'>
+                        <FormLabel required>Biển số xe</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Nhập biển số xe' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='estimated_delivery_time'
+                    render={({ field }) => (
+                      <FormItem className='flex flex-col gap-1'>
+                        <FormLabel>Thời gian dự kiến giao xe</FormLabel>
+                        <DateTimePickerForm field={field} />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='expected_receiving_time'
+                    render={({ field }) => (
+                      <FormItem className='flex flex-col gap-1'>
+                        <FormLabel>Thời gian dự kiến nhận xe</FormLabel>
+                        <DateTimePickerForm field={field} />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='description_of_customer'
+                    render={({ field }) => (
+                      <FormItem className='col-span-2'>
+                        <FormLabel>Ghi chú của khách hàng</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder='Nhập ghi chú của khách hàng' rows={4} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className='grid grid-cols-2 gap-6'>
+                  <div className='col-span-2'>
+                    <FormField
+                      control={form.control}
+                      name='staff_id'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required>Nhân viên phụ trách</FormLabel>
+                          <FormControl>
+                            <Combobox
+                              className='block'
+                              {...field}
+                              onChange={(val) => field.onChange(val)}
+                              options={staffOptions}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className='col-span-2'>
+                    <FormField
+                      control={form.control}
+                      name='status'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required>Trạng thái</FormLabel>
+                          <FormControl>
+                            <Combobox
+                              className='block'
+                              {...field}
+                              onChange={(val) => field.onChange(val)}
+                              options={Object.values(RepairStatusEnum).map((v) => ({
+                                label: convertRepairStatusEnum(v),
+                                value: v,
+                              }))}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name='service_ids'
+                    render={({ field }) => (
+                      <FormItem className='col-span-2'>
+                        <FormLabel>Dịch vụ sửa chữa</FormLabel>
+                        <FormControl>
+                          <MultipleSelect
+                            className='block'
+                            defaultValue={field.value}
+                            onValueChange={(val) => field.onChange(val)}
+                            options={serviceOptions}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className='col-span-2'>
+                    <FormLabel required>Phụ tùng thay thế</FormLabel>
+                    {controlledFields.map((field, index) => {
+                      return (
+                        <div className='grid grid-cols-9 items-center gap-4 mt-2' key={field.tempId}>
+                          <div className='col-span-6'>
+                            <FormField
+                              control={form.control}
+                              name={`products.${index}.id`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Combobox
+                                      className='block'
+                                      {...field}
+                                      onChange={(val) => field.onChange(val)}
+                                      options={productOptions}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <div className='col-span-2'>
+                            <FormField
+                              control={form.control}
+                              name={`products.${index}.quantity`}
+                              render={({ field }) => (
+                                <FormItem className='w-full'>
+                                  <FormControl>
+                                    <Input placeholder='Nhập số lượng' type='number' {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <CircleX
+                            className={cn({
+                              'hover:cursor-pointer': controlledFields?.length > 1,
+                              'hover:cursor-not-allowed': controlledFields?.length <= 1,
+                            })}
+                            color='rgb(32,44,56)'
+                            onClick={() => {
+                              if (controlledFields?.length < 1) return;
+                              remove(index);
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                    <div className='flex justify-end mt-2'>
+                      <Button
+                        onClick={() =>
+                          append({
+                            id: '',
+                            quantity: '',
+                          })
+                        }
+                        size={'md'}
+                        type='button'>
+                        Thêm phụ tùng
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className='col-span-2'>
+                    <FormField
+                      control={form.control}
+                      name='discount_percent'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Giảm giá(%)</FormLabel>
+                          <FormControl>
+                            <Input placeholder='Nhập giảm giá' type='input' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name='description'
+                    render={({ field }) => (
+                      <FormItem className='col-span-2'>
+                        <FormLabel>Ghi chú</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder='Nhập ghi chú' rows={4} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {id && (
+                    <FormField
+                      control={form.control}
+                      name='cancelled_description'
+                      render={({ field }) => (
+                        <FormItem className='col-span-2'>
+                          <FormLabel>Lý do hủy (nếu có)</FormLabel>
+                          <FormControl>
+                            <Textarea placeholder='Nhập lý do' rows={4} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              </form>
+            </Form>
+          </div>
+          {id && <RenderFeeOfRepair repair={repair as RepairEntity} />}
         </div>
       </div>
       <div className='fixed left-0 right-0 bottom-0 flex items-center justify-end gap-4 px-6 py-3 border-t border-[#eee] bg-white'>
