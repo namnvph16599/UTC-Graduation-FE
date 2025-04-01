@@ -3,10 +3,13 @@ import dayjs from 'dayjs';
 import { Wallet } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { ExportExcelRepairs } from '@/app/admin/revenue/_components/export-excel-repairs';
+import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Loading } from '@/components/app-loading';
 import { MonthYearPicker } from '@/components/month-and-year-picker';
 import { Combobox } from '@/components/ui/combobox';
 import { YearPicker } from '@/components/year-picker';
+import { AppRouter } from '@/src/constants/constant';
 import { useRevenueRepairQuery } from '@/src/graphql/queries/revenueRepair.generated';
 import { RevenueRepairTypeEnum } from '@/src/graphql/type.interface';
 
@@ -80,6 +83,15 @@ export const Revenue = () => {
 
   return (
     <Loading loading={loading}>
+      <AppBreadcrumb
+        items={[
+          {
+            label: AppRouter.admin.revenue.label,
+            href: '#',
+          },
+        ]}
+        rightContent={<ExportExcelRepairs endDate={endDate} startDate={startDate} />}
+      />
       <div className='grid grid-cols-10 gap-8 bg-[#F9F9F9] p-5'>
         <div className='p-5 bg-white col-span-7' ref={divRef}>
           <div className='flex justify-end items-center gap-4 mb-5'>
