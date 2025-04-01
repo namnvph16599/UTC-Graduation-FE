@@ -45,6 +45,11 @@ export type BrandEntity = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type CancelRepairInput = {
+  cancelled_description: Scalars['String'];
+  id: Scalars['String'];
+};
+
 export type CheckOtpInput = {
   id: Scalars['String'];
   meta?: InputMaybe<MetaInput>;
@@ -135,6 +140,11 @@ export type CreateUserByAdminInput = {
   phoneNumber: Scalars['String'];
   phonePrefix: Scalars['String'];
   status?: InputMaybe<UserStatus>;
+};
+
+export type ExportRepairsInput = {
+  endDate: Scalars['DateTime'];
+  startDate: Scalars['DateTime'];
 };
 
 export type GetModelsRequest = {
@@ -253,6 +263,7 @@ export type MotorcycleEntity = {
 export type Mutation = {
   __typename?: 'Mutation';
   adminLoginByPhone: AuthEntity;
+  cancelRepair: RepairEntity;
   changeUserEmailOrPhone: UserEntity;
   createBrand: BrandEntity;
   createMotorcycle: MotorcycleEntity;
@@ -292,6 +303,10 @@ export type Mutation = {
 
 export type MutationAdminLoginByPhoneArgs = {
   input: LoginByPhoneInput;
+};
+
+export type MutationCancelRepairArgs = {
+  input: CancelRepairInput;
 };
 
 export type MutationChangeUserEmailOrPhoneArgs = {
@@ -560,6 +575,7 @@ export type Query = {
   brandCollection: BrandConnection;
   checkOtp: Scalars['Boolean'];
   countRepairsByStatuses: Array<CountRepairByStatus>;
+  exportRepairs: Scalars['String'];
   getStaffByAdmin: UserEntity;
   getUserById: UserEntity;
   me?: Maybe<UserEntity>;
@@ -594,6 +610,10 @@ export type QueryBrandCollectionArgs = {
 
 export type QueryCheckOtpArgs = {
   input: CheckOtpInput;
+};
+
+export type QueryExportRepairsArgs = {
+  input: ExportRepairsInput;
 };
 
 export type QueryGetStaffByAdminArgs = {
@@ -644,7 +664,7 @@ export type QueryRepairCollectionArgs = {
 };
 
 export type QueryRevenueRepairArgs = {
-  year: Scalars['String'];
+  input: RevenueRepairInput;
 };
 
 export type QuerySampleArgs = {
@@ -759,10 +779,21 @@ export enum RepairStatusEnum {
 export type RevenueRepair = {
   __typename?: 'RevenueRepair';
   endDate: Scalars['String'];
-  price: Scalars['Float'];
+  price: Scalars['String'];
   startDate: Scalars['String'];
   time: Scalars['String'];
 };
+
+export type RevenueRepairInput = {
+  endDate: Scalars['DateTime'];
+  startDate: Scalars['DateTime'];
+  type: RevenueRepairTypeEnum;
+};
+
+export enum RevenueRepairTypeEnum {
+  MONTH = 'MONTH',
+  YEAR = 'YEAR',
+}
 
 export type RoleEntity = {
   __typename?: 'RoleEntity';

@@ -24,6 +24,11 @@ type BrandEntity {
   updatedAt: DateTime!
 }
 
+input CancelRepairInput {
+  cancelled_description: String!
+  id: String!
+}
+
 input CheckOtpInput {
   id: String!
   meta: MetaInput
@@ -118,6 +123,11 @@ input CreateUserByAdminInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input ExportRepairsInput {
+  endDate: DateTime!
+  startDate: DateTime!
+}
 
 input GetModelsRequest {
   brand_id: String
@@ -233,6 +243,7 @@ type MotorcycleEntity {
 
 type Mutation {
   adminLoginByPhone(input: LoginByPhoneInput!): AuthEntity!
+  cancelRepair(input: CancelRepairInput!): RepairEntity!
   changeUserEmailOrPhone(input: UpdateUserNewEmailOrPhoneInput!): UserEntity!
   createBrand(args: CreateBrandInput!): BrandEntity!
   createMotorcycle(input: CreateMotorcycleInput!): MotorcycleEntity!
@@ -391,6 +402,7 @@ type Query {
   brandCollection(pagination: PaginationArgs): BrandConnection!
   checkOtp(input: CheckOtpInput!): Boolean!
   countRepairsByStatuses: [CountRepairByStatus!]!
+  exportRepairs(input: ExportRepairsInput!): String!
   getStaffByAdmin(staffId: String!): UserEntity!
   getUserById(userId: String!): UserEntity!
   me: UserEntity
@@ -405,7 +417,7 @@ type Query {
   products: [ProductEntity!]!
   repair(id: String!): RepairEntity!
   repairCollection(input: RepairCollectionFilter, pagination: PaginationArgs): RepairConnection!
-  revenueRepair(year: String!): [RevenueRepair!]!
+  revenueRepair(input: RevenueRepairInput!): [RevenueRepair!]!
   sample(id: String!): [SampleEntity!]!
   sayHello: String!
   service(id: String!): ServicesEntity!
@@ -500,9 +512,20 @@ enum RepairStatusEnum {
 
 type RevenueRepair {
   endDate: String!
-  price: Float!
+  price: String!
   startDate: String!
   time: String!
+}
+
+input RevenueRepairInput {
+  endDate: DateTime!
+  startDate: DateTime!
+  type: RevenueRepairTypeEnum!
+}
+
+enum RevenueRepairTypeEnum {
+  MONTH
+  YEAR
 }
 
 type RoleEntity {

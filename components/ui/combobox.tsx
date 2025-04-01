@@ -17,6 +17,7 @@ const Combobox = ({
   className,
   allowAddingValueSearch,
   removable = true,
+  searchable = true,
 }: React.ComponentProps<'input'> & {
   options: { label: string; value: string; disable?: boolean }[];
   placeholderSearch?: string;
@@ -24,6 +25,7 @@ const Combobox = ({
   onChange: (newValue: string) => void;
   allowAddingValueSearch?: boolean;
   removable?: boolean;
+  searchable?: boolean;
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -49,12 +51,14 @@ const Combobox = ({
         </PopoverTrigger>
         <PopoverContent className='w-[--radix-popover-trigger-width] p-0'>
           <Command>
-            <CommandInput
-              className='h-9'
-              onValueChange={setSearchValue}
-              placeholder={placeholderSearch ?? 'Tìm kiếm'}
-              value={searchValue}
-            />
+            {!!searchable && (
+              <CommandInput
+                className='h-9'
+                onValueChange={setSearchValue}
+                placeholder={placeholderSearch ?? 'Tìm kiếm'}
+                value={searchValue}
+              />
+            )}
             <CommandList className='w-full'>
               <CommandEmpty>Không có dữ liệu.</CommandEmpty>
               <CommandGroup>
@@ -66,7 +70,7 @@ const Combobox = ({
                     key={framework.value}
                     onSelect={(currentValue) => {
                       if (framework.disable === true) return;
-                      onChange?.(currentValue === value ? '' : currentValue);
+                      onChange?.(currentValue === value && !!removable ? '' : currentValue);
                       setOpen(false);
                     }}
                     value={framework.value}>

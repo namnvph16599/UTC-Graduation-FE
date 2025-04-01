@@ -1,0 +1,3 @@
+query exportRepairs($input: ExportRepairsInput!) {
+  exportRepairs(input: $input)
+}

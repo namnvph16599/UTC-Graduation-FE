@@ -1,5 +1,5 @@
-query revenueRepair($year: String!) {
-  revenueRepair(year: $year) {
+query revenueRepair($input: RevenueRepairInput!) {
+  revenueRepair(input: $input) {
     endDate
     price
     startDate

@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type RevenueRepairQueryVariables = Types.Exact<{
-  year: Types.Scalars['String'];
+  input: Types.RevenueRepairInput;
 }>;
 
 
@@ -18,8 +18,8 @@ export type RevenueRepairQueryResponse = (
 
 
 export const RevenueRepairDocument = gql`
-    query revenueRepair($year: String!) {
-  revenueRepair(year: $year) {
+    query revenueRepair($input: RevenueRepairInput!) {
+  revenueRepair(input: $input) {
     endDate
     price
     startDate
