@@ -16,6 +16,7 @@ import {
 import { AppRouter } from '@/src/constants/constant';
 import { formatVND } from '@/src/constants/utils';
 import { RepairEntity } from '@/src/graphql/type.interface';
+import { convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -113,6 +114,77 @@ export const waitingStatusColumns: ColumnDef<RepairEntity>[] = [
   },
 ];
 
+export const repairColumns: ColumnDef<RepairEntity>[] = [
+  {
+    accessorKey: 'name',
+    header: 'Tên KH',
+  },
+  {
+    accessorKey: 'phone',
+    header: 'SĐT',
+  },
+  {
+    accessorKey: 'license_plate',
+    header: 'Biển kiểm soát',
+  },
+  {
+    accessorKey: 'estimated_delivery_time',
+    header: 'Thời gian giao xe',
+    cell: ({ row }) => {
+      const estimated_delivery_time = row.original.estimated_delivery_time;
+      if (!estimated_delivery_time) return '';
+      return dayjs(estimated_delivery_time).format('HH:mm DD/MM/YYYY');
+    },
+  },
+  {
+    accessorKey: 'expected_receiving_time',
+    header: 'Thời gian lấy xe',
+    cell: ({ row }) => {
+      const expected_receiving_time = row.original.expected_receiving_time;
+      if (!expected_receiving_time) return '';
+      return dayjs(expected_receiving_time).format('HH:mm DD/MM/YYYY');
+    },
+  },
+  {
+    accessorKey: 'description_of_customer',
+    header: 'KH ghi chú',
+  },
+  {
+    accessorKey: 'status',
+    header: 'Trạng thái',
+    cell: ({ row }) => {
+      const status = row.original.status;
+      return convertRepairStatusEnum(status);
+    },
+  },
+
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const payment = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className='h-8 w-8 p-0' variant='ghost'>
+              <span className='sr-only'>Open menu</span>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Chỉnh sửa</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
 export const cancelledStatusColumns: ColumnDef<RepairEntity>[] = [
   {
     accessorKey: 'name',
@@ -155,10 +227,6 @@ export const cancelledStatusColumns: ColumnDef<RepairEntity>[] = [
       if (!expected_receiving_time) return '';
       return dayjs(expected_receiving_time).format('HH:mm DD/MM/YYYY');
     },
-  },
-  {
-    accessorKey: 'description_of_customer',
-    header: 'KH ghi chú',
   },
   {
     accessorKey: 'cancelled_description',

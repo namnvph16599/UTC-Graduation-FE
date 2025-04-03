@@ -18,6 +18,7 @@ const Combobox = ({
   allowAddingValueSearch,
   removable = true,
   searchable = true,
+  buttonSize = 'default',
 }: React.ComponentProps<'input'> & {
   options: { label: string; value: string; disable?: boolean }[];
   placeholderSearch?: string;
@@ -26,6 +27,7 @@ const Combobox = ({
   allowAddingValueSearch?: boolean;
   removable?: boolean;
   searchable?: boolean;
+  buttonSize?: 'default' | 'sm' | 'md' | 'lg' | null | undefined;
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -42,6 +44,7 @@ const Combobox = ({
               'text-[#676773]': !value,
             })}
             role='combobox'
+            size={buttonSize}
             variant='normalOutline'>
             {value
               ? (options.find((framework) => framework.value === value)?.label ?? value)

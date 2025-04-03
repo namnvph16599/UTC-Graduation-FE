@@ -2,50 +2,33 @@
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
-import {
-  cancelledStatusColumns,
-  finishedStatusColumns,
-  waitingStatusColumns,
-} from '@/app/admin/repairs/_components/columns';
+import { z } from 'zod';
+import { repairColumns } from '@/app/admin/repairs/_components/columns';
 import { DataTable } from '@/app/admin/repairs/_components/repairs-table';
-import { RepairsTabs } from '@/app/admin/repairs/_components/repairs-tabs';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
+import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
 import { AppRouter } from '@/src/constants/constant';
 import { useRepairCollectionQuery } from '@/src/graphql/queries/repairCollection.generated';
-import { PageMeta, RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
+import { PageMeta, RepairCollectionFilter, RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
+import { filterRepairSchema, RepairFormFilter } from './_components/repair-form-filter';
 
 export const ListRepairs = () => {
   const router = useRouter();
-  const [tab, setTab] = useState(RepairStatusEnum.WAITING_FOR_CONFIRM);
-
-  const getColumnsByActiveTab = useCallback(() => {
-    switch (tab) {
-      case RepairStatusEnum.WAITING_FOR_CONFIRM:
-      case RepairStatusEnum.CONFIRMED:
-      case RepairStatusEnum.HANDLING:
-        return waitingStatusColumns;
-      case RepairStatusEnum.FINISHED:
-      case RepairStatusEnum.WAITING_FOR_PAYMENT:
-        return finishedStatusColumns;
-      case RepairStatusEnum.CANCELLED:
-        return cancelledStatusColumns;
-
-      default:
-        return [];
-    }
-  }, [tab]);
 
   const [page, setPage] = useState(1);
+  const [args, setArgs] = useState<RepairCollectionFilter | null>();
+  const [search, setSearch] = useState<string | null>(null);
 
-  const { data } = useRepairCollectionQuery({
+  const { data, refetch, loading } = useRepairCollectionQuery({
     variables: {
       input: {
-        status: tab,
+        status: args?.status,
       },
       pagination: {
         page: page,
         limit: 10,
+        search: search,
       },
     },
   });
@@ -53,21 +36,26 @@ export const ListRepairs = () => {
   const repairs = useMemo(() => data?.repairCollection?.items ?? [], [data?.repairCollection?.items]);
   const pageMeta = useMemo(() => data?.repairCollection?.meta, [data?.repairCollection?.meta]);
 
-  const renderTableByTab = useCallback(
-    () => (
-      <DataTable
-        columns={getColumnsByActiveTab()}
-        data={repairs as RepairEntity[]}
-        onChangePage={setPage}
-        pageMeta={pageMeta as PageMeta}
-        tab={tab}
-      />
-    ),
-    [getColumnsByActiveTab, pageMeta, repairs, tab],
-  );
+  const handleFilter = useCallback((values: z.infer<typeof filterRepairSchema>) => {
+    setArgs({
+      status: values?.status as RepairStatusEnum,
+    });
+    setSearch(values?.search ?? '');
+    setPage(1);
+  }, []);
+
+  const handlRefresh = useCallback(async () => await refetch(), [refetch]);
+
+  const handleRemoveFilter = useCallback(() => {
+    setArgs({
+      status: undefined,
+    });
+    setSearch('');
+    setPage(1);
+  }, []);
 
   return (
-    <div>
+    <Loading loading={loading}>
       <AppBreadcrumb
         items={[
           {
@@ -85,19 +73,19 @@ export const ListRepairs = () => {
           </Button>
         }
       />
-      <RepairsTabs
-        activeTab={tab}
-        onChangeTab={(newTab) => {
-          setTab(newTab);
-          setPage(1);
-        }}
-      />
+
       <div className='p-5 bg-[#F9F9F9]'>
+        <RepairFormFilter onFilter={handleFilter} onRefresh={handlRefresh} onRemoveFilter={handleRemoveFilter} />
         <div className='p-5 bg-white'>
           <p className='font-semibold text-[#202C38] mt-0 mb-5'>{pageMeta?.totalItem ?? 0} yêu cầu</p>
-          {renderTableByTab()}
+          <DataTable
+            columns={repairColumns}
+            data={repairs as RepairEntity[]}
+            onChangePage={setPage}
+            pageMeta={pageMeta as PageMeta}
+          />
         </div>
       </div>
-    </div>
+    </Loading>
   );
 };

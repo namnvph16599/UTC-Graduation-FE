@@ -10,7 +10,7 @@ import { TDataTablePagination } from '@/src/types';
 interface DataTableProps<TData, TValue> extends TDataTablePagination {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  tab: RepairStatusEnum;
+  tab?: RepairStatusEnum;
   hiddenPagination?: boolean;
 }
 
