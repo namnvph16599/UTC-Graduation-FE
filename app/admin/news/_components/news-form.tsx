@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { AppRouter, validationMessages } from '@/src/constants/constant';
+import { IS_CLIENT } from '@/src/constants/env';
 import { REGEX } from '@/src/constants/regex';
 import { useCreateNewsMutation } from '@/src/graphql/mutations/createNews.generated';
 import { useUpdateNewsMutation } from '@/src/graphql/mutations/updateNews.generated';
@@ -51,7 +52,7 @@ const formSchema = z.object({
     }),
 });
 
-export const NewsForm = ({ id }: TDetailPageProps) => {
+const NewsForm = ({ id }: TDetailPageProps) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -133,6 +134,8 @@ export const NewsForm = ({ id }: TDetailPageProps) => {
     if (!isValid) return null;
     return <Image alt='' className='object-fill rounded' height={100} src={image_url} width={200} />;
   }, [form]);
+
+  if (!IS_CLIENT) return null;
 
   return (
     <div className='relative'>
@@ -233,3 +236,5 @@ export const NewsForm = ({ id }: TDetailPageProps) => {
     </div>
   );
 };
+
+export default NewsForm;

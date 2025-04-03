@@ -1,16 +1,12 @@
-import { redirect } from 'next/navigation';
-import { AppRouter } from '@/src/constants/constant';
-import { NewsForm } from '../_components/news-form';
+'use client';
+import dynamic from 'next/dynamic';
+import { useParams } from 'next/navigation';
 
-type Props = {
-  params: Promise<{ id: string }>;
-};
+const NewsForm = dynamic(() => import('../_components/news-form'), { ssr: false });
 
-const Page = async ({ params }: Props) => {
-  const id = (await params).id;
-  if (!id) {
-    redirect(AppRouter.admin.dashboard);
-  }
+const Page = () => {
+  const params: { id: string } = useParams();
+  const id = params.id;
 
   return <NewsForm id={id} />;
 };
