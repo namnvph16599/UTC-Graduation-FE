@@ -5,7 +5,7 @@ import { MoreHorizontal } from 'lucide-react';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { CellRemove } from '@/app/admin/services/_components/cell-remove';
+import { CellRemove } from './cell-remove';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AppRouter } from '@/src/constants/constant';
 import { NewsEntity } from '@/src/graphql/type.interface';
+import { checkValidImage } from '@/src/utils/test-image-address.util';
 
 export const newsColumn: ColumnDef<NewsEntity>[] = [
   {
@@ -24,10 +25,13 @@ export const newsColumn: ColumnDef<NewsEntity>[] = [
   },
   {
     accessorKey: 'image_url',
-    header: 'Giá tiền',
+    header: 'Hình ảnh',
     cell: ({ row }) => {
       const image_url = row.original.image_url;
-      return <Image alt='' height={50} src={''} width={100} />;
+
+      const isValid = checkValidImage(image_url);
+      if (!isValid) return null;
+      return <Image alt='' className='object-fill rounded' height={50} src={image_url} width={100} />;
     },
   },
   {

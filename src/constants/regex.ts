@@ -13,5 +13,6 @@ export const REGEX = {
   coupon_code: /^[0-9]{8}(-)[0-9]{8}$/,
   allowNumber: /\D/g,
   fabric_code: /^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/,
+  imageAddress: /https?:\/\/(?:[a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}(?:\/[\w\-./?%&=]*)?\.(?:jpg|jpeg|png|gif|bmp|webp)/,
   // iframe: /?:<iframe[^>]*)(?:(?:\/>)|(?:>.*?<\/iframe>)/,
 };

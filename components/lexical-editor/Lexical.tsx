@@ -1,18 +1,12 @@
-'use client'
-import {  type JSX } from 'react';
+'use client';
+// eslint-disable-next-line import/order
+import { type JSX } from 'react';
 
 import { $createLinkNode } from '@lexical/link';
 import { $createListItemNode, $createListNode } from '@lexical/list';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
-import {
-  $createParagraphNode,
-  $createTextNode,
-  $getRoot,
-  $isTextNode,
-  DOMConversionMap,
-  TextNode,
-} from 'lexical';
+import { $createParagraphNode, $createTextNode, $getRoot, $isTextNode, DOMConversionMap, TextNode } from 'lexical';
 
 import { FlashMessageContext } from './context/FlashMessageContext';
 import { SettingsContext, useSettings } from './context/SettingsContext';
@@ -20,18 +14,13 @@ import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { ToolbarContext } from './context/ToolbarContext';
 import Editor, { EditorProps } from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
-import { TableContext } from './plugins/TablePlugin';
 import { parseAllowedFontSize } from './plugins/ToolbarPlugin/fontSize';
 import TypingPerfPlugin from './plugins/TypingPerfPlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import { parseAllowedColor } from './ui/ColorPicker';
 
-import './setupEnv'
-import './index.css'
-
-console.warn(
-  'If you are profiling the playground app, please ensure you turn off the debug view. You can disable it by pressing on the settings control in the bottom-left of your screen and toggling the debug view setting.',
-);
+import './setupEnv';
+import './index.css';
 
 function $prepopulatedRichText() {
   const root = $getRoot();
@@ -43,7 +32,7 @@ function $prepopulatedRichText() {
     quote.append(
       $createTextNode(
         `In case you were wondering what the black box at the bottom is – it's the debug view, showing the current state of the editor. ` +
-        `You can disable it by pressing on the settings control in the bottom-left of your screen and toggling the debug view setting.`,
+          `You can disable it by pressing on the settings control in the bottom-left of your screen and toggling the debug view setting.`,
       ),
     );
     root.append(quote);
@@ -67,38 +56,30 @@ function $prepopulatedRichText() {
     );
     root.append(paragraph2);
     const paragraph3 = $createParagraphNode();
-    paragraph3.append(
-      $createTextNode(`If you'd like to find out more about Lexical, you can:`),
-    );
+    paragraph3.append($createTextNode(`If you'd like to find out more about Lexical, you can:`));
     root.append(paragraph3);
     const list = $createListNode('bullet');
     list.append(
       $createListItemNode().append(
         $createTextNode(`Visit the `),
-        $createLinkNode('https://lexical.dev/').append(
-          $createTextNode('Lexical website'),
-        ),
+        $createLinkNode('https://lexical.dev/').append($createTextNode('Lexical website')),
         $createTextNode(` for documentation and more information.`),
       ),
       $createListItemNode().append(
         $createTextNode(`Check out the code on our `),
-        $createLinkNode('https://github.com/facebook/lexical').append(
-          $createTextNode('GitHub repository'),
-        ),
+        $createLinkNode('https://github.com/facebook/lexical').append($createTextNode('GitHub repository')),
         $createTextNode(`.`),
       ),
       $createListItemNode().append(
         $createTextNode(`Playground code can be found `),
-        $createLinkNode(
-          'https://github.com/facebook/lexical/tree/main/packages/lexical-playground',
-        ).append($createTextNode('here')),
+        $createLinkNode('https://github.com/facebook/lexical/tree/main/packages/lexical-playground').append(
+          $createTextNode('here'),
+        ),
         $createTextNode(`.`),
       ),
       $createListItemNode().append(
         $createTextNode(`Join our `),
-        $createLinkNode('https://discord.com/invite/KmG4wQnnD9').append(
-          $createTextNode('Discord Server'),
-        ),
+        $createLinkNode('https://discord.com/invite/KmG4wQnnD9').append($createTextNode('Discord Server')),
         $createTextNode(` and chat with the team.`),
       ),
     );
@@ -147,12 +128,7 @@ function buildImportMap(): DOMConversionMap {
         ...importer,
         conversion: (element) => {
           const output = importer.conversion(element);
-          if (
-            output === null ||
-            output.forChild === undefined ||
-            output.after !== undefined ||
-            output.node !== null
-          ) {
+          if (output === null || output.forChild === undefined || output.after !== undefined || output.node !== null) {
             return output;
           }
           const extraStyles = getExtraStyles(element);
@@ -193,13 +169,14 @@ function App({ ...rest }: Readonly<EditorProps>): JSX.Element {
   };
 
   const initialConfig = {
-    editorState: rest.dataInit && rest.dataInit !== ''
-      ? prepopulateEditor
-      : isCollab
-      ? null
-      : emptyEditor
-      ? undefined
-      : prepopulateEditor,
+    editorState:
+      rest.dataInit && rest.dataInit !== ''
+        ? prepopulateEditor
+        : isCollab
+          ? null
+          : emptyEditor
+            ? undefined
+            : prepopulateEditor,
     html: { import: buildImportMap() },
     namespace: 'Playground',
     nodes: [...PlaygroundNodes],
@@ -209,27 +186,21 @@ function App({ ...rest }: Readonly<EditorProps>): JSX.Element {
     theme: PlaygroundEditorTheme,
   };
 
-
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <SharedHistoryContext>
         {/* <TableContext> */}
-          <ToolbarContext>
-            <header>
-              <a href="https://lexical.dev" target="_blank" rel="noreferrer">
-                {/* <img src={logo} alt="Lexical Logo" /> */}
-              </a>
-            </header>
-            <div className="editor-shell">
-              <Editor {...rest} />
-            </div>
-            {/* <Settings /> */}
-            {/* {isDevPlayground ? <DocsPlugin /> : null} */}
-            {/* {isDevPlayground ? <PasteLogPlugin /> : null} */}
-            {/* {isDevPlayground ? <TestRecorderPlugin /> : null} */}
+        <ToolbarContext>
+          <div className='editor-shell'>
+            <Editor {...rest} />
+          </div>
+          {/* <Settings /> */}
+          {/* {isDevPlayground ? <DocsPlugin /> : null} */}
+          {/* {isDevPlayground ? <PasteLogPlugin /> : null} */}
+          {/* {isDevPlayground ? <TestRecorderPlugin /> : null} */}
 
-            {measureTypingPerf ? <TypingPerfPlugin /> : null}
-          </ToolbarContext>
+          {measureTypingPerf ? <TypingPerfPlugin /> : null}
+        </ToolbarContext>
         {/* </TableContext> */}
       </SharedHistoryContext>
     </LexicalComposer>

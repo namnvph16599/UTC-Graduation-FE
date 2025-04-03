@@ -1,0 +1,3 @@
+mutation removeNews($id: String!){
+    removeNews(id: $id)
+}

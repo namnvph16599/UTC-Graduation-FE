@@ -12,6 +12,7 @@ import {
   NewsCollectionQueryVariables,
 } from '@/src/graphql/queries/newsCollection.generated';
 import { NewsEntity } from '@/src/graphql/type.interface';
+import { checkValidImage } from '@/src/utils/test-image-address.util';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -43,15 +44,23 @@ const Page = async ({ params }: Props) => {
     <div className='container mx-auto grid grid-cols-3 gap-[30px] 2xl:gap-[60px] py-[48px] px-[16px] lg:px-0'>
       <div className='col-span-3 lg:col-span-2'>{<NewsPage news={news as NewsEntity} />}</div>
       <div className='hidden lg:block'>
-        <div className='sticky top-[100px] flex flex-col gap-y-[12px]'>
+        <div className='sticky top-[40px] flex flex-col gap-y-[12px]'>
           {(multipleNews ?? []).map((item) => {
+            const image_url = item.image_url;
+            const isValid = checkValidImage(image_url);
+
             return (
               <div
                 className='grid grid-cols-2 gap-4 p-4 lg:justify-items-center xl:justify-items-start border-[0.5px] border-solid border-[#ECECEC] rounded-xl'
                 key={item.id}>
                 <div className='relative w-full h-[120px] rounded'>
                   <Link href={AppRouter.user.news + item.id}>
-                    <Image alt={item.title} className='object-cover rounded' fill={true} src={''} />
+                    <Image
+                      alt={item.title}
+                      className='object-cover rounded'
+                      fill={true}
+                      src={isValid ? image_url : ''}
+                    />
                   </Link>
                 </div>
                 <div>
@@ -59,7 +68,9 @@ const Page = async ({ params }: Props) => {
                     <ClockIcon />
                     <p className='text-sm text-[#434343]'>{dayjs(item.createdAt).format('HH:mm DD/MM/YYYY')}</p>
                   </div>
-                  <Link className='text-[#161616] line-clamp-3  font-semibold mt-2' href={'/tin-tuc/' + item.id}>
+                  <Link
+                    className='text-[#161616] line-clamp-3  font-semibold mt-2'
+                    href={AppRouter.user.news + '/' + item.id}>
                     {item.title}
                   </Link>
                 </div>

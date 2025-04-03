@@ -1,30 +1,31 @@
-'use client'
+/* eslint-disable import/order */
+'use client';
 import type { JSX } from 'react';
 
-import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
-import {CharacterLimitPlugin} from '@lexical/react/LexicalCharacterLimitPlugin';
-import {CheckListPlugin} from '@lexical/react/LexicalCheckListPlugin';
-import {ClearEditorPlugin} from '@lexical/react/LexicalClearEditorPlugin';
-import {ClickableLinkPlugin} from '@lexical/react/LexicalClickableLinkPlugin';
-import {CollaborationPlugin} from '@lexical/react/LexicalCollaborationPlugin';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
-import {HashtagPlugin} from '@lexical/react/LexicalHashtagPlugin';
-import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
-import {HorizontalRulePlugin} from '@lexical/react/LexicalHorizontalRulePlugin';
-import {ListPlugin} from '@lexical/react/LexicalListPlugin';
-import {PlainTextPlugin} from '@lexical/react/LexicalPlainTextPlugin';
-import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
-import {SelectionAlwaysOnDisplay} from '@lexical/react/LexicalSelectionAlwaysOnDisplay';
-import {TabIndentationPlugin} from '@lexical/react/LexicalTabIndentationPlugin';
-import {TablePlugin} from '@lexical/react/LexicalTablePlugin';
-import {useLexicalEditable} from '@lexical/react/useLexicalEditable';
-import {CAN_USE_DOM} from '@lexical/utils';
-import {useEffect, useState} from 'react';
+import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import { CharacterLimitPlugin } from '@lexical/react/LexicalCharacterLimitPlugin';
+import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
+import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
+import { ClickableLinkPlugin } from '@lexical/react/LexicalClickableLinkPlugin';
+import { CollaborationPlugin } from '@lexical/react/LexicalCollaborationPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { HorizontalRulePlugin } from '@lexical/react/LexicalHorizontalRulePlugin';
+import { ListPlugin } from '@lexical/react/LexicalListPlugin';
+import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { SelectionAlwaysOnDisplay } from '@lexical/react/LexicalSelectionAlwaysOnDisplay';
+import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
+import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
+import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
+import { CAN_USE_DOM } from '@lexical/utils';
+import { useEffect, useState } from 'react';
 
-import {createWebsocketProvider} from './collaboration';
-import {useSettings} from './context/SettingsContext';
-import {useSharedHistoryContext} from './context/SharedHistoryContext';
+import { createWebsocketProvider } from './collaboration';
+import { useSettings } from './context/SettingsContext';
+import { useSharedHistoryContext } from './context/SharedHistoryContext';
 import AutocompletePlugin from './plugins/AutocompletePlugin';
 import AutoEmbedPlugin from './plugins/AutoEmbedPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
@@ -45,10 +46,10 @@ import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbar
 import ImagesPlugin from './plugins/ImagesPlugin';
 import InlineImagePlugin from './plugins/InlineImagePlugin';
 import KeywordsPlugin from './plugins/KeywordsPlugin';
-import {LayoutPlugin} from './plugins/LayoutPlugin/LayoutPlugin';
+import { LayoutPlugin } from './plugins/LayoutPlugin/LayoutPlugin';
 import LinkPlugin from './plugins/LinkPlugin';
 import MarkdownShortcutPlugin from './plugins/MarkdownShortcutPlugin';
-import {MaxLengthPlugin} from './plugins/MaxLengthPlugin';
+import { MaxLengthPlugin } from './plugins/MaxLengthPlugin';
 import MentionsPlugin from './plugins/MentionsPlugin';
 import PageBreakPlugin from './plugins/PageBreakPlugin';
 import PollPlugin from './plugins/PollPlugin';
@@ -61,24 +62,21 @@ import TableCellResizer from './plugins/TableCellResizer';
 import TableHoverActionsPlugin from './plugins/TableHoverActionsPlugin';
 import TableOfContentsPlugin from './plugins/TableOfContentsPlugin';
 import ToolbarPlugin from './plugins/ToolbarPlugin';
-import TreeViewPlugin from './plugins/TreeViewPlugin';
 import TwitterPlugin from './plugins/TwitterPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import ContentEditable from './ui/ContentEditable';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { $getRoot, EditorState } from 'lexical';
 
-const skipCollaborationInit =
-  // @ts-expect-error
-  window.parent != null && window.parent.frames.right === window;
+const skipCollaborationInit = window.parent != null && window.parent.frames['right'] === window;
 
-  export interface EditorProps {
-    dataInit?: string
-    onChange: (editorState: EditorState) => void;
-  }
+export interface EditorProps {
+  dataInit?: string;
+  onChange: (editorState: EditorState) => void;
+}
 
-export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorProps>): JSX.Element {
-  const {historyState} = useSharedHistoryContext();
+export default function Editor({ dataInit, onChange, ...rest }: Readonly<EditorProps>): JSX.Element {
+  const { historyState } = useSharedHistoryContext();
   const {
     settings: {
       isCollab,
@@ -91,7 +89,7 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
       showTreeView,
       showTableOfContents,
       shouldUseLexicalContextMenu,
-      shouldPreserveNewLinesInMarkdown,
+      // shouldPreserveNewLinesInMarkdown,
       tableCellMerge,
       tableCellBackgroundColor,
       tableHorizontalScroll,
@@ -103,12 +101,10 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
   const placeholder = isCollab
     ? 'Enter some collaborative rich text...'
     : isRichText
-    ? 'Enter some rich text...'
-    : 'Enter some plain text...';
-  const [floatingAnchorElem, setFloatingAnchorElem] =
-    useState<HTMLDivElement | null>(null);
-  const [isSmallWidthViewport, setIsSmallWidthViewport] =
-    useState<boolean>(false);
+      ? 'Enter some rich text...'
+      : 'Enter some plain text...';
+  const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
+  const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false);
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
   const [isLinkEditMode, setIsLinkEditMode] = useState<boolean>(false);
@@ -125,12 +121,11 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
     });
   };
 
-
   // convert initial data
   useEffect(() => {
     if (!dataInit || typeof dataInit !== 'string') return;
 
-    const isValidJSON = dataInit.trim().startsWith("{") || dataInit.trim().startsWith("[");
+    const isValidJSON = dataInit.trim().startsWith('{') || dataInit.trim().startsWith('[');
     if (!isValidJSON) return;
 
     const parsedData = JSON.parse(dataInit);
@@ -143,11 +138,9 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
     }
   }, [dataInit, editor]);
 
-
   useEffect(() => {
     const updateViewPortWidth = () => {
-      const isNextSmallWidthViewport =
-        CAN_USE_DOM && window.matchMedia('(max-width: 1025px)').matches;
+      const isNextSmallWidthViewport = CAN_USE_DOM && window.matchMedia('(max-width: 1025px)').matches;
 
       if (isNextSmallWidthViewport !== isSmallWidthViewport) {
         setIsSmallWidthViewport(isNextSmallWidthViewport);
@@ -166,22 +159,14 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
       <OnChangePlugin onChange={onChangeStage} />
       {isRichText && (
         <ToolbarPlugin
-          editor={editor}
           activeEditor={activeEditor}
+          editor={editor}
           setActiveEditor={setActiveEditor}
           setIsLinkEditMode={setIsLinkEditMode}
         />
       )}
-      {isRichText && (
-        <ShortcutsPlugin
-          editor={activeEditor}
-          setIsLinkEditMode={setIsLinkEditMode}
-        />
-      )}
-      <div
-        className={`editor-container ${showTreeView ? 'tree-view' : ''} ${
-          !isRichText ? 'plain-text' : ''
-        }`}>
+      {isRichText && <ShortcutsPlugin editor={activeEditor} setIsLinkEditMode={setIsLinkEditMode} />}
+      <div className={`editor-container ${showTreeView ? 'tree-view' : ''} ${!isRichText ? 'plain-text' : ''}`}>
         {isMaxLength && <MaxLengthPlugin maxLength={30} />}
         <DragDropPaste />
         <AutoFocusPlugin />
@@ -203,7 +188,7 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
           <>
             {isCollab ? (
               <CollaborationPlugin
-                id="main"
+                id='main'
                 providerFactory={createWebsocketProvider}
                 shouldBootstrap={!skipCollaborationInit}
               />
@@ -212,8 +197,8 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
             )}
             <RichTextPlugin
               contentEditable={
-                <div className="editor-scroller">
-                  <div className="editor" ref={onRef}>
+                <div className='editor-scroller'>
+                  <div className='editor' ref={onRef}>
                     <ContentEditable placeholder={placeholder} />
                   </div>
                 </div>
@@ -225,8 +210,8 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
             <ListPlugin />
             <CheckListPlugin />
             <TablePlugin
-              hasCellMerge={tableCellMerge}
               hasCellBackgroundColor={tableCellBackgroundColor}
+              hasCellMerge={tableCellMerge}
               hasHorizontalScroll={tableHorizontalScroll}
             />
             <TableCellResizer />
@@ -253,10 +238,7 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
                   isLinkEditMode={isLinkEditMode}
                   setIsLinkEditMode={setIsLinkEditMode}
                 />
-                <TableCellActionMenuPlugin
-                  anchorElem={floatingAnchorElem}
-                  cellMerge={true}
-                />
+                <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
               </>
             )}
             {floatingAnchorElem && !isSmallWidthViewport && (
@@ -281,10 +263,7 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
           </>
         )}
         {(isCharLimit || isCharLimitUtf8) && (
-          <CharacterLimitPlugin
-            charset={isCharLimit ? 'UTF-16' : 'UTF-8'}
-            maxLength={5}
-          />
+          <CharacterLimitPlugin charset={isCharLimit ? 'UTF-16' : 'UTF-8'} maxLength={5} />
         )}
         {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
@@ -295,7 +274,7 @@ export default function Editor({dataInit, onChange, ...rest}: Readonly<EditorPro
           shouldPreserveNewLinesInMarkdown={shouldPreserveNewLinesInMarkdown}
         /> */}
       </div>
-      {showTreeView && <TreeViewPlugin />}
+      {/* {showTreeView && <TreeViewPlugin />} */}
     </>
   );
 }

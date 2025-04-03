@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { useRemoveServiceMutation } from '@/src/graphql/mutations/removeService.generated';
-import { ServiceCollectionDocument } from '@/src/graphql/queries/serviceCollection.generated';
+import { useRemoveNewsMutation } from '@/src/graphql/mutations/removeNews.generated';
+import { NewsCollectionDocument } from '@/src/graphql/queries/newsCollection.generated';
 
 type Props = { id: string };
 
 export const CellRemove = (props: Props) => {
-  const [removeProductMutation] = useRemoveServiceMutation({
+  const [removeProductMutation] = useRemoveNewsMutation({
     onCompleted() {
       toast.error('Xóa thành công!');
     },
@@ -15,7 +15,7 @@ export const CellRemove = (props: Props) => {
         description: error.message,
       });
     },
-    refetchQueries: [ServiceCollectionDocument],
+    refetchQueries: [NewsCollectionDocument],
   });
 
   return (
