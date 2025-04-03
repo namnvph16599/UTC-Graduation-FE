@@ -68,7 +68,7 @@ import ContentEditable from './ui/ContentEditable';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { $getRoot, EditorState } from 'lexical';
 
-const skipCollaborationInit = window.parent != null && window.parent.frames['right'] === window;
+const skipCollaborationInit = false;
 
 export interface EditorProps {
   dataInit?: string;
