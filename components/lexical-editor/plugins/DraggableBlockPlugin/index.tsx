@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import type { JSX } from 'react';
+// eslint-disable-next-line import/order
+import type { JSX, RefObject } from 'react';
 
 import './index.css';
 
@@ -61,10 +62,10 @@ export default function DraggableBlockPlugin({
           <div className='icon' />
         </div>
       }
-      menuRef={menuRef}
+      menuRef={menuRef as RefObject<HTMLElement>}
       onElementChanged={setDraggableElement}
       targetLineComponent={<div className='draggable-block-target-line' ref={targetLineRef} />}
-      targetLineRef={targetLineRef}
+      targetLineRef={targetLineRef as RefObject<HTMLElement>}
     />
   );
 }

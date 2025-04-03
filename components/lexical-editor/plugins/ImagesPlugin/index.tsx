@@ -150,7 +150,7 @@ export function InsertImageDialog({
             data-test-id='image-modal-option-sample'
             onClick={() =>
               onClick(
-                hasModifier.current
+                (hasModifier.current
                   ? {
                       altText: 'Daylight fir trees forest glacier green high ice landscape',
                       src: landscapeImage,
@@ -158,7 +158,7 @@ export function InsertImageDialog({
                   : {
                       altText: 'Yellow flower in tilt shift lens',
                       src: yellowFlowerImage,
-                    },
+                    }) as unknown as Readonly<ImagePayload>,
               )
             }>
             Sample

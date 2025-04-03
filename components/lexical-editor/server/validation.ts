@@ -19,7 +19,7 @@ const port = 1235;
 
 let stringifiedEditorStateJSON = '';
 
-global.__DEV__ = true;
+// global.__DEV__ = true;
 
 const editor = createHeadlessEditor({
   namespace: 'validation',

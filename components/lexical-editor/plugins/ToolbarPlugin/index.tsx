@@ -954,7 +954,7 @@ export default function ToolbarPlugin({
                   onClick={() =>
                     insertGifOnClick({
                       altText: 'Cat typing on a laptop',
-                      src: catTypingGif,
+                      src: catTypingGif as unknown as string,
                     })
                   }>
                   <i className='icon gif' />
