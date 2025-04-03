@@ -6,12 +6,13 @@
  *
  */
 
-import type {JSX, Ref, RefObject} from 'react';
+import type { JSX, Ref, RefObject } from 'react';
 
 import './EquationEditor.css';
 
-import {isHTMLElement} from 'lexical';
-import {ChangeEvent, forwardRef} from 'react';
+// eslint-disable-next-line import/order
+import { isHTMLElement } from 'lexical';
+import { ChangeEvent, forwardRef } from 'react';
 
 type BaseEquationEditorProps = {
   equation: string;
@@ -20,7 +21,7 @@ type BaseEquationEditorProps = {
 };
 
 function EquationEditor(
-  {equation, setEquation, inline}: BaseEquationEditorProps,
+  { equation, setEquation, inline }: BaseEquationEditorProps,
   forwardedRef: Ref<HTMLInputElement | HTMLTextAreaElement>,
 ): JSX.Element {
   const onChange = (event: ChangeEvent) => {
@@ -28,27 +29,27 @@ function EquationEditor(
   };
 
   return inline && isHTMLElement(forwardedRef) ? (
-    <span className="EquationEditor_inputBackground">
-      <span className="EquationEditor_dollarSign">$</span>
+    <span className='EquationEditor_inputBackground'>
+      <span className='EquationEditor_dollarSign'>$</span>
       <input
-        className="EquationEditor_inlineEditor"
-        value={equation}
-        onChange={onChange}
         autoFocus={true}
+        className='EquationEditor_inlineEditor'
+        onChange={onChange}
         ref={forwardedRef as RefObject<HTMLInputElement>}
+        value={equation}
       />
-      <span className="EquationEditor_dollarSign">$</span>
+      <span className='EquationEditor_dollarSign'>$</span>
     </span>
   ) : (
-    <div className="EquationEditor_inputBackground">
-      <span className="EquationEditor_dollarSign">{'$$\n'}</span>
+    <div className='EquationEditor_inputBackground'>
+      <span className='EquationEditor_dollarSign'>{'$$\n'}</span>
       <textarea
-        className="EquationEditor_blockEditor"
-        value={equation}
+        className='EquationEditor_blockEditor'
         onChange={onChange}
         ref={forwardedRef as RefObject<HTMLTextAreaElement>}
+        value={equation}
       />
-      <span className="EquationEditor_dollarSign">{'\n$$'}</span>
+      <span className='EquationEditor_dollarSign'>{'\n$$'}</span>
     </div>
   );
 }

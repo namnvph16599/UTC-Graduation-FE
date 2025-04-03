@@ -6,19 +6,13 @@
  *
  */
 
-import type {BaseSelection, LexicalEditor} from 'lexical';
-import type {JSX} from 'react';
-
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {IS_APPLE} from '@lexical/utils';
-import {
-  $createParagraphNode,
-  $createTextNode,
-  $getRoot,
-  getDOMSelection,
-} from 'lexical';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { IS_APPLE } from '@lexical/utils';
+import type { BaseSelection, LexicalEditor } from 'lexical';
+import { $createParagraphNode, $createTextNode, $getRoot, getDOMSelection } from 'lexical';
+import type { JSX } from 'react';
 import * as React from 'react';
-import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const copy = (text: string | null) => {
   const textArea = document.createElement('textarea');
@@ -40,10 +34,7 @@ const copy = (text: string | null) => {
 
 const download = (filename: string, text: string | null) => {
   const a = document.createElement('a');
-  a.setAttribute(
-    'href',
-    'data:text/plain;charset=utf-8,' + encodeURIComponent(text || ''),
-  );
+  a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text || ''));
   a.setAttribute('download', filename);
   a.style.display = 'none';
   document.body?.appendChild(a);
@@ -100,23 +91,20 @@ const formatStep = (step: Step) => {
 };
 
 export function isSelectAll(event: KeyboardEvent): boolean {
-  return (
-    event.key.toLowerCase() === 'a' &&
-    (IS_APPLE ? event.metaKey : event.ctrlKey)
-  );
+  return event.key.toLowerCase() === 'a' && (IS_APPLE ? event.metaKey : event.ctrlKey);
 }
 
 // stolen from LexicalSelection-test
 function sanitizeSelection(selection: Selection) {
-  const {anchorNode, focusNode} = selection;
-  let {anchorOffset, focusOffset} = selection;
+  const { anchorNode, focusNode } = selection;
+  let { anchorOffset, focusOffset } = selection;
   if (anchorOffset !== 0) {
     anchorOffset--;
   }
   if (focusOffset !== 0) {
     focusOffset--;
   }
-  return {anchorNode, anchorOffset, focusNode, focusOffset};
+  return { anchorNode, anchorOffset, focusNode, focusOffset };
 }
 
 function getPathFromNodeToEditor(node: Node, rootElement: HTMLElement | null) {
@@ -124,11 +112,7 @@ function getPathFromNodeToEditor(node: Node, rootElement: HTMLElement | null) {
   const path = [];
   while (currentNode !== rootElement) {
     if (currentNode !== null && currentNode !== undefined) {
-      path.unshift(
-        Array.from(currentNode?.parentNode?.childNodes ?? []).indexOf(
-          currentNode as ChildNode,
-        ),
-      );
+      path.unshift(Array.from(currentNode?.parentNode?.childNodes ?? []).indexOf(currentNode as ChildNode));
     }
     currentNode = currentNode?.parentNode;
   }
@@ -155,9 +139,7 @@ type Step = {
 
 type Steps = Step[];
 
-function useTestRecorder(
-  editor: LexicalEditor,
-): [JSX.Element, JSX.Element | null] {
+function useTestRecorder(editor: LexicalEditor): [JSX.Element, JSX.Element | null] {
   const [steps, setSteps] = useState<Steps>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [, setCurrentInnerHTML] = useState('');
@@ -228,23 +210,17 @@ ${steps.map(formatStep).join(`\n`)}
           if (lastStep.name === name) {
             if (name === 'type') {
               // for typing events we just append the text
-              return [
-                ...steps.slice(0, currentIndex),
-                {...lastStep, value: lastStep.value + value},
-              ];
+              return [...steps.slice(0, currentIndex), { ...lastStep, value: lastStep.value + value }];
             } else {
               // for other events we bump the counter if their values are the same
               if (lastStep.value === value) {
-                return [
-                  ...steps.slice(0, currentIndex),
-                  {...lastStep, count: lastStep.count + 1},
-                ];
+                return [...steps.slice(0, currentIndex), { ...lastStep, count: lastStep.count + 1 }];
               }
             }
           }
         }
         // could not group, just append a new one
-        return [...currentSteps, {count: 1, name, value}];
+        return [...currentSteps, { count: 1, name, value }];
       });
     },
     [steps, setSteps],
@@ -277,21 +253,16 @@ ${steps.map(formatStep).join(`\n`)}
       }
     };
 
-    return editor.registerRootListener(
-      (
-        rootElement: null | HTMLElement,
-        prevRootElement: null | HTMLElement,
-      ) => {
-        if (prevRootElement !== null) {
-          prevRootElement.removeEventListener('keydown', onKeyDown);
-          prevRootElement.removeEventListener('keyup', onKeyUp);
-        }
-        if (rootElement !== null) {
-          rootElement.addEventListener('keydown', onKeyDown);
-          rootElement.addEventListener('keyup', onKeyUp);
-        }
-      },
-    );
+    return editor.registerRootListener((rootElement: null | HTMLElement, prevRootElement: null | HTMLElement) => {
+      if (prevRootElement !== null) {
+        prevRootElement.removeEventListener('keydown', onKeyDown);
+        prevRootElement.removeEventListener('keyup', onKeyUp);
+      }
+      if (rootElement !== null) {
+        rootElement.addEventListener('keydown', onKeyDown);
+        rootElement.addEventListener('keyup', onKeyUp);
+      }
+    });
   }, [editor, isRecording, pushStep]);
 
   useLayoutEffect(() => {
@@ -313,38 +284,28 @@ ${steps.map(formatStep).join(`\n`)}
   }, [generateTestContent, steps]);
 
   useEffect(() => {
-    const removeUpdateListener = editor.registerUpdateListener(
-      ({editorState, dirtyLeaves, dirtyElements}) => {
-        if (!isRecording) {
-          return;
-        }
-        const currentSelection = editorState._selection;
-        const previousSelection = previousSelectionRef.current;
-        const skipNextSelectionChange = skipNextSelectionChangeRef.current;
-        if (previousSelection !== currentSelection) {
-          if (
-            dirtyLeaves.size === 0 &&
-            dirtyElements.size === 0 &&
-            !skipNextSelectionChange
-          ) {
-            const browserSelection = getDOMSelection(editor._window);
-            if (
-              browserSelection &&
-              (browserSelection.anchorNode == null ||
-                browserSelection.focusNode == null)
-            ) {
-              return;
-            }
+    const removeUpdateListener = editor.registerUpdateListener(({ editorState, dirtyLeaves, dirtyElements }) => {
+      if (!isRecording) {
+        return;
+      }
+      const currentSelection = editorState._selection;
+      const previousSelection = previousSelectionRef.current;
+      const skipNextSelectionChange = skipNextSelectionChangeRef.current;
+      if (previousSelection !== currentSelection) {
+        if (dirtyLeaves.size === 0 && dirtyElements.size === 0 && !skipNextSelectionChange) {
+          const browserSelection = getDOMSelection(editor._window);
+          if (browserSelection && (browserSelection.anchorNode == null || browserSelection.focusNode == null)) {
+            return;
           }
-          previousSelectionRef.current = currentSelection;
         }
-        skipNextSelectionChangeRef.current = false;
-        const testContent = generateTestContent();
-        if (testContent !== null) {
-          setTemplatedTest(testContent);
-        }
-      },
-    );
+        previousSelectionRef.current = currentSelection;
+      }
+      skipNextSelectionChangeRef.current = false;
+      const testContent = generateTestContent();
+      if (testContent !== null) {
+        setTemplatedTest(testContent);
+      }
+    });
     return removeUpdateListener;
   }, [editor, generateTestContent, isRecording, pushStep]);
 
@@ -385,15 +346,10 @@ ${steps.map(formatStep).join(`\n`)}
       return;
     }
     const browserSelection = getDOMSelection(getCurrentEditor()._window);
-    if (
-      browserSelection === null ||
-      browserSelection.anchorNode == null ||
-      browserSelection.focusNode == null
-    ) {
+    if (browserSelection === null || browserSelection.anchorNode == null || browserSelection.focusNode == null) {
       return;
     }
-    const {anchorNode, anchorOffset, focusNode, focusOffset} =
-      sanitizeSelection(browserSelection);
+    const { anchorNode, anchorOffset, focusNode, focusOffset } = sanitizeSelection(browserSelection);
     const rootElement = getCurrentEditor().getRootElement();
     let anchorPath;
     if (anchorNode !== null) {
@@ -423,35 +379,35 @@ ${steps.map(formatStep).join(`\n`)}
 
   const button = (
     <button
-      id="test-recorder-button"
       className={`editor-dev-button ${isRecording ? 'active' : ''}`}
+      id='test-recorder-button'
       onClick={() => toggleEditorSelection(getCurrentEditor())}
       title={isRecording ? 'Disable test recorder' : 'Enable test recorder'}
     />
   );
   const output = isRecording ? (
-    <div className="test-recorder-output">
-      <div className="test-recorder-toolbar">
+    <div className='test-recorder-output'>
+      <div className='test-recorder-toolbar'>
         <button
-          className="test-recorder-button"
-          id="test-recorder-button-snapshot"
-          title="Insert snapshot"
+          className='test-recorder-button'
+          id='test-recorder-button-snapshot'
           onClick={onSnapshotClick}
+          title='Insert snapshot'
         />
         <button
-          className="test-recorder-button"
-          id="test-recorder-button-copy"
-          title="Copy to clipboard"
+          className='test-recorder-button'
+          id='test-recorder-button-copy'
           onClick={onCopyClick}
+          title='Copy to clipboard'
         />
         <button
-          className="test-recorder-button"
-          id="test-recorder-button-download"
-          title="Download as a file"
+          className='test-recorder-button'
+          id='test-recorder-button-download'
           onClick={onDownloadClick}
+          title='Download as a file'
         />
       </div>
-      <pre id="test-recorder" ref={preRef}>
+      <pre id='test-recorder' ref={preRef}>
         {templatedTest}
       </pre>
     </div>

@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 import parse from 'html-react-parser';
 import { createEditor } from 'lexical';
 import { useEffect, useState } from 'react';
-import { ClockIcon } from '../_components/clock-icon';
 import PlaygroundNodes from '@/components/lexical-editor/nodes/PlaygroundNodes';
 import { NewsEntity } from '@/src/graphql/type.interface';
+import { ClockIcon } from '../_components/clock-icon';
 
 export interface IntroTabProps {
   news: NewsEntity;

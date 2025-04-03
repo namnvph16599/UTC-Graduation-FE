@@ -1,8 +1,6 @@
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
-import { NewsPage } from './news-page';
-import { ClockIcon } from '../_components/clock-icon';
 import { getClient } from '@/src/configs/apollo';
 import { AppRouter } from '@/src/constants/constant';
 import { NewsDocument, NewsQueryResponse, NewsQueryVariables } from '@/src/graphql/queries/news.generated';
@@ -13,6 +11,8 @@ import {
 } from '@/src/graphql/queries/newsCollection.generated';
 import { NewsEntity } from '@/src/graphql/type.interface';
 import { checkValidImage } from '@/src/utils/test-image-address.util';
+import { NewsPage } from './news-page';
+import { ClockIcon } from '../_components/clock-icon';
 
 type Props = {
   params: Promise<{ id: string }>;

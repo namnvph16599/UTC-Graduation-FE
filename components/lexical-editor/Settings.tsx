@@ -6,13 +6,13 @@
  *
  */
 
-import type {JSX} from 'react';
+import { CAN_USE_BEFORE_INPUT } from '@lexical/utils';
+import type { JSX } from 'react';
 
-import {CAN_USE_BEFORE_INPUT} from '@lexical/utils';
-import {useEffect, useMemo, useState} from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import {INITIAL_SETTINGS, isDevPlayground} from './appSettings';
-import {useSettings} from './context/SettingsContext';
+import { INITIAL_SETTINGS, isDevPlayground } from './appSettings';
+import { useSettings } from './context/SettingsContext';
 import Switch from './ui/Switch';
 
 export default function Settings(): JSX.Element {
@@ -41,41 +41,39 @@ export default function Settings(): JSX.Element {
   } = useSettings();
   useEffect(() => {
     if (INITIAL_SETTINGS.disableBeforeInput && CAN_USE_BEFORE_INPUT) {
-      console.error(
-        `Legacy events are enabled (disableBeforeInput) but CAN_USE_BEFORE_INPUT is true`,
-      );
+      console.error(`Legacy events are enabled (disableBeforeInput) but CAN_USE_BEFORE_INPUT is true`);
     }
   }, []);
   const [showSettings, setShowSettings] = useState(false);
   const [isSplitScreen, search] = useMemo(() => {
     const parentWindow = window.parent;
     const _search = windowLocation.search;
-    const _isSplitScreen =
-      parentWindow && parentWindow.location.pathname === '/split/';
+    const _isSplitScreen = parentWindow && parentWindow.location.pathname === '/split/';
     return [_isSplitScreen, _search];
   }, [windowLocation]);
 
   return (
     <>
       <button
-        id="options-button"
         className={`editor-dev-button ${showSettings ? 'active' : ''}`}
+        id='options-button'
         onClick={() => setShowSettings(!showSettings)}
       />
       {showSettings ? (
-        <div className="switches">
+        <div className='switches'>
           {isRichText && isDevPlayground && (
             <Switch
+              checked={isCollab}
               onClick={() => {
                 setOption('isCollab', !isCollab);
                 window.location.reload();
               }}
-              checked={isCollab}
-              text="Collaboration"
+              text='Collaboration'
             />
           )}
           {isDevPlayground && (
             <Switch
+              checked={isSplitScreen}
               onClick={() => {
                 if (isSplitScreen) {
                   window.parent.location.href = `/${search}`;
@@ -83,59 +81,44 @@ export default function Settings(): JSX.Element {
                   window.location.href = `/split/${search}`;
                 }
               }}
-              checked={isSplitScreen}
-              text="Split Screen"
+              text='Split Screen'
             />
           )}
           <Switch
-            onClick={() => setOption('measureTypingPerf', !measureTypingPerf)}
             checked={measureTypingPerf}
-            text="Measure Perf"
+            onClick={() => setOption('measureTypingPerf', !measureTypingPerf)}
+            text='Measure Perf'
           />
+          <Switch checked={showTreeView} onClick={() => setOption('showTreeView', !showTreeView)} text='Debug View' />
           <Switch
-            onClick={() => setOption('showTreeView', !showTreeView)}
-            checked={showTreeView}
-            text="Debug View"
-          />
-          <Switch
-            onClick={() =>
-              setOption('showNestedEditorTreeView', !showNestedEditorTreeView)
-            }
             checked={showNestedEditorTreeView}
-            text="Nested Editors Debug View"
+            onClick={() => setOption('showNestedEditorTreeView', !showNestedEditorTreeView)}
+            text='Nested Editors Debug View'
           />
           <Switch
+            checked={isRichText}
             onClick={() => {
               setOption('isRichText', !isRichText);
               setOption('isCollab', false);
             }}
-            checked={isRichText}
-            text="Rich Text"
+            text='Rich Text'
           />
+          <Switch checked={isCharLimit} onClick={() => setOption('isCharLimit', !isCharLimit)} text='Char Limit' />
           <Switch
-            onClick={() => setOption('isCharLimit', !isCharLimit)}
-            checked={isCharLimit}
-            text="Char Limit"
-          />
-          <Switch
-            onClick={() => setOption('isCharLimitUtf8', !isCharLimitUtf8)}
             checked={isCharLimitUtf8}
-            text="Char Limit (UTF-8)"
+            onClick={() => setOption('isCharLimitUtf8', !isCharLimitUtf8)}
+            text='Char Limit (UTF-8)'
           />
           <Switch
-            onClick={() => setOption('hasLinkAttributes', !hasLinkAttributes)}
             checked={hasLinkAttributes}
-            text="Link Attributes"
+            onClick={() => setOption('hasLinkAttributes', !hasLinkAttributes)}
+            text='Link Attributes'
           />
+          <Switch checked={isMaxLength} onClick={() => setOption('isMaxLength', !isMaxLength)} text='Max Length' />
           <Switch
-            onClick={() => setOption('isMaxLength', !isMaxLength)}
-            checked={isMaxLength}
-            text="Max Length"
-          />
-          <Switch
-            onClick={() => setOption('isAutocomplete', !isAutocomplete)}
             checked={isAutocomplete}
-            text="Autocomplete"
+            onClick={() => setOption('isAutocomplete', !isAutocomplete)}
+            text='Autocomplete'
           />
           {/* <Switch
             onClick={() => {
@@ -146,31 +129,25 @@ export default function Settings(): JSX.Element {
             text="Legacy Events"
           /> */}
           <Switch
+            checked={showTableOfContents}
             onClick={() => {
               setOption('showTableOfContents', !showTableOfContents);
             }}
-            checked={showTableOfContents}
-            text="Table Of Contents"
+            text='Table Of Contents'
           />
           <Switch
-            onClick={() => {
-              setOption(
-                'shouldUseLexicalContextMenu',
-                !shouldUseLexicalContextMenu,
-              );
-            }}
             checked={shouldUseLexicalContextMenu}
-            text="Use Lexical Context Menu"
+            onClick={() => {
+              setOption('shouldUseLexicalContextMenu', !shouldUseLexicalContextMenu);
+            }}
+            text='Use Lexical Context Menu'
           />
           <Switch
-            onClick={() => {
-              setOption(
-                'shouldPreserveNewLinesInMarkdown',
-                !shouldPreserveNewLinesInMarkdown,
-              );
-            }}
             checked={shouldPreserveNewLinesInMarkdown}
-            text="Preserve newlines in Markdown"
+            onClick={() => {
+              setOption('shouldPreserveNewLinesInMarkdown', !shouldPreserveNewLinesInMarkdown);
+            }}
+            text='Preserve newlines in Markdown'
           />
           {/* <Switch
             onClick={() => {
@@ -180,22 +157,19 @@ export default function Settings(): JSX.Element {
             text="Tables have horizontal scroll"
           /> */}
           <Switch
-            onClick={() => {
-              setOption(
-                'shouldAllowHighlightingWithBrackets',
-                !shouldAllowHighlightingWithBrackets,
-              );
-            }}
             checked={shouldAllowHighlightingWithBrackets}
-            text="Use Brackets for Highlighting"
+            onClick={() => {
+              setOption('shouldAllowHighlightingWithBrackets', !shouldAllowHighlightingWithBrackets);
+            }}
+            text='Use Brackets for Highlighting'
           />
 
           <Switch
+            checked={selectionAlwaysOnDisplay}
             onClick={() => {
               setOption('selectionAlwaysOnDisplay', !selectionAlwaysOnDisplay);
             }}
-            checked={selectionAlwaysOnDisplay}
-            text="Retain selection"
+            text='Retain selection'
           />
         </div>
       ) : null}

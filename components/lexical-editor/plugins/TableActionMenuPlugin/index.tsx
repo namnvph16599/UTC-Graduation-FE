@@ -6,11 +6,8 @@
  *
  */
 
-import type {ElementNode, LexicalEditor} from 'lexical';
-import type {JSX} from 'react';
-
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {useLexicalEditable} from '@lexical/react/useLexicalEditable';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import {
   $computeTableMapSkipCellCheck,
   $deleteTableColumn__EXPERIMENTAL,
@@ -33,7 +30,8 @@ import {
   TableObserver,
   TableSelection,
 } from '@lexical/table';
-import {mergeRegister} from '@lexical/utils';
+import { mergeRegister } from '@lexical/utils';
+import type { ElementNode, LexicalEditor } from 'lexical';
 import {
   $getSelection,
   $isElementNode,
@@ -45,13 +43,14 @@ import {
   isDOMNode,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
+import type { JSX } from 'react';
 import * as React from 'react';
-import {ReactPortal, useCallback, useEffect, useRef, useState} from 'react';
-import {createPortal} from 'react-dom';
+import { ReactPortal, useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import useModal from '../../hooks/useModal';
 import ColorPicker from '../../ui/ColorPicker';
-import DropDown, {DropDownItem} from '../../ui/DropDown';
+import DropDown, { DropDownItem } from '../../ui/DropDown';
 
 function computeSelectionCount(selection: TableSelection): {
   columns: number;
@@ -102,13 +101,10 @@ function currentCellBackgroundColor(editor: LexicalEditor): null | string {
 }
 
 type TableCellActionMenuProps = Readonly<{
-  contextRef: {current: null | HTMLElement};
+  contextRef: { current: null | HTMLElement };
   onClose: () => void;
   setIsMenuOpen: (isOpen: boolean) => void;
-  showColorPickerModal: (
-    title: string,
-    showModal: (onClose: () => void) => JSX.Element,
-  ) => void;
+  showColorPickerModal: (title: string, showModal: (onClose: () => void) => JSX.Element) => void;
   tableCellNode: TableCellNode;
   cellMerge: boolean;
 }>;
@@ -130,16 +126,13 @@ function TableActionMenu({
   });
   const [canMergeCells, setCanMergeCells] = useState(false);
   const [canUnmergeCell, setCanUnmergeCell] = useState(false);
-  const [backgroundColor, setBackgroundColor] = useState(
-    () => currentCellBackgroundColor(editor) || '',
-  );
+  const [backgroundColor, setBackgroundColor] = useState(() => currentCellBackgroundColor(editor) || '');
 
   useEffect(() => {
     return editor.registerMutationListener(
       TableCellNode,
       (nodeMutations) => {
-        const nodeUpdated =
-          nodeMutations.get(tableCellNode.getKey()) === 'updated';
+        const nodeUpdated = nodeMutations.get(tableCellNode.getKey()) === 'updated';
 
         if (nodeUpdated) {
           editor.getEditorState().read(() => {
@@ -148,7 +141,7 @@ function TableActionMenu({
           setBackgroundColor(currentCellBackgroundColor(editor) || '');
         }
       },
-      {skipInitialization: true},
+      { skipInitialization: true },
     );
   }, [editor, tableCellNode]);
 
@@ -159,9 +152,7 @@ function TableActionMenu({
       if ($isTableSelection(selection)) {
         const currentSelectionCounts = computeSelectionCount(selection);
         updateSelectionCounts(computeSelectionCount(selection));
-        setCanMergeCells(
-          currentSelectionCounts.columns > 1 || currentSelectionCounts.rows > 1,
-        );
+        setCanMergeCells(currentSelectionCounts.columns > 1 || currentSelectionCounts.rows > 1);
       }
       // Unmerge cell
       setCanUnmergeCell($canUnmerge());
@@ -173,11 +164,7 @@ function TableActionMenu({
     const dropDownElement = dropDownRef.current;
     const rootElement = editor.getRootElement();
 
-    if (
-      menuButtonElement != null &&
-      dropDownElement != null &&
-      rootElement != null
-    ) {
+    if (menuButtonElement != null && dropDownElement != null && rootElement != null) {
       const rootEleRect = rootElement.getBoundingClientRect();
       const menuButtonRect = menuButtonElement.getBoundingClientRect();
       dropDownElement.style.opacity = '1';
@@ -188,8 +175,7 @@ function TableActionMenu({
         leftPosition + dropDownElementRect.width > window.innerWidth ||
         leftPosition + dropDownElementRect.width > rootEleRect.right
       ) {
-        const position =
-          menuButtonRect.left - dropDownElementRect.width - margin;
+        const position = menuButtonRect.left - dropDownElementRect.width - margin;
         leftPosition = (position < 0 ? margin : position) + window.pageXOffset;
       }
       dropDownElement.style.left = `${leftPosition + window.pageXOffset}px`;
@@ -225,15 +211,10 @@ function TableActionMenu({
     editor.update(() => {
       if (tableCellNode.isAttached()) {
         const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-        const tableElement = getTableElement(
-          tableNode,
-          editor.getElementByKey(tableNode.getKey()),
-        );
+        const tableElement = getTableElement(tableNode, editor.getElementByKey(tableNode.getKey()));
 
         if (tableElement === null) {
-          throw new Error(
-            'TableActionMenu: Expected to find tableElement in DOM',
-          );
+          throw new Error('TableActionMenu: Expected to find tableElement in DOM');
         }
 
         const tableObserver = getTableObserverFromTableElement(tableElement);
@@ -330,8 +311,7 @@ function TableActionMenu({
 
       const rowCells = new Set<TableCellNode>();
 
-      const newStyle =
-        tableCellNode.getHeaderStyles() ^ TableCellHeaderStates.ROW;
+      const newStyle = tableCellNode.getHeaderStyles() ^ TableCellHeaderStates.ROW;
 
       for (let col = 0; col < gridMap[tableRowIndex].length; col++) {
         const mapCell = gridMap[tableRowIndex][col];
@@ -354,14 +334,12 @@ function TableActionMenu({
     editor.update(() => {
       const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
 
-      const tableColumnIndex =
-        $getTableColumnIndexFromTableCellNode(tableCellNode);
+      const tableColumnIndex = $getTableColumnIndexFromTableCellNode(tableCellNode);
 
       const [gridMap] = $computeTableMapSkipCellCheck(tableNode, null, null);
 
       const columnCells = new Set<TableCellNode>();
-      const newStyle =
-        tableCellNode.getHeaderStyles() ^ TableCellHeaderStates.COLUMN;
+      const newStyle = tableCellNode.getHeaderStyles() ^ TableCellHeaderStates.COLUMN;
 
       for (let row = 0; row < gridMap.length; row++) {
         const mapCell = gridMap[row][tableColumnIndex];
@@ -411,9 +389,7 @@ function TableActionMenu({
       if (tableCellNode.isAttached()) {
         const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
         if (tableNode) {
-          tableNode.setFrozenColumns(
-            tableNode.getFrozenColumns() === 0 ? 1 : 0,
-          );
+          tableNode.setFrozenColumns(tableNode.getFrozenColumns() === 0 ? 1 : 0);
         }
       }
       clearTableSelection();
@@ -475,199 +451,163 @@ function TableActionMenu({
     if (canMergeCells) {
       mergeCellButton = (
         <button
-          type="button"
-          className="item"
+          className='item'
+          data-test-id='table-merge-cells'
           onClick={() => mergeTableCellsAtSelection()}
-          data-test-id="table-merge-cells">
-          <span className="text">Merge cells</span>
+          type='button'>
+          <span className='text'>Merge cells</span>
         </button>
       );
     } else if (canUnmergeCell) {
       mergeCellButton = (
         <button
-          type="button"
-          className="item"
+          className='item'
+          data-test-id='table-unmerge-cells'
           onClick={() => unmergeTableCellsAtSelection()}
-          data-test-id="table-unmerge-cells">
-          <span className="text">Unmerge cells</span>
+          type='button'>
+          <span className='text'>Unmerge cells</span>
         </button>
       );
     }
   }
 
   return createPortal(
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
-      className="dropdown"
-      ref={dropDownRef}
+      className='dropdown'
       onClick={(e) => {
         e.stopPropagation();
-      }}>
+      }}
+      ref={dropDownRef}>
       {mergeCellButton}
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-background-color'
         onClick={() =>
           showColorPickerModal('Cell background color', () => (
-            <ColorPicker
-              color={backgroundColor}
-              onChange={handleCellBackgroundColor}
-            />
+            <ColorPicker color={backgroundColor} onChange={handleCellBackgroundColor} />
           ))
         }
-        data-test-id="table-background-color">
-        <span className="text">Background color</span>
+        type='button'>
+        <span className='text'>Background color</span>
       </button>
-      <button
-        type="button"
-        className="item"
-        onClick={() => toggleRowStriping()}
-        data-test-id="table-row-striping">
-        <span className="text">Toggle Row Striping</span>
+      <button className='item' data-test-id='table-row-striping' onClick={() => toggleRowStriping()} type='button'>
+        <span className='text'>Toggle Row Striping</span>
       </button>
       <DropDown
-        buttonLabel="Vertical Align"
-        buttonClassName="item"
-        buttonAriaLabel="Formatting options for vertical alignment">
+        buttonAriaLabel='Formatting options for vertical alignment'
+        buttonClassName='item'
+        buttonLabel='Vertical Align'>
         <DropDownItem
+          className='item wide'
           onClick={() => {
             formatVerticalAlign('top');
-          }}
-          className="item wide">
-          <div className="icon-text-container">
-            <i className="icon vertical-top" />
-            <span className="text">Top Align</span>
+          }}>
+          <div className='icon-text-container'>
+            <i className='icon vertical-top' />
+            <span className='text'>Top Align</span>
           </div>
         </DropDownItem>
         <DropDownItem
+          className='item wide'
           onClick={() => {
             formatVerticalAlign('middle');
-          }}
-          className="item wide">
-          <div className="icon-text-container">
-            <i className="icon vertical-middle" />
-            <span className="text">Middle Align</span>
+          }}>
+          <div className='icon-text-container'>
+            <i className='icon vertical-middle' />
+            <span className='text'>Middle Align</span>
           </div>
         </DropDownItem>
         <DropDownItem
+          className='item wide'
           onClick={() => {
             formatVerticalAlign('bottom');
-          }}
-          className="item wide">
-          <div className="icon-text-container">
-            <i className="icon vertical-bottom" />
-            <span className="text">Bottom Align</span>
+          }}>
+          <div className='icon-text-container'>
+            <i className='icon vertical-bottom' />
+            <span className='text'>Bottom Align</span>
           </div>
         </DropDownItem>
       </DropDown>
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-freeze-first-row'
         onClick={() => toggleFirstRowFreeze()}
-        data-test-id="table-freeze-first-row">
-        <span className="text">Toggle First Row Freeze</span>
+        type='button'>
+        <span className='text'>Toggle First Row Freeze</span>
       </button>
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-freeze-first-column'
         onClick={() => toggleFirstColumnFreeze()}
-        data-test-id="table-freeze-first-column">
-        <span className="text">Toggle First Column Freeze</span>
+        type='button'>
+        <span className='text'>Toggle First Column Freeze</span>
       </button>
       <hr />
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-insert-row-above'
         onClick={() => insertTableRowAtSelection(false)}
-        data-test-id="table-insert-row-above">
-        <span className="text">
-          Insert{' '}
-          {selectionCounts.rows === 1 ? 'row' : `${selectionCounts.rows} rows`}{' '}
-          above
-        </span>
+        type='button'>
+        <span className='text'>Insert {selectionCounts.rows === 1 ? 'row' : `${selectionCounts.rows} rows`} above</span>
       </button>
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-insert-row-below'
         onClick={() => insertTableRowAtSelection(true)}
-        data-test-id="table-insert-row-below">
-        <span className="text">
-          Insert{' '}
-          {selectionCounts.rows === 1 ? 'row' : `${selectionCounts.rows} rows`}{' '}
-          below
-        </span>
+        type='button'>
+        <span className='text'>Insert {selectionCounts.rows === 1 ? 'row' : `${selectionCounts.rows} rows`} below</span>
       </button>
       <hr />
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-insert-column-before'
         onClick={() => insertTableColumnAtSelection(false)}
-        data-test-id="table-insert-column-before">
-        <span className="text">
-          Insert{' '}
-          {selectionCounts.columns === 1
-            ? 'column'
-            : `${selectionCounts.columns} columns`}{' '}
-          left
+        type='button'>
+        <span className='text'>
+          Insert {selectionCounts.columns === 1 ? 'column' : `${selectionCounts.columns} columns`} left
         </span>
       </button>
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-insert-column-after'
         onClick={() => insertTableColumnAtSelection(true)}
-        data-test-id="table-insert-column-after">
-        <span className="text">
-          Insert{' '}
-          {selectionCounts.columns === 1
-            ? 'column'
-            : `${selectionCounts.columns} columns`}{' '}
-          right
+        type='button'>
+        <span className='text'>
+          Insert {selectionCounts.columns === 1 ? 'column' : `${selectionCounts.columns} columns`} right
         </span>
       </button>
       <hr />
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-delete-columns'
         onClick={() => deleteTableColumnAtSelection()}
-        data-test-id="table-delete-columns">
-        <span className="text">Delete column</span>
+        type='button'>
+        <span className='text'>Delete column</span>
       </button>
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-delete-rows'
         onClick={() => deleteTableRowAtSelection()}
-        data-test-id="table-delete-rows">
-        <span className="text">Delete row</span>
+        type='button'>
+        <span className='text'>Delete row</span>
       </button>
-      <button
-        type="button"
-        className="item"
-        onClick={() => deleteTableAtSelection()}
-        data-test-id="table-delete">
-        <span className="text">Delete table</span>
+      <button className='item' data-test-id='table-delete' onClick={() => deleteTableAtSelection()} type='button'>
+        <span className='text'>Delete table</span>
       </button>
       <hr />
-      <button
-        type="button"
-        className="item"
-        onClick={() => toggleTableRowIsHeader()}
-        data-test-id="table-row-header">
-        <span className="text">
-          {(tableCellNode.__headerState & TableCellHeaderStates.ROW) ===
-          TableCellHeaderStates.ROW
-            ? 'Remove'
-            : 'Add'}{' '}
+      <button className='item' data-test-id='table-row-header' onClick={() => toggleTableRowIsHeader()} type='button'>
+        <span className='text'>
+          {(tableCellNode.__headerState & TableCellHeaderStates.ROW) === TableCellHeaderStates.ROW ? 'Remove' : 'Add'}{' '}
           row header
         </span>
       </button>
       <button
-        type="button"
-        className="item"
+        className='item'
+        data-test-id='table-column-header'
         onClick={() => toggleTableColumnIsHeader()}
-        data-test-id="table-column-header">
-        <span className="text">
-          {(tableCellNode.__headerState & TableCellHeaderStates.COLUMN) ===
-          TableCellHeaderStates.COLUMN
+        type='button'>
+        <span className='text'>
+          {(tableCellNode.__headerState & TableCellHeaderStates.COLUMN) === TableCellHeaderStates.COLUMN
             ? 'Remove'
             : 'Add'}{' '}
           column header
@@ -691,40 +631,28 @@ function TableCellActionMenuContainer({
   const menuRootRef = useRef<HTMLButtonElement | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const [tableCellNode, setTableMenuCellNode] = useState<TableCellNode | null>(
-    null,
-  );
+  const [tableCellNode, setTableMenuCellNode] = useState<TableCellNode | null>(null);
 
   const [colorPickerModal, showColorPickerModal] = useModal();
 
-  const checkTableCellOverflow = useCallback(
-    (tableCellParentNodeDOM: HTMLElement): boolean => {
-      const scrollableContainer = tableCellParentNodeDOM.closest(
-        '.PlaygroundEditorTheme__tableScrollableWrapper',
-      );
-      if (scrollableContainer) {
-        const containerRect = (
-          scrollableContainer as HTMLElement
-        ).getBoundingClientRect();
-        const cellRect = tableCellParentNodeDOM.getBoundingClientRect();
+  const checkTableCellOverflow = useCallback((tableCellParentNodeDOM: HTMLElement): boolean => {
+    const scrollableContainer = tableCellParentNodeDOM.closest('.PlaygroundEditorTheme__tableScrollableWrapper');
+    if (scrollableContainer) {
+      const containerRect = (scrollableContainer as HTMLElement).getBoundingClientRect();
+      const cellRect = tableCellParentNodeDOM.getBoundingClientRect();
 
-        // Calculate where the action button would be positioned (5px from right edge of cell)
-        // Also account for the button width and table cell padding (8px)
-        const actionButtonRight = cellRect.right - 5;
-        const actionButtonLeft = actionButtonRight - 28; // 20px width + 8px padding
+      // Calculate where the action button would be positioned (5px from right edge of cell)
+      // Also account for the button width and table cell padding (8px)
+      const actionButtonRight = cellRect.right - 5;
+      const actionButtonLeft = actionButtonRight - 28; // 20px width + 8px padding
 
-        // Only hide if the action button would overflow the container
-        if (
-          actionButtonRight > containerRect.right ||
-          actionButtonLeft < containerRect.left
-        ) {
-          return true;
-        }
+      // Only hide if the action button would overflow the container
+      if (actionButtonRight > containerRect.right || actionButtonLeft < containerRect.left) {
+        return true;
       }
-      return false;
-    },
-    [],
-  );
+    }
+    return false;
+  }, []);
 
   const $moveMenu = useCallback(() => {
     const menu = menuButtonRef.current;
@@ -753,22 +681,15 @@ function TableCellActionMenuContainer({
       nativeSelection !== null &&
       rootElement.contains(nativeSelection.anchorNode)
     ) {
-      const tableCellNodeFromSelection = $getTableCellNodeFromLexicalNode(
-        selection.anchor.getNode(),
-      );
+      const tableCellNodeFromSelection = $getTableCellNodeFromLexicalNode(selection.anchor.getNode());
 
       if (tableCellNodeFromSelection == null) {
         return disable();
       }
 
-      tableCellParentNodeDOM = editor.getElementByKey(
-        tableCellNodeFromSelection.getKey(),
-      );
+      tableCellParentNodeDOM = editor.getElementByKey(tableCellNodeFromSelection.getKey());
 
-      if (
-        tableCellParentNodeDOM == null ||
-        !tableCellNodeFromSelection.isAttached()
-      ) {
+      if (tableCellParentNodeDOM == null || !tableCellNodeFromSelection.isAttached()) {
         return disable();
       }
 
@@ -776,38 +697,24 @@ function TableCellActionMenuContainer({
         return disable();
       }
 
-      const tableNode = $getTableNodeFromLexicalNodeOrThrow(
-        tableCellNodeFromSelection,
-      );
-      const tableElement = getTableElement(
-        tableNode,
-        editor.getElementByKey(tableNode.getKey()),
-      );
+      const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNodeFromSelection);
+      const tableElement = getTableElement(tableNode, editor.getElementByKey(tableNode.getKey()));
 
       if (tableElement === null) {
-        throw new Error(
-          'TableActionMenu: Expected to find tableElement in DOM',
-        );
+        throw new Error('TableActionMenu: Expected to find tableElement in DOM');
       }
 
       tableObserver = getTableObserverFromTableElement(tableElement);
       setTableMenuCellNode(tableCellNodeFromSelection);
     } else if ($isTableSelection(selection)) {
-      const anchorNode = $getTableCellNodeFromLexicalNode(
-        selection.anchor.getNode(),
-      );
+      const anchorNode = $getTableCellNodeFromLexicalNode(selection.anchor.getNode());
       if (!$isTableCellNode(anchorNode)) {
         throw new Error('TableSelection anchorNode must be a TableCellNode');
       }
       const tableNode = $getTableNodeFromLexicalNodeOrThrow(anchorNode);
-      const tableElement = getTableElement(
-        tableNode,
-        editor.getElementByKey(tableNode.getKey()),
-      );
+      const tableElement = getTableElement(tableNode, editor.getElementByKey(tableNode.getKey()));
       if (tableElement === null) {
-        throw new Error(
-          'TableActionMenu: Expected to find tableElement in DOM',
-        );
+        throw new Error('TableActionMenu: Expected to find tableElement in DOM');
       }
       tableObserver = getTableObserverFromTableElement(tableElement);
       tableCellParentNodeDOM = editor.getElementByKey(anchorNode.getKey());
@@ -826,14 +733,8 @@ function TableCellActionMenuContainer({
       return disable();
     }
     const enabled = !tableObserver || !tableObserver.isSelecting;
-    menu.classList.toggle(
-      'table-cell-action-button-container--active',
-      enabled,
-    );
-    menu.classList.toggle(
-      'table-cell-action-button-container--inactive',
-      !enabled,
-    );
+    menu.classList.toggle('table-cell-action-button-container--active', enabled);
+    menu.classList.toggle('table-cell-action-button-container--inactive', !enabled);
     if (enabled) {
       const tableCellRect = tableCellParentNodeDOM.getBoundingClientRect();
       const anchorRect = anchorElem.getBoundingClientRect();
@@ -859,11 +760,7 @@ function TableCellActionMenuContainer({
     };
     return mergeRegister(
       editor.registerUpdateListener(delayedCallback),
-      editor.registerCommand(
-        SELECTION_CHANGE_COMMAND,
-        delayedCallback,
-        COMMAND_PRIORITY_CRITICAL,
-      ),
+      editor.registerCommand(SELECTION_CHANGE_COMMAND, delayedCallback, COMMAND_PRIORITY_CRITICAL),
       editor.registerRootListener((rootElement, prevRootElement) => {
         if (prevRootElement) {
           prevRootElement.removeEventListener('pointerup', delayedCallback);
@@ -888,28 +785,28 @@ function TableCellActionMenuContainer({
   }, [prevTableCellDOM, tableCellNode]);
 
   return (
-    <div className="table-cell-action-button-container" ref={menuButtonRef}>
+    <div className='table-cell-action-button-container' ref={menuButtonRef}>
       {tableCellNode != null && (
         <>
           <button
-            type="button"
-            className="table-cell-action-button chevron-down"
+            className='table-cell-action-button chevron-down'
             onClick={(e) => {
               e.stopPropagation();
               setIsMenuOpen(!isMenuOpen);
             }}
-            ref={menuRootRef}>
-            <i className="chevron-down" />
+            ref={menuRootRef}
+            type='button'>
+            <i className='chevron-down' />
           </button>
           {colorPickerModal}
           {isMenuOpen && (
             <TableActionMenu
-              contextRef={menuRootRef}
-              setIsMenuOpen={setIsMenuOpen}
-              onClose={() => setIsMenuOpen(false)}
-              tableCellNode={tableCellNode}
               cellMerge={cellMerge}
+              contextRef={menuRootRef}
+              onClose={() => setIsMenuOpen(false)}
+              setIsMenuOpen={setIsMenuOpen}
               showColorPickerModal={showColorPickerModal}
+              tableCellNode={tableCellNode}
             />
           )}
         </>
@@ -927,12 +824,7 @@ export default function TableActionMenuPlugin({
 }): null | ReactPortal {
   const isEditable = useLexicalEditable();
   return createPortal(
-    isEditable ? (
-      <TableCellActionMenuContainer
-        anchorElem={anchorElem}
-        cellMerge={cellMerge}
-      />
-    ) : null,
+    isEditable ? <TableCellActionMenuContainer anchorElem={anchorElem} cellMerge={cellMerge} /> : null,
     anchorElem,
   );
 }

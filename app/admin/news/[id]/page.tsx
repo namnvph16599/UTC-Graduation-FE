@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { NewsForm } from '../_components/news-form';
 import { AppRouter } from '@/src/constants/constant';
+import { NewsForm } from '../_components/news-form';
 
 type Props = {
   params: Promise<{ id: string }>;

@@ -6,14 +6,15 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
 import './Modal.css';
 
-import {isDOMNode} from 'lexical';
+// eslint-disable-next-line import/order
+import { isDOMNode } from 'lexical';
 import * as React from 'react';
-import {ReactNode, useEffect, useRef} from 'react';
-import {createPortal} from 'react-dom';
+import { ReactNode, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 function PortalImpl({
   onClose,
@@ -43,12 +44,7 @@ function PortalImpl({
     };
     const clickOutsideHandler = (event: MouseEvent) => {
       const target = event.target;
-      if (
-        modalRef.current !== null &&
-        isDOMNode(target) &&
-        !modalRef.current.contains(target) &&
-        closeOnClickOutside
-      ) {
+      if (modalRef.current !== null && isDOMNode(target) && !modalRef.current.contains(target) && closeOnClickOutside) {
         onClose();
       }
     };
@@ -71,17 +67,13 @@ function PortalImpl({
   }, [closeOnClickOutside, onClose]);
 
   return (
-    <div className="Modal__overlay" role="dialog">
-      <div className="Modal__modal" tabIndex={-1} ref={modalRef}>
-        <h2 className="Modal__title">{title}</h2>
-        <button
-          className="Modal__closeButton"
-          aria-label="Close modal"
-          type="button"
-          onClick={onClose}>
+    <div className='Modal__overlay' role='dialog'>
+      <div className='Modal__modal' ref={modalRef} tabIndex={-1}>
+        <h2 className='Modal__title'>{title}</h2>
+        <button aria-label='Close modal' className='Modal__closeButton' onClick={onClose} type='button'>
           X
         </button>
-        <div className="Modal__content">{children}</div>
+        <div className='Modal__content'>{children}</div>
       </div>
     </div>
   );
@@ -99,10 +91,7 @@ export default function Modal({
   title: string;
 }): JSX.Element {
   return createPortal(
-    <PortalImpl
-      onClose={onClose}
-      title={title}
-      closeOnClickOutside={closeOnClickOutside}>
+    <PortalImpl closeOnClickOutside={closeOnClickOutside} onClose={onClose} title={title}>
       {children}
     </PortalImpl>,
     document.body,

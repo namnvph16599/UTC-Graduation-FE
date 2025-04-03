@@ -26,6 +26,8 @@ export const UploadImage = ({ title, error, field, width = 400, height = 400 }: 
         reader.readAsDataURL(acceptedFiles[0]);
         field.onChange(acceptedFiles[0]);
       } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log('error', error);
         setPreview(null);
         field.onChange('');
       }

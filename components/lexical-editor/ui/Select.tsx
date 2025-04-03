@@ -6,7 +6,7 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
 import './Select.css';
 
@@ -17,15 +17,10 @@ interface SelectProps extends SelectIntrinsicProps {
   label: string;
 }
 
-export default function Select({
-  children,
-  label,
-  className,
-  ...other
-}: SelectProps): JSX.Element {
+export default function Select({ children, label, className, ...other }: SelectProps): JSX.Element {
   return (
-    <div className="Input__wrapper">
-      <label style={{marginTop: '-1em'}} className="Input__label">
+    <div className='Input__wrapper'>
+      <label className='Input__label' style={{ marginTop: '-1em' }}>
         {label}
       </label>
       <select {...other} className={className || 'select'}>

@@ -6,24 +6,16 @@
  *
  */
 
-import type {JSX} from 'react';
+import { ElementFormatType } from 'lexical';
+import type { JSX } from 'react';
 
-import {ElementFormatType} from 'lexical';
-import React, {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 export const MIN_ALLOWED_FONT_SIZE = 8;
 export const MAX_ALLOWED_FONT_SIZE = 72;
 export const DEFAULT_FONT_SIZE = 15;
 
-const rootTypeToRootName = {
+export const rootTypeToRootName = {
   root: 'Root',
   table: 'Table',
 };
@@ -44,7 +36,6 @@ export const blockTypeToBlockName = {
 };
 
 //disable eslint sorting rule for quick reference to toolbar state
-/* eslint-disable sort-keys-fix/sort-keys-fix */
 const INITIAL_TOOLBAR_STATE = {
   bgColor: '#fff',
   blockType: 'paragraph' as keyof typeof blockTypeToBlockName,
@@ -83,31 +74,21 @@ type ToolbarStateValue<Key extends ToolbarStateKey> = ToolbarState[Key];
 
 type ContextShape = {
   toolbarState: ToolbarState;
-  updateToolbarState<Key extends ToolbarStateKey>(
-    key: Key,
-    value: ToolbarStateValue<Key>,
-  ): void;
+  updateToolbarState<Key extends ToolbarStateKey>(key: Key, value: ToolbarStateValue<Key>): void;
 };
 
 const Context = createContext<ContextShape | undefined>(undefined);
 
-export const ToolbarContext = ({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element => {
+export const ToolbarContext = ({ children }: { children: ReactNode }): JSX.Element => {
   const [toolbarState, setToolbarState] = useState(INITIAL_TOOLBAR_STATE);
   const selectionFontSize = toolbarState.fontSize;
 
-  const updateToolbarState = useCallback(
-    <Key extends ToolbarStateKey>(key: Key, value: ToolbarStateValue<Key>) => {
-      setToolbarState((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
-    },
-    [],
-  );
+  const updateToolbarState = useCallback(<Key extends ToolbarStateKey>(key: Key, value: ToolbarStateValue<Key>) => {
+    setToolbarState((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  }, []);
 
   useEffect(() => {
     updateToolbarState('fontSizeInputValue', selectionFontSize.slice(0, -2));

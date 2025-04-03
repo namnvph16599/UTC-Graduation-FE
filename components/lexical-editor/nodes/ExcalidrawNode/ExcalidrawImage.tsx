@@ -6,16 +6,13 @@
  *
  */
 
-import type {
-  ExcalidrawElement,
-  NonDeleted,
-} from '@excalidraw/excalidraw/element/types';
-import type {AppState, BinaryFiles} from '@excalidraw/excalidraw/types';
-import type {JSX} from 'react';
+import { exportToSvg } from '@excalidraw/excalidraw';
+import type { ExcalidrawElement, NonDeleted } from '@excalidraw/excalidraw/element/types';
+import type { AppState, BinaryFiles } from '@excalidraw/excalidraw/types';
+import type { JSX } from 'react';
 
-import {exportToSvg} from '@excalidraw/excalidraw';
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 type ImageType = 'svg' | 'canvas';
 
@@ -122,6 +119,8 @@ export default function ExcalidrawImage({
 
   return (
     <div
+      className={rootClassName ?? ''}
+      dangerouslySetInnerHTML={{ __html: Svg?.outerHTML ?? '' }}
       ref={(node) => {
         if (node) {
           if (imageContainerRef) {
@@ -129,9 +128,7 @@ export default function ExcalidrawImage({
           }
         }
       }}
-      className={rootClassName ?? ''}
       style={containerStyle}
-      dangerouslySetInnerHTML={{__html: Svg?.outerHTML ?? ''}}
     />
   );
 }

@@ -6,14 +6,9 @@
  *
  */
 
-import type {JSX} from 'react';
-
-import {$isLinkNode, TOGGLE_LINK_COMMAND} from '@lexical/link';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {
-  LexicalContextMenuPlugin,
-  MenuOption,
-} from '@lexical/react/LexicalContextMenuPlugin';
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { LexicalContextMenuPlugin, MenuOption } from '@lexical/react/LexicalContextMenuPlugin';
 import {
   $getNearestNodeFromDOMNode,
   $getSelection,
@@ -25,7 +20,8 @@ import {
   type LexicalNode,
   PASTE_COMMAND,
 } from 'lexical';
-import {useCallback, useMemo} from 'react';
+import type { JSX } from 'react';
+import { useCallback, useMemo } from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
@@ -48,16 +44,16 @@ function ContextMenuItem({
   }
   return (
     <li
-      key={option.key}
-      tabIndex={-1}
-      className={className}
-      ref={option.setRefElement}
-      role="option"
       aria-selected={isSelected}
+      className={className}
       id={'typeahead-item-' + index}
+      key={option.key}
+      onClick={onClick}
       onMouseEnter={onMouseEnter}
-      onClick={onClick}>
-      <span className="text">{option.title}</span>
+      ref={option.setRefElement}
+      role='option'
+      tabIndex={-1}>
+      <span className='text'>{option.title}</span>
     </li>
   );
 }
@@ -74,15 +70,15 @@ function ContextMenu({
   options: Array<ContextMenuOption>;
 }) {
   return (
-    <div className="typeahead-popover">
+    <div className='typeahead-popover'>
       <ul>
         {options.map((option: ContextMenuOption, i: number) => (
           <ContextMenuItem
             index={i}
             isSelected={selectedItemIndex === i}
+            key={option.key}
             onClick={() => onOptionClick(option, i)}
             onMouseEnter={() => onOptionMouseEnter(i)}
-            key={option.key}
             option={option}
           />
         ))}
@@ -180,9 +176,7 @@ export default function ContextMenuPlugin(): JSX.Element {
           const selection = $getSelection();
           if ($isRangeSelection(selection)) {
             const currentNode = selection.anchor.getNode();
-            const ancestorNodeWithRootAsParent = currentNode
-              .getParents()
-              .at(-2);
+            const ancestorNodeWithRootAsParent = currentNode.getParents().at(-2);
 
             ancestorNodeWithRootAsParent?.remove();
           } else if ($isNodeSelection(selection)) {
@@ -201,11 +195,7 @@ export default function ContextMenuPlugin(): JSX.Element {
   const [options, setOptions] = React.useState(defaultOptions);
 
   const onSelectOption = useCallback(
-    (
-      selectedOption: ContextMenuOption,
-      targetNode: LexicalNode | null,
-      closeMenu: () => void,
-    ) => {
+    (selectedOption: ContextMenuOption, targetNode: LexicalNode | null, closeMenu: () => void) => {
       editor.update(() => {
         selectedOption.onSelect(targetNode);
         closeMenu();
@@ -237,32 +227,22 @@ export default function ContextMenuPlugin(): JSX.Element {
 
   return (
     <LexicalContextMenuPlugin
-      options={options}
-      onSelectOption={onSelectOption}
-      onWillOpen={onWillOpen}
       menuRenderFn={(
         anchorElementRef,
-        {
-          selectedIndex,
-          options: _options,
-          selectOptionAndCleanUp,
-          setHighlightedIndex,
-        },
-        {setMenuRef},
+        { selectedIndex, options: _options, selectOptionAndCleanUp, setHighlightedIndex },
+        { setMenuRef },
       ) =>
         anchorElementRef.current
           ? ReactDOM.createPortal(
               <div
-                className="typeahead-popover auto-embed-menu"
+                className='typeahead-popover auto-embed-menu'
+                ref={setMenuRef}
                 style={{
                   marginLeft: anchorElementRef.current.style.width,
                   userSelect: 'none',
                   width: 200,
-                }}
-                ref={setMenuRef}>
+                }}>
                 <ContextMenu
-                  options={options}
-                  selectedItemIndex={selectedIndex}
                   onOptionClick={(option: ContextMenuOption, index: number) => {
                     setHighlightedIndex(index);
                     selectOptionAndCleanUp(option);
@@ -270,12 +250,17 @@ export default function ContextMenuPlugin(): JSX.Element {
                   onOptionMouseEnter={(index: number) => {
                     setHighlightedIndex(index);
                   }}
+                  options={options}
+                  selectedItemIndex={selectedIndex}
                 />
               </div>,
               anchorElementRef.current,
             )
           : null
       }
+      onSelectOption={onSelectOption}
+      onWillOpen={onWillOpen}
+      options={options}
     />
   );
 }

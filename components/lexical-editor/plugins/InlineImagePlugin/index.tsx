@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -5,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import type {Position} from '../../nodes/InlineImageNode/InlineImageNode';
-import type {JSX} from 'react';
+import type { Position } from '../../nodes/InlineImageNode/InlineImageNode';
+import type { JSX } from 'react';
 
 import '../../nodes/InlineImageNode/InlineImageNode.css';
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {$wrapNodeInElement, mergeRegister} from '@lexical/utils';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
 import {
   $createParagraphNode,
   $createRangeSelection,
@@ -33,7 +34,7 @@ import {
   LexicalEditor,
 } from 'lexical';
 import * as React from 'react';
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
   $createInlineImageNode,
@@ -42,7 +43,7 @@ import {
   InlineImagePayload,
 } from '../../nodes/InlineImageNode/InlineImageNode';
 import Button from '../../ui/Button';
-import {DialogActions} from '../../ui/Dialog';
+import { DialogActions } from '../../ui/Dialog';
 import FileInput from '../../ui/FileInput';
 import Select from '../../ui/Select';
 import TextInput from '../../ui/TextInput';
@@ -101,58 +102,50 @@ export function InsertInlineImageDialog({
   }, [activeEditor]);
 
   const handleOnClick = () => {
-    const payload = {altText, position, showCaption, src};
+    const payload = { altText, position, showCaption, src };
     activeEditor.dispatchCommand(INSERT_INLINE_IMAGE_COMMAND, payload);
     onClose();
   };
 
   return (
     <>
-      <div style={{marginBottom: '1em'}}>
-        <FileInput
-          label="Image Upload"
-          onChange={loadImage}
-          accept="image/*"
-          data-test-id="image-modal-file-upload"
-        />
+      <div style={{ marginBottom: '1em' }}>
+        <FileInput accept='image/*' data-test-id='image-modal-file-upload' label='Image Upload' onChange={loadImage} />
       </div>
-      <div style={{marginBottom: '1em'}}>
+      <div style={{ marginBottom: '1em' }}>
         <TextInput
-          label="Alt Text"
-          placeholder="Descriptive alternative text"
+          data-test-id='image-modal-alt-text-input'
+          label='Alt Text'
           onChange={setAltText}
+          placeholder='Descriptive alternative text'
           value={altText}
-          data-test-id="image-modal-alt-text-input"
         />
       </div>
 
       <Select
-        style={{marginBottom: '1em', width: '290px'}}
-        label="Position"
-        name="position"
-        id="position-select"
-        onChange={handlePositionChange}>
-        <option value="left">Left</option>
-        <option value="right">Right</option>
-        <option value="full">Full Width</option>
+        id='position-select'
+        label='Position'
+        name='position'
+        onChange={handlePositionChange}
+        style={{ marginBottom: '1em', width: '290px' }}>
+        <option value='left'>Left</option>
+        <option value='right'>Right</option>
+        <option value='full'>Full Width</option>
       </Select>
 
-      <div className="Input__wrapper">
+      <div className='Input__wrapper'>
         <input
-          id="caption"
-          className="InlineImageNode_Checkbox"
-          type="checkbox"
           checked={showCaption}
+          className='InlineImageNode_Checkbox'
+          id='caption'
           onChange={handleShowCaptionChange}
+          type='checkbox'
         />
-        <label htmlFor="caption">Show Caption</label>
+        <label htmlFor='caption'>Show Caption</label>
       </div>
 
       <DialogActions>
-        <Button
-          data-test-id="image-modal-file-upload-btn"
-          disabled={isDisabled}
-          onClick={() => handleOnClick()}>
+        <Button data-test-id='image-modal-file-upload-btn' disabled={isDisabled} onClick={() => handleOnClick()}>
           Confirm
         </Button>
       </DialogActions>
@@ -209,8 +202,7 @@ export default function InlineImagePlugin(): JSX.Element | null {
   return null;
 }
 
-const TRANSPARENT_IMAGE =
-  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+const TRANSPARENT_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 const img = document.createElement('img');
 img.src = TRANSPARENT_IMAGE;
 
@@ -293,7 +285,7 @@ function getDragImageData(event: DragEvent): null | InsertInlineImagePayload {
   if (!dragData) {
     return null;
   }
-  const {type, data} = JSON.parse(dragData);
+  const { type, data } = JSON.parse(dragData);
   if (type !== 'image') {
     return null;
   }

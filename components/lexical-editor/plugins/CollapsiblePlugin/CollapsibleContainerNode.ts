@@ -6,7 +6,7 @@
  *
  */
 
-import {IS_CHROME} from '@lexical/utils';
+import { IS_CHROME } from '@lexical/utils';
 import {
   $getSiblingCaret,
   $isElementNode,
@@ -25,7 +25,7 @@ import {
   Spread,
 } from 'lexical';
 
-import {setDomHiddenUntilFound} from './CollapsibleUtils';
+import { setDomHiddenUntilFound } from './CollapsibleUtils';
 
 type SerializedCollapsibleContainerNode = Spread<
   {
@@ -34,9 +34,7 @@ type SerializedCollapsibleContainerNode = Spread<
   SerializedElementNode
 >;
 
-export function $convertDetailsElement(
-  domNode: HTMLDetailsElement,
-): DOMConversionOutput | null {
+export function $convertDetailsElement(domNode: HTMLDetailsElement): DOMConversionOutput | null {
   const isOpen = domNode.open !== undefined ? domNode.open : true;
   const node = $createCollapsibleContainerNode(isOpen);
   return {
@@ -141,19 +139,15 @@ export class CollapsibleContainerNode extends ElementNode {
     };
   }
 
-  static importJSON(
-    serializedNode: SerializedCollapsibleContainerNode,
-  ): CollapsibleContainerNode {
-    return $createCollapsibleContainerNode(serializedNode.open).updateFromJSON(
-      serializedNode,
-    );
+  static importJSON(serializedNode: SerializedCollapsibleContainerNode): CollapsibleContainerNode {
+    return $createCollapsibleContainerNode(serializedNode.open).updateFromJSON(serializedNode);
   }
 
   exportDOM(): DOMExportOutput {
     const element = document.createElement('details');
     element.classList.add('Collapsible__container');
     element.setAttribute('open', this.__open.toString());
-    return {element};
+    return { element };
   }
 
   exportJSON(): SerializedCollapsibleContainerNode {
@@ -177,14 +171,10 @@ export class CollapsibleContainerNode extends ElementNode {
   }
 }
 
-export function $createCollapsibleContainerNode(
-  isOpen: boolean,
-): CollapsibleContainerNode {
+export function $createCollapsibleContainerNode(isOpen: boolean): CollapsibleContainerNode {
   return new CollapsibleContainerNode(isOpen);
 }
 
-export function $isCollapsibleContainerNode(
-  node: LexicalNode | null | undefined,
-): node is CollapsibleContainerNode {
+export function $isCollapsibleContainerNode(node: LexicalNode | null | undefined): node is CollapsibleContainerNode {
   return node instanceof CollapsibleContainerNode;
 }

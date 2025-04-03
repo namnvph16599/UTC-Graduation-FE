@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -6,28 +7,28 @@
  *
  */
 
-import type {LexicalEditor, NodeKey} from 'lexical';
-import type {JSX} from 'react';
+import type { LexicalEditor, NodeKey } from 'lexical';
+import type { JSX } from 'react';
 
 import './StickyNode.css';
 
-import {useCollaborationContext} from '@lexical/react/LexicalCollaborationContext';
-import {CollaborationPlugin} from '@lexical/react/LexicalCollaborationPlugin';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
-import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
-import {LexicalNestedComposer} from '@lexical/react/LexicalNestedComposer';
-import {PlainTextPlugin} from '@lexical/react/LexicalPlainTextPlugin';
-import {calculateZoomLevel} from '@lexical/utils';
-import {$getNodeByKey} from 'lexical';
+import { useCollaborationContext } from '@lexical/react/LexicalCollaborationContext';
+import { CollaborationPlugin } from '@lexical/react/LexicalCollaborationPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { LexicalNestedComposer } from '@lexical/react/LexicalNestedComposer';
+import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
+import { calculateZoomLevel } from '@lexical/utils';
+import { $getNodeByKey } from 'lexical';
 import * as React from 'react';
-import {useEffect, useLayoutEffect, useRef} from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
-import {createWebsocketProvider} from '../collaboration';
-import {useSharedHistoryContext} from '../context/SharedHistoryContext';
+import { createWebsocketProvider } from '../collaboration';
+import { $isStickyNode } from './StickyNode';
+import { useSharedHistoryContext } from '../context/SharedHistoryContext';
 import StickyEditorTheme from '../themes/StickyEditorTheme';
 import ContentEditable from '../ui/ContentEditable';
-import {$isStickyNode} from './StickyNode';
 
 type Positioning = {
   isDragging: boolean;
@@ -38,10 +39,7 @@ type Positioning = {
   y: number;
 };
 
-function positionSticky(
-  stickyElem: HTMLElement,
-  positioning: Positioning,
-): void {
+function positionSticky(stickyElem: HTMLElement, positioning: Positioning): void {
   const style = stickyElem.style;
   const rootElementRect = positioning.rootElementRect;
   const rectLeft = rootElementRect !== null ? rootElementRect.left : 0;
@@ -73,7 +71,7 @@ export default function StickyComponent({
     x: 0,
     y: 0,
   });
-  const {isCollabActive} = useCollaborationContext();
+  const { isCollabActive } = useCollaborationContext();
 
   useEffect(() => {
     const position = positioningRef.current;
@@ -91,7 +89,7 @@ export default function StickyComponent({
     const resizeObserver = new ResizeObserver((entries) => {
       for (let i = 0; i < entries.length; i++) {
         const entry = entries[i];
-        const {target} = entry;
+        const { target } = entry;
         position.rootElementRect = target.getBoundingClientRect();
         const stickyContainer = stickyContainerRef.current;
         if (stickyContainer !== null) {
@@ -100,16 +98,14 @@ export default function StickyComponent({
       }
     });
 
-    const removeRootListener = editor.registerRootListener(
-      (nextRootElem, prevRootElem) => {
-        if (prevRootElem !== null) {
-          resizeObserver.unobserve(prevRootElem);
-        }
-        if (nextRootElem !== null) {
-          resizeObserver.observe(nextRootElem);
-        }
-      },
-    );
+    const removeRootListener = editor.registerRootListener((nextRootElem, prevRootElem) => {
+      if (prevRootElem !== null) {
+        resizeObserver.unobserve(prevRootElem);
+      }
+      if (nextRootElem !== null) {
+        resizeObserver.observe(nextRootElem);
+      }
+    });
 
     const handleWindowResize = () => {
       const rootElement = editor.getRootElement();
@@ -134,10 +130,7 @@ export default function StickyComponent({
       // Delay adding transition so we don't trigger the
       // transition on load of the sticky.
       setTimeout(() => {
-        stickyContainer.style.setProperty(
-          'transition',
-          'top 0.3s ease 0s, left 0.3s ease 0s',
-        );
+        stickyContainer.style.setProperty('transition', 'top 0.3s ease 0s, left 0.3s ease 0s');
       }, 500);
     }
   }, []);
@@ -147,15 +140,9 @@ export default function StickyComponent({
     const positioning = positioningRef.current;
     const rootElementRect = positioning.rootElementRect;
     const zoom = calculateZoomLevel(stickyContainer);
-    if (
-      stickyContainer !== null &&
-      positioning.isDragging &&
-      rootElementRect !== null
-    ) {
-      positioning.x =
-        event.pageX / zoom - positioning.offsetX - rootElementRect.left;
-      positioning.y =
-        event.pageY / zoom - positioning.offsetY - rootElementRect.top;
+    if (stickyContainer !== null && positioning.isDragging && rootElementRect !== null) {
+      positioning.x = event.pageX / zoom - positioning.offsetX - rootElementRect.left;
+      positioning.y = event.pageY / zoom - positioning.offsetY - rootElementRect.top;
       positionSticky(stickyContainer, positioning);
     }
   };
@@ -195,26 +182,22 @@ export default function StickyComponent({
     });
   };
 
-  const {historyState} = useSharedHistoryContext();
+  const { historyState } = useSharedHistoryContext();
 
   return (
-    <div ref={stickyContainerRef} className="sticky-note-container">
+    <div className='sticky-note-container' ref={stickyContainerRef}>
       <div
         className={`sticky-note ${color}`}
         onPointerDown={(event) => {
           const stickyContainer = stickyContainerRef.current;
-          if (
-            stickyContainer == null ||
-            event.button === 2 ||
-            event.target !== stickyContainer.firstChild
-          ) {
+          if (stickyContainer == null || event.button === 2 || event.target !== stickyContainer.firstChild) {
             // Right click or click on editor should not work
             return;
           }
           const stickContainer = stickyContainer;
           const positioning = positioningRef.current;
           if (stickContainer !== null) {
-            const {top, left} = stickContainer.getBoundingClientRect();
+            const { top, left } = stickContainer.getBoundingClientRect();
             const zoom = calculateZoomLevel(stickContainer);
             positioning.offsetX = event.clientX / zoom - left;
             positioning.offsetY = event.clientY / zoom - top;
@@ -225,23 +208,13 @@ export default function StickyComponent({
             event.preventDefault();
           }
         }}>
-        <button
-          onClick={handleDelete}
-          className="delete"
-          aria-label="Delete sticky note"
-          title="Delete">
+        <button aria-label='Delete sticky note' className='delete' onClick={handleDelete} title='Delete'>
           X
         </button>
-        <button
-          onClick={handleColorChange}
-          className="color"
-          aria-label="Change sticky note color"
-          title="Color">
-          <i className="bucket" />
+        <button aria-label='Change sticky note color' className='color' onClick={handleColorChange} title='Color'>
+          <i className='bucket' />
         </button>
-        <LexicalNestedComposer
-          initialEditor={caption}
-          initialTheme={StickyEditorTheme}>
+        <LexicalNestedComposer initialEditor={caption} initialTheme={StickyEditorTheme}>
           {isCollabActive ? (
             <CollaborationPlugin
               id={caption.getKey()}
@@ -254,9 +227,9 @@ export default function StickyComponent({
           <PlainTextPlugin
             contentEditable={
               <ContentEditable
+                className='StickyNode__contentEditable'
                 placeholder="What's up?"
-                placeholderClassName="StickyNode__placeholder"
-                className="StickyNode__contentEditable"
+                placeholderClassName='StickyNode__placeholder'
               />
             }
             ErrorBoundary={LexicalErrorBoundary}

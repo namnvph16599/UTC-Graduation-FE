@@ -6,12 +6,9 @@
  *
  */
 
-import type {JSX} from 'react';
+import { AutoLinkPlugin, createLinkMatcherWithRegExp } from '@lexical/react/LexicalAutoLinkPlugin';
+import type { JSX } from 'react';
 
-import {
-  AutoLinkPlugin,
-  createLinkMatcherWithRegExp,
-} from '@lexical/react/LexicalAutoLinkPlugin';
 import * as React from 'react';
 
 const URL_REGEX =

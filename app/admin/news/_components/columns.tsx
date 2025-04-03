@@ -5,7 +5,6 @@ import { MoreHorizontal } from 'lucide-react';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { CellRemove } from './cell-remove';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -17,6 +16,7 @@ import {
 import { AppRouter } from '@/src/constants/constant';
 import { NewsEntity } from '@/src/graphql/type.interface';
 import { checkValidImage } from '@/src/utils/test-image-address.util';
+import { CellRemove } from './cell-remove';
 
 export const newsColumn: ColumnDef<NewsEntity>[] = [
   {

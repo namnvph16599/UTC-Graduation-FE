@@ -6,7 +6,7 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
 import './Input.css';
 
@@ -19,21 +19,16 @@ type Props = Readonly<{
   onChange: (files: FileList | null) => void;
 }>;
 
-export default function FileInput({
-  accept,
-  label,
-  onChange,
-  'data-test-id': dataTestId,
-}: Props): JSX.Element {
+export default function FileInput({ accept, label, onChange, 'data-test-id': dataTestId }: Props): JSX.Element {
   return (
-    <div className="Input__wrapper">
-      <label className="Input__label">{label}</label>
+    <div className='Input__wrapper'>
+      <label className='Input__label'>{label}</label>
       <input
-        type="file"
         accept={accept}
-        className="Input__input"
-        onChange={(e) => onChange(e.target.files)}
+        className='Input__input'
         data-test-id={dataTestId}
+        onChange={(e) => onChange(e.target.files)}
+        type='file'
       />
     </div>
   );

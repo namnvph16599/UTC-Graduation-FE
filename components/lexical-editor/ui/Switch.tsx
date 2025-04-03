@@ -6,10 +6,10 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
 import * as React from 'react';
-import {useMemo} from 'react';
+import { useMemo } from 'react';
 
 export default function Switch({
   checked,
@@ -24,13 +24,9 @@ export default function Switch({
 }>): JSX.Element {
   const buttonId = useMemo(() => 'id_' + Math.floor(Math.random() * 10000), []);
   return (
-    <div className="switch" id={id}>
+    <div className='switch' id={id}>
       <label htmlFor={buttonId}>{text}</label>
-      <button
-        role="switch"
-        aria-checked={checked}
-        id={buttonId}
-        onClick={onClick}>
+      <button aria-checked={checked} id={buttonId} onClick={onClick} role='switch'>
         <span />
       </button>
     </div>

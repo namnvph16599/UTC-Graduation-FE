@@ -6,27 +6,25 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
 import './KatexEquationAlterer.css';
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+// eslint-disable-next-line import/order
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import * as React from 'react';
-import {useCallback, useState} from 'react';
-import {ErrorBoundary} from 'react-error-boundary';
+import { useCallback, useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
-import Button from '../ui/Button';
 import KatexRenderer from './KatexRenderer';
+import Button from '../ui/Button';
 
 type Props = {
   initialEquation?: string;
   onConfirm: (equation: string, inline: boolean) => void;
 };
 
-export default function KatexEquationAlterer({
-  onConfirm,
-  initialEquation = '',
-}: Props): JSX.Element {
+export default function KatexEquationAlterer({ onConfirm, initialEquation = '' }: Props): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [equation, setEquation] = useState<string>(initialEquation);
   const [inline, setInline] = useState<boolean>(true);
@@ -41,41 +39,37 @@ export default function KatexEquationAlterer({
 
   return (
     <>
-      <div className="KatexEquationAlterer_defaultRow">
+      <div className='KatexEquationAlterer_defaultRow'>
         Inline
-        <input type="checkbox" checked={inline} onChange={onCheckboxChange} />
+        <input checked={inline} onChange={onCheckboxChange} type='checkbox' />
       </div>
-      <div className="KatexEquationAlterer_defaultRow">Equation </div>
-      <div className="KatexEquationAlterer_centerRow">
+      <div className='KatexEquationAlterer_defaultRow'>Equation </div>
+      <div className='KatexEquationAlterer_centerRow'>
         {inline ? (
           <input
+            className='KatexEquationAlterer_textArea'
             onChange={(event) => {
               setEquation(event.target.value);
             }}
             value={equation}
-            className="KatexEquationAlterer_textArea"
           />
         ) : (
           <textarea
+            className='KatexEquationAlterer_textArea'
             onChange={(event) => {
               setEquation(event.target.value);
             }}
             value={equation}
-            className="KatexEquationAlterer_textArea"
           />
         )}
       </div>
-      <div className="KatexEquationAlterer_defaultRow">Visualization </div>
-      <div className="KatexEquationAlterer_centerRow">
-        <ErrorBoundary onError={(e) => editor._onError(e)} fallback={null}>
-          <KatexRenderer
-            equation={equation}
-            inline={false}
-            onDoubleClick={() => null}
-          />
+      <div className='KatexEquationAlterer_defaultRow'>Visualization </div>
+      <div className='KatexEquationAlterer_centerRow'>
+        <ErrorBoundary fallback={null} onError={(e) => editor._onError(e)}>
+          <KatexRenderer equation={equation} inline={false} onDoubleClick={() => null} />
         </ErrorBoundary>
       </div>
-      <div className="KatexEquationAlterer_dialogActions">
+      <div className='KatexEquationAlterer_dialogActions'>
         <Button onClick={onClick}>Confirm</Button>
       </div>
     </>

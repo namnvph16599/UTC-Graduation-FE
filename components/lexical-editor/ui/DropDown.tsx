@@ -6,19 +6,12 @@
  *
  */
 
-import type {JSX} from 'react';
+import { isDOMNode } from 'lexical';
+import type { JSX } from 'react';
 
-import {isDOMNode} from 'lexical';
 import * as React from 'react';
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import {createPortal} from 'react-dom';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 type DropDownContextType = {
   registerItem: (ref: React.RefObject<HTMLButtonElement>) => void;
@@ -47,7 +40,7 @@ export function DropDownItem({
     throw new Error('DropDownItem must be used within a DropDown');
   }
 
-  const {registerItem} = dropDownContext;
+  const { registerItem } = dropDownContext;
 
   useEffect(() => {
     if (ref && ref.current) {
@@ -56,12 +49,7 @@ export function DropDownItem({
   }, [ref, registerItem]);
 
   return (
-    <button
-      className={className}
-      onClick={onClick}
-      ref={ref}
-      title={title}
-      type="button">
+    <button className={className} onClick={onClick} ref={ref} title={title} type='button'>
       {children}
     </button>
   );
@@ -77,8 +65,7 @@ function DropDownItems({
   onClose: () => void;
 }) {
   const [items, setItems] = useState<React.RefObject<HTMLButtonElement>[]>();
-  const [highlightedItem, setHighlightedItem] =
-    useState<React.RefObject<HTMLButtonElement>>();
+  const [highlightedItem, setHighlightedItem] = useState<React.RefObject<HTMLButtonElement>>();
 
   const registerItem = useCallback(
     (itemRef: React.RefObject<HTMLButtonElement>) => {
@@ -137,7 +124,7 @@ function DropDownItems({
 
   return (
     <DropDownContext.Provider value={contextValue}>
-      <div className="dropdown" ref={dropDownRef} onKeyDown={handleKeyDown}>
+      <div className='dropdown' onKeyDown={handleKeyDown} ref={dropDownRef}>
         {children}
       </div>
     </DropDownContext.Provider>
@@ -177,12 +164,9 @@ export default function DropDown({
     const dropDown = dropDownRef.current;
 
     if (showDropDown && button !== null && dropDown !== null) {
-      const {top, left} = button.getBoundingClientRect();
+      const { top, left } = button.getBoundingClientRect();
       dropDown.style.top = `${top + button.offsetHeight + dropDownPadding}px`;
-      dropDown.style.left = `${Math.min(
-        left,
-        window.innerWidth - dropDown.offsetWidth - 20,
-      )}px`;
+      dropDown.style.left = `${Math.min(left, window.innerWidth - dropDown.offsetWidth - 20)}px`;
     }
   }, [dropDownRef, buttonRef, showDropDown]);
 
@@ -218,7 +202,7 @@ export default function DropDown({
         const button = buttonRef.current;
         const dropDown = dropDownRef.current;
         if (button !== null && dropDown !== null) {
-          const {top} = button.getBoundingClientRect();
+          const { top } = button.getBoundingClientRect();
           const newPosition = top + button.offsetHeight + dropDownPadding;
           if (newPosition !== dropDown.getBoundingClientRect().top) {
             dropDown.style.top = `${newPosition}px`;
@@ -237,17 +221,15 @@ export default function DropDown({
   return (
     <>
       <button
-        type="button"
-        disabled={disabled}
         aria-label={buttonAriaLabel || buttonLabel}
         className={buttonClassName}
+        disabled={disabled}
         onClick={() => setShowDropDown(!showDropDown)}
-        ref={buttonRef}>
+        ref={buttonRef}
+        type='button'>
         {buttonIconClassName && <span className={buttonIconClassName} />}
-        {buttonLabel && (
-          <span className="text dropdown-button-text">{buttonLabel}</span>
-        )}
-        <i className="chevron-down" />
+        {buttonLabel && <span className='text dropdown-button-text'>{buttonLabel}</span>}
+        <i className='chevron-down' />
       </button>
 
       {showDropDown &&

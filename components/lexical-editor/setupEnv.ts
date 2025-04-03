@@ -6,7 +6,7 @@
  *
  */
 
-import {INITIAL_SETTINGS, Settings} from './appSettings';
+import { INITIAL_SETTINGS, Settings } from './appSettings';
 
 // Export a function so this is not tree-shaken,
 // but evaluate it immediately so it executes before
@@ -21,17 +21,20 @@ export default (() => {
         const value = JSON.parse(urlSearchParams.get(param) ?? 'true');
         INITIAL_SETTINGS[param as keyof Settings] = Boolean(value);
       } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn(`Unable to parse query parameter "${error}"`);
+        // eslint-disable-next-line no-console
         console.warn(`Unable to parse query parameter "${param}"`);
       }
     }
   }
 
   if (INITIAL_SETTINGS.disableBeforeInput) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     delete window.InputEvent.prototype.getTargetRanges;
   }
 
-  // @ts-ignore
   // window.EXCALIDRAW_ASSET_PATH = process.env.EXCALIDRAW_ASSET_PATH;
 
   return INITIAL_SETTINGS;

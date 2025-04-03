@@ -2,14 +2,14 @@
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useMemo, useState } from 'react';
-import { newsColumn } from './_components/columns';
-import { DataTable } from './_components/table';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
 import { AppRouter } from '@/src/constants/constant';
 import { useNewsCollectionQuery } from '@/src/graphql/queries/newsCollection.generated';
 import { NewsEntity, PageMeta } from '@/src/graphql/type.interface';
+import { newsColumn } from './_components/columns';
+import { DataTable } from './_components/table';
 
 export const ListNews = () => {
   const router = useRouter();

@@ -5,14 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
 import './index.css';
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {DraggableBlockPlugin_EXPERIMENTAL} from '@lexical/react/LexicalDraggableBlockPlugin';
-import {$createParagraphNode, $getNearestNodeFromDOMNode} from 'lexical';
-import {useRef, useState} from 'react';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { DraggableBlockPlugin_EXPERIMENTAL } from '@lexical/react/LexicalDraggableBlockPlugin';
+import { $createParagraphNode, $getNearestNodeFromDOMNode } from 'lexical';
+import { useRef, useState } from 'react';
 
 const DRAGGABLE_BLOCK_MENU_CLASSNAME = 'draggable-block-menu';
 
@@ -28,9 +28,7 @@ export default function DraggableBlockPlugin({
   const [editor] = useLexicalComposerContext();
   const menuRef = useRef<HTMLDivElement>(null);
   const targetLineRef = useRef<HTMLDivElement>(null);
-  const [draggableElement, setDraggableElement] = useState<HTMLElement | null>(
-    null,
-  );
+  const [draggableElement, setDraggableElement] = useState<HTMLElement | null>(null);
 
   function insertBlock(e: React.MouseEvent) {
     if (!draggableElement || !editor) {
@@ -56,23 +54,17 @@ export default function DraggableBlockPlugin({
   return (
     <DraggableBlockPlugin_EXPERIMENTAL
       anchorElem={anchorElem}
-      menuRef={menuRef}
-      targetLineRef={targetLineRef}
+      isOnMenu={isOnMenu}
       menuComponent={
-        <div ref={menuRef} className="icon draggable-block-menu">
-          <button
-            title="Click to add below"
-            className="icon icon-plus"
-            onClick={insertBlock}
-          />
-          <div className="icon" />
+        <div className='icon draggable-block-menu' ref={menuRef}>
+          <button className='icon icon-plus' onClick={insertBlock} title='Click to add below' />
+          <div className='icon' />
         </div>
       }
-      targetLineComponent={
-        <div ref={targetLineRef} className="draggable-block-target-line" />
-      }
-      isOnMenu={isOnMenu}
+      menuRef={menuRef}
       onElementChanged={setDraggableElement}
+      targetLineComponent={<div className='draggable-block-target-line' ref={targetLineRef} />}
+      targetLineRef={targetLineRef}
     />
   );
 }

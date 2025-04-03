@@ -6,11 +6,11 @@
  *
  */
 
-import {createHeadlessEditor} from '@lexical/headless';
-import {$isMarkNode, $unwrapMarkNode} from '@lexical/mark';
 import * as http from 'http';
-import {$getRoot, $isElementNode, LexicalNode} from 'lexical';
 import * as url from 'url';
+import { createHeadlessEditor } from '@lexical/headless';
+import { $isMarkNode, $unwrapMarkNode } from '@lexical/mark';
+import { $getRoot, $isElementNode, LexicalNode } from 'lexical';
 
 import PlaygroundNodes from '../nodes/PlaygroundNodes';
 
@@ -59,9 +59,7 @@ const $sanitizeNode = (node: LexicalNode): void => {
   }
 };
 
-const validateEditorState = async (
-  stringifiedJSON: string,
-): Promise<boolean> => {
+const validateEditorState = async (stringifiedJSON: string): Promise<boolean> => {
   if (stringifiedEditorStateJSON === stringifiedJSON) {
     return true;
   }
@@ -91,7 +89,7 @@ const validateEditorState = async (
 
 const server = http.createServer(async (req, res) => {
   const pathname = url.parse(req.url!).pathname;
-  const {method} = req;
+  const { method } = req;
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Request-Method', '*');
@@ -126,7 +124,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(port, hostname, () => {
   // eslint-disable-next-line no-console
-  console.log(
-    `Read-only validation server running at http://${hostname}:${port}/`,
-  );
+  console.log(`Read-only validation server running at http://${hostname}:${port}/`);
 });

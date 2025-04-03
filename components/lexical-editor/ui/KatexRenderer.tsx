@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -6,11 +7,11 @@
  *
  */
 
-import type {JSX} from 'react';
-
 import katex from 'katex';
+import type { JSX } from 'react';
+
 import * as React from 'react';
-import {useEffect, useRef} from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function KatexRenderer({
   equation,
@@ -44,22 +45,17 @@ export default function KatexRenderer({
     // without having a physical space.
     <>
       <img
-        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-        width="0"
-        height="0"
-        alt=""
+        alt=''
+        height='0'
+        src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+        width='0'
       />
-      <span
-        role="button"
-        tabIndex={-1}
-        onDoubleClick={onDoubleClick}
-        ref={katexElementRef}
-      />
+      <span onDoubleClick={onDoubleClick} ref={katexElementRef} role='button' tabIndex={-1} />
       <img
-        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-        width="0"
-        height="0"
-        alt=""
+        alt=''
+        height='0'
+        src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+        width='0'
       />
     </>
   );

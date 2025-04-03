@@ -6,6 +6,7 @@
  *
  */
 
+import { addClassNamesToElement } from '@lexical/utils';
 import type {
   DOMConversionMap,
   DOMConversionOutput,
@@ -18,8 +19,7 @@ import type {
   Spread,
 } from 'lexical';
 
-import {addClassNamesToElement} from '@lexical/utils';
-import {ElementNode} from 'lexical';
+import { ElementNode } from 'lexical';
 
 export type SerializedLayoutContainerNode = Spread<
   {
@@ -28,16 +28,12 @@ export type SerializedLayoutContainerNode = Spread<
   SerializedElementNode
 >;
 
-function $convertLayoutContainerElement(
-  domNode: HTMLElement,
-): DOMConversionOutput | null {
+function $convertLayoutContainerElement(domNode: HTMLElement): DOMConversionOutput | null {
   const styleAttributes = window.getComputedStyle(domNode);
-  const templateColumns = styleAttributes.getPropertyValue(
-    'grid-template-columns',
-  );
+  const templateColumns = styleAttributes.getPropertyValue('grid-template-columns');
   if (templateColumns) {
     const node = $createLayoutContainerNode(templateColumns);
-    return {node};
+    return { node };
   }
   return null;
 }
@@ -71,7 +67,7 @@ export class LayoutContainerNode extends ElementNode {
     const element = document.createElement('div');
     element.style.gridTemplateColumns = this.__templateColumns;
     element.setAttribute('data-lexical-layout-container', 'true');
-    return {element};
+    return { element };
   }
 
   updateDOM(prevNode: this, dom: HTMLElement): boolean {
@@ -99,12 +95,8 @@ export class LayoutContainerNode extends ElementNode {
     return $createLayoutContainerNode().updateFromJSON(json);
   }
 
-  updateFromJSON(
-    serializedNode: LexicalUpdateJSON<SerializedLayoutContainerNode>,
-  ): this {
-    return super
-      .updateFromJSON(serializedNode)
-      .setTemplateColumns(serializedNode.templateColumns);
+  updateFromJSON(serializedNode: LexicalUpdateJSON<SerializedLayoutContainerNode>): this {
+    return super.updateFromJSON(serializedNode).setTemplateColumns(serializedNode.templateColumns);
   }
 
   isShadowRoot(): boolean {
@@ -133,14 +125,10 @@ export class LayoutContainerNode extends ElementNode {
   }
 }
 
-export function $createLayoutContainerNode(
-  templateColumns: string = '',
-): LayoutContainerNode {
+export function $createLayoutContainerNode(templateColumns: string = ''): LayoutContainerNode {
   return new LayoutContainerNode(templateColumns);
 }
 
-export function $isLayoutContainerNode(
-  node: LexicalNode | null | undefined,
-): node is LayoutContainerNode {
+export function $isLayoutContainerNode(node: LexicalNode | null | undefined): node is LayoutContainerNode {
   return node instanceof LayoutContainerNode;
 }
