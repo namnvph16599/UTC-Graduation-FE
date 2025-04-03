@@ -11,9 +11,16 @@ interface DataTableProps<TData, TValue> extends TDataTablePagination {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   tab: RepairStatusEnum;
+  hiddenPagination?: boolean;
 }
 
-export function DataTable<TData, TValue>({ columns, data, onChangePage, pageMeta }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  onChangePage,
+  pageMeta,
+  hiddenPagination = false,
+}: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -50,19 +57,21 @@ export function DataTable<TData, TValue>({ columns, data, onChangePage, pageMeta
             ) : (
               <TableRow>
                 <TableCell className='h-24 text-center' colSpan={columns.length}>
-                  No results.
+                  Không có dữ liệu
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <AppPagination
-        className='justify-end'
-        currentPage={pageMeta?.currentPage}
-        onChangePage={onChangePage}
-        totalPage={pageMeta?.totalPage}
-      />
+      {!hiddenPagination && (
+        <AppPagination
+          className='justify-end'
+          currentPage={pageMeta?.currentPage}
+          onChangePage={onChangePage}
+          totalPage={pageMeta?.totalPage}
+        />
+      )}
     </div>
   );
 }
