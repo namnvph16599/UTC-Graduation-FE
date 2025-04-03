@@ -1,0 +1,10 @@
+query news($id: String!) {
+  news(id: $id) {
+    content
+    description
+    id
+    image_url
+    title
+    createdAt
+  }
+}

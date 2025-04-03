@@ -1,7 +1,7 @@
-import NewsPage from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/news-page';
+import ListNews from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/list-news';
 
 const Page = () => {
-  return <NewsPage />;
+  return <ListNews />;
 };
 
 export default Page;

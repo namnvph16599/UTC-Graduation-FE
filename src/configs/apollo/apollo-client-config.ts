@@ -1,12 +1,19 @@
 import { HttpLink } from '@apollo/client';
 import { registerApolloClient, ApolloClient, InMemoryCache } from '@apollo/experimental-nextjs-app-support';
-import { AppVariables } from '@/src/constants/env';
+import { AppVariables, IS_CLIENT } from '@/src/constants/env';
 import { getItemLocalstorage, LocalStorageKeyEnum } from '@/src/utils/localstorate.util';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('dotenv').config();
 
 const apiUrl = AppVariables.apiUrl;
 
 export const { getClient, query, PreloadQuery } = registerApolloClient(() => {
-  const token = getItemLocalstorage(LocalStorageKeyEnum.AccessToken);
+  let token = '';
+
+  if (IS_CLIENT) {
+    token = getItemLocalstorage(LocalStorageKeyEnum.AccessToken) ?? '';
+  }
 
   return new ApolloClient({
     cache: new InMemoryCache(),

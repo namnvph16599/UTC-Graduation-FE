@@ -4,7 +4,7 @@ import { NewsInputSearch } from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/
 import { NewsPagination } from '@/app/(user)/(main-layout)/tin-tuc-va-cam-nang/_components/news-pagination';
 import { cn } from '@/src/constants/utils';
 
-const NewsPage = () => {
+const ListNews = () => {
   const newsData = [
     {
       content: 'Exciting advancements in AI are shaping the future of technology.',
@@ -78,4 +78,4 @@ const NewsPage = () => {
   );
 };
 
-export default NewsPage;
+export default ListNews;

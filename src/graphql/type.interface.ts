@@ -86,6 +86,13 @@ export type CreateMotorcycleInput = {
   user_id: Scalars['String'];
 };
 
+export type CreateNewsInput = {
+  content: Scalars['String'];
+  description: Scalars['String'];
+  image_url: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type CreateOtpInput = {
   email?: InputMaybe<Scalars['String']>;
   method: OtpMethod;
@@ -267,6 +274,7 @@ export type Mutation = {
   changeUserEmailOrPhone: UserEntity;
   createBrand: BrandEntity;
   createMotorcycle: MotorcycleEntity;
+  createNews: NewsEntity;
   createProduct: ProductEntity;
   createRepairRequest: RepairEntity;
   createService: ServicesEntity;
@@ -278,6 +286,7 @@ export type Mutation = {
   removeBrand: Scalars['Boolean'];
   removeMedias: Scalars['Boolean'];
   removeMotorcycle: Scalars['Boolean'];
+  removeNews: Scalars['Boolean'];
   removeNotifications: Scalars['Boolean'];
   removeProduct: Scalars['Boolean'];
   removeService: Scalars['Boolean'];
@@ -289,6 +298,7 @@ export type Mutation = {
   sendRegisterOtp?: Maybe<Scalars['String']>;
   updateBrand: BrandEntity;
   updateMotorcycle: MotorcycleEntity;
+  updateNews: NewsEntity;
   updateProduct: ProductEntity;
   updateRepairRequest: RepairEntity;
   updateService: ServicesEntity;
@@ -319,6 +329,10 @@ export type MutationCreateBrandArgs = {
 
 export type MutationCreateMotorcycleArgs = {
   input: CreateMotorcycleInput;
+};
+
+export type MutationCreateNewsArgs = {
+  input: CreateNewsInput;
 };
 
 export type MutationCreateProductArgs = {
@@ -358,6 +372,10 @@ export type MutationRemoveMediasArgs = {
 };
 
 export type MutationRemoveMotorcycleArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationRemoveNewsArgs = {
   id: Scalars['String'];
 };
 
@@ -405,6 +423,10 @@ export type MutationUpdateMotorcycleArgs = {
   input: UpdateMotorcycleInput;
 };
 
+export type MutationUpdateNewsArgs = {
+  input: UpdateNewsInput;
+};
+
 export type MutationUpdateProductArgs = {
   args: UpdateProductInput;
 };
@@ -443,6 +465,24 @@ export type MutationUserChangePasswordArgs = {
 
 export type MutationVerifyOtpRegisterAccountByPhoneArgs = {
   input: VerifyOtpRegisterAccountByPhoneInput;
+};
+
+export type NewsConnection = {
+  __typename?: 'NewsConnection';
+  items: Array<NewsEntity>;
+  meta: PageMeta;
+};
+
+export type NewsEntity = {
+  __typename?: 'NewsEntity';
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  image_url: Scalars['String'];
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
 };
 
 export type NotificationCollectionFilter = {
@@ -584,6 +624,8 @@ export type Query = {
   models: Array<ModelEntity>;
   motorcycle: MotorcycleEntity;
   motorcycleCollection: MotorcycleConnection;
+  news: NewsEntity;
+  newsCollection: NewsConnection;
   notificationCollection: NotificationUserConnection;
   product: ProductEntity;
   productCollection: ProductConnection;
@@ -639,6 +681,14 @@ export type QueryMotorcycleArgs = {
 export type QueryMotorcycleCollectionArgs = {
   filterArgs?: InputMaybe<MotorcycleCollectionFilter>;
   pagination?: InputMaybe<PaginationArgs>;
+};
+
+export type QueryNewsArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryNewsCollectionArgs = {
+  paginationArgs: PaginationArgs;
 };
 
 export type QueryNotificationCollectionArgs = {
@@ -709,6 +759,7 @@ export type RepairCollectionFilter = {
   endDate?: InputMaybe<Scalars['DateTime']>;
   startDate?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<RepairStatusEnum>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type RepairConnection = {
@@ -986,6 +1037,14 @@ export type UpdateMotorcycleInput = {
   model_id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateNewsInput = {
+  content?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  image_url?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateProductInput = {
