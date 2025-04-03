@@ -1,0 +1,5 @@
+mutation createNews($input: CreateNewsInput!) {
+  createNews(input: $input) {
+    id
+  }
+}

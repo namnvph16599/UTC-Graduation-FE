@@ -16,7 +16,7 @@ type Props = {
 
 export const AppBreadcrumb = ({ items, rightContent }: Props) => {
   return (
-    <div className='px-6 py-4 flex items-center justify-between border-b border-[#eeeeee]'>
+    <div className='bg-white px-6 py-4 flex items-center justify-between border-b border-[#eeeeee]'>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

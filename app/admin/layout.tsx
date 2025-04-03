@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <main className='w-full'>
-        <div className='flex justify-between items-center px-6 py-2 border-b border-solid border-[#eeeeee]'>
+        <div className='bg-white flex justify-between items-center px-6 py-2 border-b border-solid border-[#eeeeee]'>
           <SidebarTrigger />
 
           <DropdownMenu>

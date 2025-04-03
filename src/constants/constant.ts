@@ -44,7 +44,10 @@ export const AppRouter = {
       edit: (id: string) => '/admin/banners/' + id,
     },
     news: {
+      label: 'Tin tức',
       list: '/admin/news',
+      add: '/admin/news/add',
+      edit: (id: string) => '/admin/news/' + id,
     },
     contacts: {
       label: 'Liên hệ',

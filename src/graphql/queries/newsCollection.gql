@@ -1,0 +1,19 @@
+query newsCollection($paginationArgs: PaginationArgs!) {
+  newsCollection(paginationArgs: $paginationArgs) {
+    items {
+      description
+      id
+      image_url
+      title
+      createdAt
+    }
+    meta {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      totalItem
+      totalPage
+    }
+  }
+}

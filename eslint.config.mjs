@@ -24,6 +24,7 @@ const eslintConfig = [
       ecmaVersion: 'latest',
       sourceType: 'module',
     },
+    ignorePatterns: ['*.generated.tsx'], // <-- Add this line
 
     rules: {
       // **React Rules**
