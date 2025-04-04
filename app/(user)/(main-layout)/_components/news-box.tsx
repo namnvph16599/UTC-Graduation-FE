@@ -1,19 +1,10 @@
 import dayjs from 'dayjs';
 import Image, { ImageProps } from 'next/image';
 import Link from 'next/link';
-import { DATE_FORMAT } from '@/src/constants/constant';
+import { AppRouter, DATE_FORMAT } from '@/src/constants/constant';
 import { cn } from '@/src/constants/utils';
-
-export type NewsEntity = {
-  content: string;
-  createdAt: string;
-  description?: string;
-  id: string;
-  imageName: string;
-  isPopular?: boolean;
-  status: boolean;
-  title: string;
-};
+import { NewsEntity } from '@/src/graphql/type.interface';
+import { getImageUrlOfNews } from '@/src/utils/chunk-news.util';
 
 type Props = {
   convertedNews: NewsEntity[][];
@@ -35,7 +26,12 @@ export const NewsBox = ({ convertedNews }: Props) => {
               },
             )}
             key={firstNews.id}>
-            <NewsImage alt={firstNews.title} className='sm:h-[290px]' newsId={firstNews.id} src={firstNews.imageName} />
+            <NewsImage
+              alt={firstNews.title}
+              className='sm:h-[290px]'
+              newsId={firstNews.id}
+              src={getImageUrlOfNews(firstNews.image_url)}
+            />
             <div className='pt-4'>
               <div className='flex gap-x-1 items-center'>
                 <ClockIcon />
@@ -45,7 +41,7 @@ export const NewsBox = ({ convertedNews }: Props) => {
               </div>
               <Link
                 className='font-semibold mb-3 mt-2 text-secondary-default text-md line-clamp-2 leading-[22px]'
-                href={'/tin-tuc/' + firstNews.id}>
+                href={AppRouter.user.news + '/' + firstNews.id}>
                 {firstNews.title}
               </Link>
               <p className='text-black-3A text-ellipsis line-clamp-2 lg:line-clamp-5'>{firstNews.description}</p>
@@ -58,7 +54,12 @@ export const NewsBox = ({ convertedNews }: Props) => {
               if (it.id === firstNews?.id) return null;
               return (
                 <div className='col-span-2 sm:col-span-1 rounded-lg p-4 border border-solid border-[#ECECEC]' key={idx}>
-                  <NewsImage alt={it.title} className='w-[640px]' newsId={it.id} src={it.imageName} />
+                  <NewsImage
+                    alt={it.title}
+                    className='w-[640px]'
+                    newsId={it.id}
+                    src={getImageUrlOfNews(it.image_url)}
+                  />
                   <div className='pt-4'>
                     <div className='flex gap-x-1 items-center'>
                       <ClockIcon />
@@ -68,7 +69,7 @@ export const NewsBox = ({ convertedNews }: Props) => {
                     </div>
                     <Link
                       className='font-semibold mb-3 mt-2 text-secondary-default text-md line-clamp-2 leading-[22px]'
-                      href={'/tin-tuc/' + it.id}>
+                      href={AppRouter.user.news + '/' + it.id}>
                       {it.title}
                     </Link>
                     <p className='text-black-3A text-ellipsis line-clamp-2'>{it.description}</p>

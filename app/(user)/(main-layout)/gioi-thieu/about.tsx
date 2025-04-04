@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Services } from '@/app/(user)/(main-layout)/home/_components/services';
 import { AppInformation } from '@/src/constants/constant';
+import { Services } from '../trang-chu/_components/services';
 
 export const TextIntro = ({ text }: { text: string }) => {
   return (
