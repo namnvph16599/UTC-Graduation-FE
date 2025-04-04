@@ -2,8 +2,13 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { AppPagination } from '@/components/app-pagination';
+import { PageMeta } from '@/src/graphql/type.interface';
 
-export const NewsPagination = () => {
+type Props = {
+  pageMeta: PageMeta;
+};
+
+export const NewsPagination = ({ pageMeta }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -23,5 +28,11 @@ export const NewsPagination = () => {
     },
     [pathname, router, search, searchParams],
   );
-  return <AppPagination currentPage={Number(currentPage)} onChangePage={handleChangePage} totalPage={10} />;
+  return (
+    <AppPagination
+      currentPage={Number(currentPage)}
+      onChangePage={handleChangePage}
+      totalPage={pageMeta.totalPage ?? 0}
+    />
+  );
 };
