@@ -249,7 +249,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
 
   const [updateRepairRequestMutation, { loading: updating }] = useUpdateRepairRequestMutation({
     onCompleted() {
-      toast.error('Cập nhật thành công!');
+      toast.success('Cập nhật thành công!');
       router.push(AppRouter.admin.repairs.list);
     },
     onError(error) {
@@ -262,7 +262,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
 
   const [createRepairRequestMutation, { loading: creating }] = useCreateRepairRequestMutation({
     onCompleted() {
-      toast.error('Thêm mới thành công!');
+      toast.success('Thêm mới thành công!');
       router.push(AppRouter.admin.repairs.list);
     },
     onError(error) {
