@@ -9,7 +9,9 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { validationMessages } from '@/src/constants/constant';
+import { ProductCollectionDocument } from '@/src/graphql/queries/productCollection.generated';
 import { RepairDocument } from '@/src/graphql/queries/repair.generated';
+import { RepairCollectionDocument } from '@/src/graphql/queries/repairCollection.generated';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ErrorMessage } from '@/src/constants/error';
 import { useCancelRepairMutation } from '@/src/graphql/mutations/cancelRepair.generated';
@@ -49,7 +51,7 @@ export const ModalCancelRepair = ({ open, setOpen, id }: Props) => {
         description: error.message,
       });
     },
-    refetchQueries: [RepairDocument],
+    refetchQueries: [RepairCollectionDocument, RepairDocument, ProductCollectionDocument],
   });
 
   async function onSubmit(data: z.infer<typeof schema>) {

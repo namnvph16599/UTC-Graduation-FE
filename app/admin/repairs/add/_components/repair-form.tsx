@@ -23,7 +23,10 @@ import { cn } from '@/src/constants/utils';
 import { useCreateRepairRequestMutation } from '@/src/graphql/mutations/createRepairRequest.generated';
 import { useUpdateRepairRequestMutation } from '@/src/graphql/mutations/updateRepairRequest.generated';
 import { useBrandCollectionQuery } from '@/src/graphql/queries/brandCollection.generated';
-import { useProductCollectionQuery } from '@/src/graphql/queries/productCollection.generated';
+import {
+  ProductCollectionDocument,
+  useProductCollectionQuery,
+} from '@/src/graphql/queries/productCollection.generated';
 import { RepairDocument, useRepairQuery } from '@/src/graphql/queries/repair.generated';
 import { RepairCollectionDocument } from '@/src/graphql/queries/repairCollection.generated';
 import { useServicesQuery } from '@/src/graphql/queries/services.generated';
@@ -246,7 +249,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
         description: error.message,
       });
     },
-    refetchQueries: [RepairCollectionDocument, RepairDocument],
+    refetchQueries: [RepairCollectionDocument, RepairDocument, ProductCollectionDocument],
   });
 
   const [createRepairRequestMutation, { loading: creating }] = useCreateRepairRequestMutation({
@@ -259,7 +262,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
         description: error.message,
       });
     },
-    refetchQueries: [RepairCollectionDocument, RepairDocument],
+    refetchQueries: [RepairCollectionDocument, RepairDocument, ProductCollectionDocument],
   });
 
   const onSubmit = useCallback(
