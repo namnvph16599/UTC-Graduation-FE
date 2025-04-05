@@ -36,12 +36,20 @@ import { TDetailPageProps } from '@/src/types';
 import { convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 
 const productSchema = z.object({
-  id: z.string({
-    message: validationMessages.required,
-  }),
-  quantity: z.string({
-    message: validationMessages.required,
-  }),
+  id: z
+    .string({
+      message: validationMessages.required,
+    })
+    .min(1, {
+      message: validationMessages.required,
+    }),
+  quantity: z
+    .string({
+      message: validationMessages.required,
+    })
+    .min(1, {
+      message: validationMessages.required,
+    }),
 });
 
 const formSchema = z.object({
@@ -571,6 +579,10 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                   <div className='col-span-2'>
                     <FormLabel required>Phụ tùng thay thế</FormLabel>
                     {controlledFields.map((field, index) => {
+                      const product = (productData?.productCollection?.items ?? []).find((p) => p.id === field.id);
+                      const currentProduct = (repair?.products ?? []).find((p) => p.product.id === field.id);
+                      const maxQuantity = Number(product?.quantity ?? 0) + Number(currentProduct?.quantity ?? 0);
+
                       return (
                         <div className='grid grid-cols-9 items-center gap-4 mt-2' key={field.tempId}>
                           <div className='col-span-6'>
@@ -599,11 +611,27 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                               render={({ field }) => (
                                 <FormItem className='w-full'>
                                   <FormControl>
-                                    <Input placeholder='Nhập số lượng' type='number' {...field} />
+                                    <Input
+                                      max={maxQuantity}
+                                      min={1}
+                                      placeholder='Nhập số lượng'
+                                      type='number'
+                                      {...field}
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
                               )}
+                              rules={{
+                                min: {
+                                  value: 1,
+                                  message: 'Số lượng tối thiểu là 1',
+                                },
+                                max: {
+                                  value: maxQuantity,
+                                  message: `Số lượng tối đa là ${maxQuantity}`,
+                                },
+                              }}
                             />
                           </div>
                           <CircleX
