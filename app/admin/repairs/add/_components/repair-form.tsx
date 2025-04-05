@@ -2,13 +2,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { CircleX } from 'lucide-react';
-import { tree } from 'next/dist/build/templates/app-page';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { ModalCancelRepair } from '@/app/admin/repairs/add/_components/modal-cancel-repair';
 import { RenderFeeOfRepair } from '@/app/admin/repairs/add/_components/render-fee-of-repair';
+import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
@@ -18,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import { MultipleSelect } from '@/components/ui/multi-select';
 import { Textarea } from '@/components/ui/textarea';
 import { AppRouter, validationMessages } from '@/src/constants/constant';
-import { cn, formatVND } from '@/src/constants/utils';
+import { cn } from '@/src/constants/utils';
 import { useCreateRepairRequestMutation } from '@/src/graphql/mutations/createRepairRequest.generated';
 import { useUpdateRepairRequestMutation } from '@/src/graphql/mutations/updateRepairRequest.generated';
 import { useBrandCollectionQuery } from '@/src/graphql/queries/brandCollection.generated';
@@ -227,10 +228,13 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
       );
       form.setValue('status', defaultData?.status);
       form.setValue('staff_id', defaultData?.staff?.id ?? '');
+      form.setValue('cancelled_description', defaultData?.cancelled_description ?? '');
     },
   });
 
   const repair = useMemo(() => data?.repair, [data?.repair]);
+
+  const [openModalCancel, setOpenModalCancel] = useState(false);
 
   const [updateRepairRequestMutation, { loading: updating }] = useUpdateRepairRequestMutation({
     onCompleted() {
@@ -297,6 +301,29 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
 
   return (
     <Loading loading={loading}>
+      <AppBreadcrumb
+        items={[
+          {
+            label: 'Yêu cầu sữa chữa',
+            href: AppRouter.admin.repairs.list,
+          },
+          {
+            label: id ? 'Chỉnh sửa' : 'Thêm mới',
+            href: '#',
+          },
+        ]}
+        rightContent={
+          !!repair?.status &&
+          [RepairStatusEnum.WAITING_FOR_CONFIRM, RepairStatusEnum.CONFIRMED].includes(repair?.status) && (
+            <Button onClick={() => setOpenModalCancel(true)} size={'md'} variant={'redOutline'}>
+              Từ chối
+            </Button>
+          )
+        }
+      />
+      {openModalCancel && repair?.id && (
+        <ModalCancelRepair id={repair?.id} open={openModalCancel} setOpen={setOpenModalCancel} />
+      )}
       <div className='p-5 bg-[#F9F9F9]'>
         <div className='grid grid-cols-10 gap-8'>
           <div
@@ -482,10 +509,35 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                               className='block'
                               {...field}
                               onChange={(val) => field.onChange(val)}
-                              options={Object.values(RepairStatusEnum).map((v) => ({
-                                label: convertRepairStatusEnum(v),
-                                value: v,
-                              }))}
+                              options={[
+                                {
+                                  label: convertRepairStatusEnum(RepairStatusEnum.CANCELLED),
+                                  value: RepairStatusEnum.CANCELLED,
+                                  disable: true,
+                                },
+                                {
+                                  label: convertRepairStatusEnum(RepairStatusEnum.WAITING_FOR_CONFIRM),
+                                  value: RepairStatusEnum.WAITING_FOR_CONFIRM,
+                                },
+                                {
+                                  label: convertRepairStatusEnum(RepairStatusEnum.CONFIRMED),
+                                  value: RepairStatusEnum.CONFIRMED,
+                                },
+                                {
+                                  label: convertRepairStatusEnum(RepairStatusEnum.HANDLING),
+                                  value: RepairStatusEnum.HANDLING,
+                                },
+                                {
+                                  label: convertRepairStatusEnum(RepairStatusEnum.WAITING_FOR_PAYMENT),
+                                  value: RepairStatusEnum.WAITING_FOR_PAYMENT,
+                                },
+                                {
+                                  label: convertRepairStatusEnum(RepairStatusEnum.FINISHED),
+                                  value: RepairStatusEnum.FINISHED,
+                                },
+                              ]}
+                              removable={false}
+                              searchable={false}
                             />
                           </FormControl>
                           <FormMessage />
@@ -617,7 +669,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
                         <FormItem className='col-span-2'>
                           <FormLabel>Lý do hủy (nếu có)</FormLabel>
                           <FormControl>
-                            <Textarea placeholder='Nhập lý do' rows={4} {...field} />
+                            <Textarea disabled placeholder='Nhập lý do' rows={4} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

@@ -44,6 +44,34 @@ type CommonEntity {
   updatedAt: DateTime!
 }
 
+input ContactCollectionInput {
+  status: ContactStatusEnum
+}
+
+type ContactConnection {
+  items: [ContactEntity!]!
+  meta: PageMeta!
+}
+
+type ContactEntity {
+  content: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  email: String
+  id: ID!
+  name: String!
+  note: String!
+  phone: String!
+  status: ContactStatusEnum!
+  updatedAt: DateTime!
+}
+
+enum ContactStatusEnum {
+  Cancelled
+  Default
+  Handled
+}
+
 type CountRepairByStatus {
   status: RepairStatusEnum!
   total: Float!
@@ -52,6 +80,15 @@ type CountRepairByStatus {
 input CreateBrandInput {
   model_names: [String!]!
   name: String!
+}
+
+input CreateContactInput {
+  content: String!
+  email: String
+  name: String!
+  note: String
+  phone: String!
+  status: ContactStatusEnum!
 }
 
 input CreateMotorcycleInput {
@@ -253,6 +290,7 @@ type Mutation {
   cancelRepair(input: CancelRepairInput!): RepairEntity!
   changeUserEmailOrPhone(input: UpdateUserNewEmailOrPhoneInput!): UserEntity!
   createBrand(args: CreateBrandInput!): BrandEntity!
+  createContact(input: CreateContactInput!): ContactEntity!
   createMotorcycle(input: CreateMotorcycleInput!): MotorcycleEntity!
   createNews(input: CreateNewsInput!): NewsEntity!
   createProduct(args: CreateProductInput!): ProductEntity!
@@ -264,6 +302,7 @@ type Mutation {
   refreshToken(refreshToken: String!): AuthEntity!
   registerByPhone(input: RegisterByPhoneInput!): UserEntity!
   removeBrand(id: String!): Boolean!
+  removeContact(id: String!): Boolean!
   removeMedias(input: RemoveMediasInput!): Boolean!
   removeMotorcycle(id: String!): Boolean!
   removeNews(id: String!): Boolean!
@@ -277,6 +316,7 @@ type Mutation {
   sendOtpVerifyEmailOrPhone(input: CreateOtpVerifyEmailOrPhone!): String
   sendRegisterOtp(input: CreateOtpInput!): String
   updateBrand(args: UpdateBrandInput!): BrandEntity!
+  updateContact(input: UpdateContactInput!): ContactEntity!
   updateMotorcycle(input: UpdateMotorcycleInput!): MotorcycleEntity!
   updateNews(input: UpdateNewsInput!): NewsEntity!
   updateProduct(args: UpdateProductInput!): ProductEntity!
@@ -427,6 +467,8 @@ type Query {
   brand(id: String!): BrandEntity!
   brandCollection(pagination: PaginationArgs): BrandConnection!
   checkOtp(input: CheckOtpInput!): Boolean!
+  contact(id: String!): ContactEntity!
+  contactCollection(filterArgs: ContactCollectionInput, paginationArgs: PaginationArgs!): ContactConnection!
   countRepairsByStatuses: [CountRepairByStatus!]!
   exportRepairs(input: ExportRepairsInput!): String!
   getStaffByAdmin(staffId: String!): UserEntity!
@@ -727,6 +769,16 @@ input UpdateBrandInput {
   id: String!
   models: [ModelOfUpdateBrandInput!]!
   name: String!
+}
+
+input UpdateContactInput {
+  content: String
+  email: String
+  id: String!
+  name: String
+  note: String
+  phone: String
+  status: ContactStatusEnum
 }
 
 input UpdateMotorcycleInput {

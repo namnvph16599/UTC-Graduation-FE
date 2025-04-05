@@ -1,0 +1,5 @@
+mutation cancelRepair($input: CancelRepairInput!) {
+  cancelRepair(input: $input) {
+    id
+  }
+}

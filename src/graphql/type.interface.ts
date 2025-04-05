@@ -66,6 +66,36 @@ export type CommonEntity = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type ContactCollectionInput = {
+  status?: InputMaybe<ContactStatusEnum>;
+};
+
+export type ContactConnection = {
+  __typename?: 'ContactConnection';
+  items: Array<ContactEntity>;
+  meta: PageMeta;
+};
+
+export type ContactEntity = {
+  __typename?: 'ContactEntity';
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  email?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  note: Scalars['String'];
+  phone: Scalars['String'];
+  status: ContactStatusEnum;
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum ContactStatusEnum {
+  CANCELLED = 'Cancelled',
+  DEFAULT = 'Default',
+  HANDLED = 'Handled',
+}
+
 export type CountRepairByStatus = {
   __typename?: 'CountRepairByStatus';
   status: RepairStatusEnum;
@@ -75,6 +105,15 @@ export type CountRepairByStatus = {
 export type CreateBrandInput = {
   model_names: Array<Scalars['String']>;
   name: Scalars['String'];
+};
+
+export type CreateContactInput = {
+  content: Scalars['String'];
+  email?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  note?: InputMaybe<Scalars['String']>;
+  phone: Scalars['String'];
+  status: ContactStatusEnum;
 };
 
 export type CreateMotorcycleInput = {
@@ -273,6 +312,7 @@ export type Mutation = {
   cancelRepair: RepairEntity;
   changeUserEmailOrPhone: UserEntity;
   createBrand: BrandEntity;
+  createContact: ContactEntity;
   createMotorcycle: MotorcycleEntity;
   createNews: NewsEntity;
   createProduct: ProductEntity;
@@ -284,6 +324,7 @@ export type Mutation = {
   refreshToken: AuthEntity;
   registerByPhone: UserEntity;
   removeBrand: Scalars['Boolean'];
+  removeContact: Scalars['Boolean'];
   removeMedias: Scalars['Boolean'];
   removeMotorcycle: Scalars['Boolean'];
   removeNews: Scalars['Boolean'];
@@ -297,6 +338,7 @@ export type Mutation = {
   sendOtpVerifyEmailOrPhone?: Maybe<Scalars['String']>;
   sendRegisterOtp?: Maybe<Scalars['String']>;
   updateBrand: BrandEntity;
+  updateContact: ContactEntity;
   updateMotorcycle: MotorcycleEntity;
   updateNews: NewsEntity;
   updateProduct: ProductEntity;
@@ -325,6 +367,10 @@ export type MutationChangeUserEmailOrPhoneArgs = {
 
 export type MutationCreateBrandArgs = {
   args: CreateBrandInput;
+};
+
+export type MutationCreateContactArgs = {
+  input: CreateContactInput;
 };
 
 export type MutationCreateMotorcycleArgs = {
@@ -364,6 +410,10 @@ export type MutationRegisterByPhoneArgs = {
 };
 
 export type MutationRemoveBrandArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationRemoveContactArgs = {
   id: Scalars['String'];
 };
 
@@ -417,6 +467,10 @@ export type MutationSendRegisterOtpArgs = {
 
 export type MutationUpdateBrandArgs = {
   args: UpdateBrandInput;
+};
+
+export type MutationUpdateContactArgs = {
+  input: UpdateContactInput;
 };
 
 export type MutationUpdateMotorcycleArgs = {
@@ -614,6 +668,8 @@ export type Query = {
   brand: BrandEntity;
   brandCollection: BrandConnection;
   checkOtp: Scalars['Boolean'];
+  contact: ContactEntity;
+  contactCollection: ContactConnection;
   countRepairsByStatuses: Array<CountRepairByStatus>;
   exportRepairs: Scalars['String'];
   getStaffByAdmin: UserEntity;
@@ -652,6 +708,15 @@ export type QueryBrandCollectionArgs = {
 
 export type QueryCheckOtpArgs = {
   input: CheckOtpInput;
+};
+
+export type QueryContactArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryContactCollectionArgs = {
+  filterArgs?: InputMaybe<ContactCollectionInput>;
+  paginationArgs: PaginationArgs;
 };
 
 export type QueryExportRepairsArgs = {
@@ -1027,6 +1092,16 @@ export type UpdateBrandInput = {
   id: Scalars['String'];
   models: Array<ModelOfUpdateBrandInput>;
   name: Scalars['String'];
+};
+
+export type UpdateContactInput = {
+  content?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  note?: InputMaybe<Scalars['String']>;
+  phone?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<ContactStatusEnum>;
 };
 
 export type UpdateMotorcycleInput = {
