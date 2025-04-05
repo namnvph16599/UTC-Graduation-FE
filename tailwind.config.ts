@@ -10,6 +10,11 @@ export default {
   theme: {
     extend: {
       colors: {
+        notification: {
+          error: '#D63120',
+          success: '#1BB045',
+          warning: '#FFC42C',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

@@ -1,5 +1,6 @@
-import type { Metadata } from 'next';
 import './globals.css';
+import { CircleCheck, CircleX, Info } from 'lucide-react';
+import type { Metadata } from 'next';
 import { Quicksand } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { ApolloWrapper } from '@/src/configs/apollo';
@@ -25,7 +26,14 @@ export default function RootLayout({
         <ApolloWrapper>
           <ReactQueryProvider>
             {children}
-            <Toaster position='top-right' />
+            <Toaster
+              icons={{
+                success: <CircleCheck color='#1BB045' />,
+                warning: <Info color='#FFC42C' />,
+                error: <CircleX color='#D63120' />,
+              }}
+              position='top-right'
+            />
           </ReactQueryProvider>
         </ApolloWrapper>
       </body>
