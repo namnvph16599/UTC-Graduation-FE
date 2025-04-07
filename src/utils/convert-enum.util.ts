@@ -1,4 +1,4 @@
-import { RepairStatusEnum, UserStatus } from '@/src/graphql/type.interface';
+import { ContactStatusEnum, RepairStatusEnum, UserStatus } from '@/src/graphql/type.interface';
 
 export const convertRepairStatusEnum = (status: RepairStatusEnum) => {
   switch (status) {
@@ -29,5 +29,16 @@ export const convertUserStatus = (status: UserStatus) => {
       return 'Cần xác thực';
     default:
       return '';
+  }
+};
+
+export const convertContactStatusEnum = (status: ContactStatusEnum) => {
+  switch (status) {
+    case ContactStatusEnum.CANCELLED:
+      return 'Đã hủy';
+    case ContactStatusEnum.HANDLED:
+      return 'Đã xử lý';
+    default:
+      return 'Chưa xử lý';
   }
 };

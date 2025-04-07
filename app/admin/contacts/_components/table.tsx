@@ -4,13 +4,14 @@ import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReact
 
 import { AppPagination } from '@/components/app-pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { TDataTablePagination } from '@/src/types';
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData, TValue> extends TDataTablePagination {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, onChangePage, pageMeta }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -56,7 +57,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-      <AppPagination currentPage={1} onChangePage={() => {}} totalPage={10} />
+      <AppPagination
+        className='justify-end'
+        currentPage={pageMeta?.currentPage ?? 0}
+        onChangePage={onChangePage}
+        totalPage={pageMeta?.totalPage ?? 0}
+      />
     </div>
   );
 }

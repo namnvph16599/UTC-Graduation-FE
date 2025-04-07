@@ -3,24 +3,34 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
+import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
+import { Combobox } from '@/components/ui/combobox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { UploadImage } from '@/components/ui/upload-image';
+import { validationMessages } from '@/src/constants/constant';
+import { useUpdateContactMutation } from '@/src/graphql/mutations/updateContact.generated';
+import { useContactQuery } from '@/src/graphql/queries/contact.generated';
+import { ContactCollectionDocument } from '@/src/graphql/queries/contactCollection.generated';
+import { ContactStatusEnum } from '@/src/graphql/type.interface';
+import { TDetailPageProps } from '@/src/types';
+import { convertContactStatusEnum } from '@/src/utils/convert-enum.util';
 
 const formSchema = z.object({
   name: z.string({}),
   phone: z.string({}),
   content: z.string({}),
   email: z.string({}).optional(),
-  status: z.boolean({}),
   note: z.string({}).optional(),
+  status: z.enum(Object.values(ContactStatusEnum) as [string, ...string[]], {
+    message: validationMessages.required,
+  }),
 });
 
-export const ContactForm = () => {
+export const ContactForm = ({ id }: TDetailPageProps) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -28,21 +38,62 @@ export const ContactForm = () => {
     defaultValues: {},
   });
 
-  const onSubmit = useCallback((data: z.infer<typeof formSchema>) => {
-    console.log('data', data);
-  }, []);
+  const { loading, refetch } = useContactQuery({
+    variables: {
+      id: id ?? '',
+    },
+    skip: !id,
+    onCompleted(data) {
+      const defaultValues = data?.contact;
+      form.setValue('content', defaultValues?.content);
+      form.setValue('name', defaultValues?.name);
+      form.setValue('phone', defaultValues?.phone);
+      form.setValue('email', defaultValues?.email ?? '');
+      form.setValue('status', defaultValues?.status);
+      form.setValue('note', defaultValues?.note);
+    },
+  });
+
+  const [updateAsync, { loading: updating }] = useUpdateContactMutation({
+    onCompleted() {
+      toast.success('Cập nhật thành công!');
+      refetch();
+    },
+    onError(error) {
+      toast.error('Đã có lỗi xảy ra', {
+        description: error.message,
+      });
+    },
+    refetchQueries: [ContactCollectionDocument],
+  });
+
+  const onSubmit = useCallback(
+    async (input: z.infer<typeof formSchema>) => {
+      if (!id) return;
+      await updateAsync({
+        variables: {
+          input: {
+            id: id,
+            status: input.status as ContactStatusEnum,
+            note: input.note,
+          },
+        },
+      });
+    },
+    [id, updateAsync],
+  );
 
   return (
-    <>
+    <Loading loading={loading}>
       <div className='p-5 bg-[#F9F9F9]'>
-        <div className='p-5 bg-white mb-[93px] container mx-auto'>
+        <div className='p-5 bg-white mb-[93px] mx-auto'>
           <Form {...form}>
             <form
               className='grid grid-cols-1 items-start gap-6'
               id='repair-form'
               onSubmit={form.handleSubmit(onSubmit)}>
               <div className='grid grid-cols-2 gap-10'>
-                <div>
+                <div className='flex flex-col gap-5'>
                   <FormField
                     control={form.control}
                     name='name'
@@ -96,15 +147,36 @@ export const ContactForm = () => {
                     )}
                   />
                 </div>
-                <div>
+                <div className='flex flex-col gap-5'>
                   <FormField
                     control={form.control}
                     name='status'
                     render={({ field }) => (
-                      <FormItem className='flex flex-col mb-8'>
-                        <FormLabel>Trạng thái xử lý</FormLabel>
+                      <FormItem>
+                        <FormLabel required>Trạng thái</FormLabel>
                         <FormControl>
-                          <Switch checked={field.value} onCheckedChange={field.onChange} />
+                          <Combobox
+                            className='block'
+                            {...field}
+                            onChange={(val) => field.onChange(val)}
+                            options={[
+                              {
+                                label: convertContactStatusEnum(ContactStatusEnum.DEFAULT),
+                                value: ContactStatusEnum.DEFAULT,
+                                disable: true,
+                              },
+                              {
+                                label: 'Hủy',
+                                value: ContactStatusEnum.CANCELLED,
+                              },
+                              {
+                                label: convertContactStatusEnum(ContactStatusEnum.HANDLED),
+                                value: ContactStatusEnum.HANDLED,
+                              },
+                            ]}
+                            removable={false}
+                            searchable={false}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -133,8 +205,10 @@ export const ContactForm = () => {
         <Button onClick={() => router.back()} variant='outline'>
           Hủy
         </Button>
-        <Button form='repair-form'>Lưu</Button>
+        <Button form='repair-form' loading={updating} type='submit'>
+          Lưu
+        </Button>
       </div>
-    </>
+    </Loading>
   );
 };

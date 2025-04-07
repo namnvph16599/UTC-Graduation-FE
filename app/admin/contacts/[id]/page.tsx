@@ -27,7 +27,7 @@ const Page = async ({ params }: Props) => {
           },
         ]}
       />
-      <ContactForm />
+      <ContactForm id={id} />
     </div>
   );
 };

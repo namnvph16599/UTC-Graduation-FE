@@ -14,18 +14,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppRouter, DATE_FORMAT } from '@/src/constants/constant';
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type ContactEntity = {
-  id: string;
-  name: string;
-  phone: string;
-  email?: string;
-  content: string;
-  status: boolean;
-  note?: string;
-  created_at: Date;
-};
+import { ContactEntity } from '@/src/graphql/type.interface';
+import { convertContactStatusEnum } from '@/src/utils/convert-enum.util';
 
 export const contactColumns: ColumnDef<ContactEntity>[] = [
   {
@@ -48,8 +38,8 @@ export const contactColumns: ColumnDef<ContactEntity>[] = [
     accessorKey: 'status',
     header: 'Trạng thái',
     cell: ({ row }) => {
-      const entity = row.original.status;
-      return entity ? 'Đã xử lý' : 'Chưa xử lý';
+      const status = row.original.status;
+      return convertContactStatusEnum(status);
     },
   },
   {
@@ -62,7 +52,7 @@ export const contactColumns: ColumnDef<ContactEntity>[] = [
     cell: ({ row }) => {
       const entity = row.original;
 
-      return dayjs(entity.created_at).format(DATE_FORMAT.dateTime);
+      return dayjs(entity.createdAt).format(DATE_FORMAT.dateTime);
     },
   },
   {
@@ -83,7 +73,7 @@ export const contactColumns: ColumnDef<ContactEntity>[] = [
             {/* <DropdownMenuItem onClick={() => navigator.clipboard.writeText(entity.id)}>Sao chép ID</DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={AppRouter.admin.contacts.edit(entity.id)}>Xem chi tiết</Link>
+              <Link href={AppRouter.admin.contacts.edit(entity.id)}>Chỉnh sửa</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </DropdownMenuContent>
