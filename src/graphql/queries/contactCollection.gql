@@ -1,0 +1,23 @@
+query contactCollection($filterArgs: ContactCollectionInput, $paginationArgs: PaginationArgs!) {
+  contactCollection(filterArgs: $filterArgs, paginationArgs: $paginationArgs) {
+    items {
+      content
+      createdAt
+      email
+      id
+      name
+      note
+      phone
+      status
+      updatedAt
+    }
+    meta {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      totalItem
+      totalPage
+    }
+  }
+}

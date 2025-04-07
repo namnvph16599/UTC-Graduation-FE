@@ -1,0 +1,11 @@
+query contact($id: String!) {
+  contact(id: $id) {
+    content
+    email
+    id
+    name
+    note
+    phone
+    status
+  }
+}

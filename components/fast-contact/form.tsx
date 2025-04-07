@@ -2,6 +2,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { memo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -9,6 +10,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { validationMessages } from '@/src/constants/constant';
 import { REGEX } from '@/src/constants/regex';
+import { useCreateContactMutation } from '@/src/graphql/mutations/createContact.generated';
+import { ContactCollectionDocument } from '@/src/graphql/queries/contactCollection.generated';
+import { ContactStatusEnum } from '@/src/graphql/type.interface';
 const validationSchema = z.object({
   email: z
     .string()
@@ -16,7 +20,7 @@ const validationSchema = z.object({
     .refine((val) => !val || z.string().email().safeParse(val).success, {
       message: validationMessages.invalidEmail,
     }),
-  fullName: z
+  name: z
     .string({ message: validationMessages.required })
     .min(6, { message: validationMessages.minLength(6) })
     .max(50, {
@@ -30,7 +34,7 @@ const validationSchema = z.object({
     .regex(REGEX.phone, {
       message: validationMessages.invalidPhone,
     }),
-  description: z.string({ message: validationMessages.required }).min(6, { message: validationMessages.minLength(6) }),
+  content: z.string({ message: validationMessages.required }).min(6, { message: validationMessages.minLength(6) }),
 });
 
 type Props = {
@@ -43,13 +47,39 @@ export const FormFastContact = memo(({}: Props) => {
     mode: 'onSubmit',
     defaultValues: {
       //   email: userAuth?.email ?? undefined,
-      //   fullName: userAuth?.name ?? undefined,
+      //   name: userAuth?.name ?? undefined,
       //   phone: userAuth?.phone ?? undefined,
       //   serviceTypeId: defaultOptionId ?? undefined,
     },
   });
 
-  const onSubmit = useCallback((values: unknown) => {}, []);
+  const [createAsync, { loading }] = useCreateContactMutation({
+    onCompleted() {
+      toast.success('Gửi liên hệ thành công!');
+      form.reset();
+    },
+    onError(error) {
+      toast.error('Đã có lỗi xảy ra', {
+        description: error.message,
+      });
+    },
+    refetchQueries: [ContactCollectionDocument],
+  });
+
+  const onSubmit = useCallback(
+    async (values: z.infer<typeof validationSchema>) => {
+      await createAsync({
+        variables: {
+          input: {
+            ...values,
+            status: ContactStatusEnum.DEFAULT,
+            note: '',
+          },
+        },
+      });
+    },
+    [createAsync],
+  );
 
   return (
     <Form {...form}>
@@ -59,7 +89,7 @@ export const FormFastContact = memo(({}: Props) => {
         onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name='fullName'
+          name='name'
           render={({ field }) => (
             <FormItem>
               <FormControl>
@@ -97,7 +127,7 @@ export const FormFastContact = memo(({}: Props) => {
 
         <FormField
           control={form.control}
-          name='description'
+          name='content'
           render={({ field }) => (
             <FormItem className='col-span-2'>
               <FormControl>
@@ -109,7 +139,7 @@ export const FormFastContact = memo(({}: Props) => {
         />
 
         <div className='col-span-2 flex justify-center items-center w-full mt-4'>
-          <Button className='text-white w-full text-base font-semibold' type='submit'>
+          <Button className='text-white w-full text-base font-semibold' loading={loading} type='submit'>
             Gửi thông tin liên hệ
           </Button>
         </div>
