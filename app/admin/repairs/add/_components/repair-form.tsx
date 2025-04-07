@@ -194,6 +194,7 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
   );
 
   const currentBrandId = form.watch('brand_id');
+  const currentModelId = form.watch('model_id');
 
   const modelOptions = useMemo(
     () =>
@@ -309,6 +310,22 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
       form.setValue('model_id', '');
     }
   }, [currentBrandId, form]);
+
+  useEffect(() => {
+    if (currentModelId && currentBrandId) {
+      const isExited = modelOptions.find((m) => m.value === currentModelId);
+      if (!isExited) {
+        form.setValue('model_id', '');
+      }
+    }
+
+    if (!currentModelId && currentBrandId && repair?.model?.id) {
+      const isExited = modelOptions.find((m) => m.value === repair?.model?.id);
+      if (isExited) {
+        form.setValue('model_id', repair?.model?.id);
+      }
+    }
+  }, [currentBrandId, currentModelId, form, modelOptions, repair?.model?.id]);
 
   return (
     <Loading loading={loading}>
