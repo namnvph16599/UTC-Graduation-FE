@@ -14,8 +14,7 @@ import { Input } from '@/components/ui/input';
 import { AppRouter } from '@/src/constants/constant';
 import { useAuth } from '@/src/contexts';
 import { useLoginByPhoneMutation } from '@/src/graphql/mutations/loginByPhone.generated';
-import { Platform, UserEntity } from '@/src/graphql/type.interface';
-import { LocalStorageKeyEnum, setItemLocalstorage } from '@/src/utils/localstorate.util';
+import { Platform } from '@/src/graphql/type.interface';
 
 const formSchema = z.object({
   phone: z
@@ -49,11 +48,9 @@ export function LoginForm() {
 
   const [loginMutation, { loading }] = useLoginByPhoneMutation({
     onCompleted(data) {
-      setItemLocalstorage(LocalStorageKeyEnum.AccessToken, data.loginByPhone.accessToken);
-      setItemLocalstorage(LocalStorageKeyEnum.RefreshToken, data.loginByPhone.refreshToken);
+      login(data);
 
-      login(data.loginByPhone.user as UserEntity);
-
+      router.prefetch(AppRouter.user.home);
       router.push(AppRouter.user.home);
     },
     onError(error) {

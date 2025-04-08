@@ -1,4 +1,3 @@
-'use client';
 import { DropdownMenuGroup } from '@radix-ui/react-dropdown-menu';
 import Link from 'next/link';
 import {
@@ -9,12 +8,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppRouter } from '@/src/constants/constant';
-import { useAuth } from '@/src/contexts';
+import { meServerQuery } from '@/src/server-hooks/queries/use-me-server-query';
+import { Logout } from './logout';
 
-export const Account = () => {
-  const { isLoggedIn, isLoading, user, logout } = useAuth();
+export const Account = async () => {
+  const { data } = await meServerQuery();
 
-  if (isLoading) return null;
+  const user = data?.me;
+  const isLoggedIn = !!user;
+
   if (!isLoggedIn) {
     return (
       <div className='flex items-center gap-x-2 text-sm font-semibold text-secondary-default'>
@@ -42,7 +44,7 @@ export const Account = () => {
             <DropdownMenuItem>Đổi mật khẩu</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => logout()}>Đăng xuất</DropdownMenuItem>
+          <Logout />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

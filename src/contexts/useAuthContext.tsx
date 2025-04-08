@@ -1,17 +1,19 @@
 'use client';
 import { useApolloClient } from '@apollo/client';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { createContext, PropsWithChildren, useCallback, useContext, useState } from 'react';
-import { AppRouter } from '@/src/constants/constant';
 import { useMeQuery } from '@/src/graphql/queries/me.generated';
 import { UserEntity } from '@/src/graphql/type.interface';
+import { LoginByPhoneMutationResponse } from '../graphql/mutations/loginByPhone.generated';
+import { LocalStorageKeyEnum, removeItemLocalstorage, setItemLocalstorage } from '../utils/localstorate.util';
 
 type ContextProps = {
   isLoggedIn: boolean;
   isLoading: boolean;
   user?: UserEntity;
   logout: () => Promise<void>;
-  login: (data: UserEntity) => Promise<void> | void;
+  login: (data: LoginByPhoneMutationResponse) => Promise<void> | void;
 };
 
 const AuthContext = createContext<ContextProps>({
@@ -47,17 +49,37 @@ export const AuthProvider = ({ children }: Props) => {
     },
   });
 
-  const login = useCallback((data: UserEntity) => {
-    setUser(data);
+  const login = useCallback((data: LoginByPhoneMutationResponse) => {
+    setItemLocalstorage(LocalStorageKeyEnum.AccessToken, data.loginByPhone.accessToken);
+    setItemLocalstorage(LocalStorageKeyEnum.RefreshToken, data.loginByPhone.refreshToken);
+
+    Cookies.set(LocalStorageKeyEnum.AccessToken, data.loginByPhone.accessToken, {
+      expires: 30, // days until it expires
+      path: '/', // cookie is available across the entire site
+      secure: process.env.NODE_ENV === 'production', // only set secure flag in production
+      sameSite: 'Lax',
+    });
+
+    Cookies.set(LocalStorageKeyEnum.RefreshToken, data.loginByPhone.accessToken, {
+      expires: 30, // days until it expires
+      path: '/', // cookie is available across the entire site
+      secure: process.env.NODE_ENV === 'production', // only set secure flag in production
+      sameSite: 'Lax',
+    });
+
+    setUser(data.loginByPhone.user as UserEntity);
     setIsLoggedIn(true);
   }, []);
 
   const logout = useCallback(async () => {
-    await client.cache.reset();
-    localStorage.clear();
-    setIsLoggedIn(false);
-    router.push(AppRouter.user.home);
-  }, [client.cache, router]);
+    removeItemLocalstorage(LocalStorageKeyEnum.AccessToken);
+    removeItemLocalstorage(LocalStorageKeyEnum.RefreshToken);
+
+    Cookies.remove(LocalStorageKeyEnum.AccessToken);
+    Cookies.remove(LocalStorageKeyEnum.RefreshToken);
+
+    router.refresh();
+  }, [router]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, isLoading: loading, login, logout, user }}>
