@@ -1,0 +1,5 @@
+mutation createMotorcycle($input: CreateMotorcycleInput!) {
+  createMotorcycle(input: $input) {
+    id
+  }
+}

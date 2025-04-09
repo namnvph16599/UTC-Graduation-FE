@@ -9,6 +9,14 @@ export const AppRouter = {
     booking: '/dat-lich',
     news: '/tin-tuc-va-cam-nang',
     contact: '/lien-he',
+    authenticatePages: {
+      myVehicle: {
+        label: 'Xe của tôi',
+        path: '/xe-cua-toi',
+        edit: (id: string) => '/xe-cua-toi/' + id,
+        add: '/xe-cua-toi/tao-moi',
+      },
+    },
   },
   admin: {
     dashboard: '/admin/dashboard',

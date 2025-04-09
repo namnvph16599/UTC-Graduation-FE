@@ -1,0 +1,5 @@
+mutation updateMotorcycle($input: UpdateMotorcycleInput!) {
+  updateMotorcycle(input: $input) {
+    id
+  }
+}

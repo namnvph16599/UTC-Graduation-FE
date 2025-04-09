@@ -8,23 +8,41 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { AppRouter } from '@/src/constants/constant';
+import { cn } from '@/src/constants/utils';
 
 type Props = {
   items: { label: string; href: string }[];
   rightContent?: ReactNode;
+  isAdmin?: boolean;
+  isUser?: boolean;
+  className?: string;
 };
 
-export const AppBreadcrumb = ({ items, rightContent }: Props) => {
+export const AppBreadcrumb = ({ items, rightContent, isAdmin = true, isUser = false, className }: Props) => {
   return (
-    <div className='bg-white px-6 py-4 flex items-center justify-between border-b border-[#eeeeee]'>
+    <div className={cn('bg-white px-6 py-4 flex items-center justify-between border-b border-[#eeeeee]', className)}>
       <Breadcrumb>
         <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href={AppRouter.admin.dashboard}>Tổng quan</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
+          {isAdmin && (
+            <>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href={AppRouter.admin.dashboard}>Tổng quan</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+            </>
+          )}
+          {isUser && (
+            <>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href={AppRouter.user.home}>Trang chủ</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+            </>
+          )}
           {items.map((item, idx) => {
             return (
               <Fragment key={item.label}>

@@ -1,0 +1,15 @@
+query motorcycle($id: String!) {
+  motorcycle(id: $id) {
+    capacity
+    id
+    license_plate
+    manufacture_year
+    model {
+      brand {
+        id
+      }
+      id
+    }
+    name
+  }
+}

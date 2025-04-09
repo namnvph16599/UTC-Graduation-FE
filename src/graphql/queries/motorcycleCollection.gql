@@ -1,0 +1,25 @@
+query motorcycleCollection($filterArgs: MotorcycleCollectionFilter, $pagination: PaginationArgs) {
+  motorcycleCollection(filterArgs: $filterArgs, pagination: $pagination) {
+    items {
+      capacity
+      id
+      license_plate
+      manufacture_year
+      model {
+        name
+        brand {
+          name
+        }
+      }
+      name
+    }
+    meta {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      totalItem
+      totalPage
+    }
+  }
+}

@@ -1,0 +1,3 @@
+mutation removeMotorcycle($id: String!){
+    removeMotorcycle(id: $id)
+}

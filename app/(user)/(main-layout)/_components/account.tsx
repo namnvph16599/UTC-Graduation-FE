@@ -39,9 +39,15 @@ export const Account = async () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className='w-56 text-secondary-default'>
           <DropdownMenuGroup>
-            <DropdownMenuItem>Sửa chữa</DropdownMenuItem>
-            <DropdownMenuItem>Xe của tôi</DropdownMenuItem>
-            <DropdownMenuItem>Đổi mật khẩu</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={'#'}>Sửa chữa</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={AppRouter.user.authenticatePages.myVehicle.path}>Xe của tôi</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={'#'}>Đổi mật khẩu</Link>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <Logout />
