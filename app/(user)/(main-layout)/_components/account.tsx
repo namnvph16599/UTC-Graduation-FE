@@ -46,7 +46,7 @@ export const Account = async () => {
               <Link href={AppRouter.user.authenticatePages.myVehicle.path}>Xe của tôi</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={'#'}>Đổi mật khẩu</Link>
+              <Link href={AppRouter.user.authenticatePages.changePassword}>Đổi mật khẩu</Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

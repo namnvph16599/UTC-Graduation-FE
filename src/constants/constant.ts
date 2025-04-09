@@ -16,6 +16,7 @@ export const AppRouter = {
         edit: (id: string) => '/xe-cua-toi/' + id,
         add: '/xe-cua-toi/tao-moi',
       },
+      changePassword: '/thay-doi-mat-khau',
     },
   },
   admin: {
