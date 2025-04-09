@@ -1,0 +1,17 @@
+query myMotorcycles {
+  myMotorcycles {
+    items {
+      capacity
+      id
+      license_plate
+      manufacture_year
+      model {
+        id
+        brand {
+          id
+        }
+      }
+      name
+    }
+  }
+}

@@ -1,7 +1,7 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,9 @@ import { DateTimePickerForm } from '@/components/ui/datetime-picker';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { MultipleSelect } from '@/components/ui/multi-select';
+import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { BrandEntity, MotorcycleEntity, ServicesEntity, UserEntity } from '@/src/graphql/type.interface';
 
 const formSchema = z
   .object({
@@ -65,6 +67,8 @@ const formSchema = z
     customer_description: z.string().optional(),
     estimated_delivery_time: z.date().optional(),
     expected_receiving_time: z.date().optional(),
+    showSelectingMyVehicle: z.boolean().optional(),
+    vehicle_id: z.string().optional(),
   })
   .refine(
     (values) =>
@@ -77,11 +81,64 @@ const formSchema = z
     },
   );
 
-const BookingPage = () => {
+type Props = {
+  user?: UserEntity | null;
+  services?: ServicesEntity[];
+  brands?: BrandEntity[];
+  myMotorcycles?: MotorcycleEntity[];
+};
+
+const BookingPage = ({ brands = [], services = [], myMotorcycles = [], user }: Props) => {
+  const brandOptions = useMemo(
+    () =>
+      brands.map((s) => ({
+        label: s.name,
+        value: s.id,
+      })),
+    [brands],
+  );
+
+  const serviceOptions = useMemo(
+    () =>
+      services.map((s) => ({
+        label: s.name,
+        value: s.id,
+      })),
+    [services],
+  );
+
+  const motorcycleOptions = useMemo(
+    () =>
+      myMotorcycles.map((s) => ({
+        label: s.name,
+        value: s.id,
+      })),
+    [myMotorcycles],
+  );
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      name: user?.fullName ?? '',
+      phone: user?.phoneNumber ?? '',
+      showSelectingMyVehicle: false,
+    },
   });
+
+  const currentBrandId = form.watch('brand');
+  const currentModelId = form.watch('model');
+  const currentShowSelectingMyVehicle = form.watch('showSelectingMyVehicle');
+
+  console.log('currentShowSelectingMyVehicle', currentShowSelectingMyVehicle);
+
+  const modelOptions = useMemo(
+    () =>
+      (brands.find((b) => b.id === currentBrandId)?.models ?? []).map((m) => ({
+        label: m.name,
+        value: m.id,
+      })),
+    [brands, currentBrandId],
+  );
 
   const onSubmit = useCallback((data: z.infer<typeof formSchema>) => {
     console.log('data', data);
@@ -119,38 +176,106 @@ const BookingPage = () => {
             />
             <FormField
               control={form.control}
+              name='estimated_delivery_time'
+              render={({ field }) => (
+                <FormItem className='flex flex-col gap-1'>
+                  <FormLabel>Thời gian dự kiến giao xe</FormLabel>
+                  <DateTimePickerForm field={field} hourTypes='day' />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='expected_receiving_time'
+              render={({ field }) => (
+                <FormItem className='flex flex-col gap-1'>
+                  <FormLabel>Thời gian dự kiến nhận xe</FormLabel>
+                  <DateTimePickerForm field={field} hourTypes='day' />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='serviceIds'
+              render={({ field }) => (
+                <FormItem className='col-span-2'>
+                  <FormLabel>Dịch vụ sửa chữa</FormLabel>
+                  <FormControl>
+                    <MultipleSelect
+                      className='block bg-white hover:bg-white'
+                      defaultValue={field.value}
+                      onValueChange={(val) => field.onChange(val)}
+                      options={serviceOptions}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='customer_description'
+              render={({ field }) => (
+                <FormItem className='col-span-2'>
+                  <FormLabel>Ghi chú</FormLabel>
+                  <FormControl>
+                    <Textarea className='bg-white' placeholder='Nhập ghi chú' rows={4} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className='grid grid-cols-2 gap-6'>
+            <FormField
+              control={form.control}
+              name='showSelectingMyVehicle'
+              render={({ field }) => (
+                <FormItem className='flex flex-col'>
+                  <FormLabel>Chọn xe của tôi</FormLabel>
+                  <FormControl>
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='vehicle_id'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Xe của tôi</FormLabel>
+                  <FormControl>
+                    <Combobox
+                      className='block'
+                      disabled={currentShowSelectingMyVehicle == true}
+                      {...field}
+                      onChange={(val) => field.onChange(val)}
+                      options={motorcycleOptions}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name='brand'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>Hãng xe</FormLabel>
                   <FormControl>
                     <Combobox
-                      allowAddingValueSearch
                       className='block'
+                      disabled={currentShowSelectingMyVehicle == true}
                       {...field}
                       onChange={(val) => field.onChange(val)}
-                      options={[
-                        {
-                          value: 'next.js',
-                          label: 'Next.js',
-                        },
-                        {
-                          value: 'sveltekit',
-                          label: 'SvelteKit',
-                        },
-                        {
-                          value: 'nuxt.js',
-                          label: 'Nuxt.js',
-                        },
-                        {
-                          value: 'remix',
-                          label: 'Remix',
-                        },
-                        {
-                          value: 'astro',
-                          label: 'Astro',
-                        },
-                      ]}
+                      options={brandOptions}
                     />
                   </FormControl>
                   <FormMessage />
@@ -165,32 +290,11 @@ const BookingPage = () => {
                   <FormLabel required>Dòng xe</FormLabel>
                   <FormControl>
                     <Combobox
-                      allowAddingValueSearch
                       className='block'
+                      disabled={currentShowSelectingMyVehicle == true}
                       {...field}
                       onChange={(val) => field.onChange(val)}
-                      options={[
-                        {
-                          value: 'next.js',
-                          label: 'Next.js',
-                        },
-                        {
-                          value: 'sveltekit',
-                          label: 'SvelteKit',
-                        },
-                        {
-                          value: 'nuxt.js',
-                          label: 'Nuxt.js',
-                        },
-                        {
-                          value: 'remix',
-                          label: 'Remix',
-                        },
-                        {
-                          value: 'astro',
-                          label: 'Astro',
-                        },
-                      ]}
+                      options={modelOptions}
                     />
                   </FormControl>
                   <FormMessage />
@@ -244,83 +348,6 @@ const BookingPage = () => {
                   <FormLabel required>Biển số xe</FormLabel>
                   <FormControl>
                     <Input className='bg-white' placeholder='Nhập biển số xe' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className='grid grid-cols-2 gap-6'>
-            <FormField
-              control={form.control}
-              name='estimated_delivery_time'
-              render={({ field }) => (
-                <FormItem className='flex flex-col gap-1'>
-                  <FormLabel>Thời gian dự kiến giao xe</FormLabel>
-                  <DateTimePickerForm field={field} hourTypes='day' />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='expected_receiving_time'
-              render={({ field }) => (
-                <FormItem className='flex flex-col gap-1'>
-                  <FormLabel>Thời gian dự kiến nhận xe</FormLabel>
-                  <DateTimePickerForm field={field} hourTypes='day' />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='serviceIds'
-              render={({ field }) => (
-                <FormItem className='col-span-2'>
-                  <FormLabel required>Dịch vụ sửa chữa</FormLabel>
-                  <FormControl>
-                    <MultipleSelect
-                      className='block bg-white'
-                      defaultValue={field.value}
-                      onValueChange={(val) => field.onChange(val)}
-                      options={[
-                        {
-                          value: 'next.js',
-                          label: 'Next.js',
-                        },
-                        {
-                          value: 'sveltekit',
-                          label: 'SvelteKit',
-                        },
-                        {
-                          value: 'nuxt.js',
-                          label: 'Nuxt.js',
-                        },
-                        {
-                          value: 'remix',
-                          label: 'Remix',
-                        },
-                        {
-                          value: 'astro',
-                          label: 'Astro',
-                        },
-                      ]}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='customer_description'
-              render={({ field }) => (
-                <FormItem className='col-span-2'>
-                  <FormLabel>Ghi chú</FormLabel>
-                  <FormControl>
-                    <Textarea className='bg-white' placeholder='Nhập ghi chú' rows={7} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

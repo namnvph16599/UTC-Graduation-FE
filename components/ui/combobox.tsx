@@ -19,6 +19,7 @@ const Combobox = ({
   removable = true,
   searchable = true,
   buttonSize = 'default',
+  disabled,
 }: React.ComponentProps<'input'> & {
   options: { label: string; value: string; disable?: boolean }[];
   placeholderSearch?: string;
@@ -43,6 +44,7 @@ const Combobox = ({
               'text-[#262626]': !!value,
               'text-[#676773]': !value,
             })}
+            disabled={disabled}
             role='combobox'
             size={buttonSize}
             variant='normalOutline'>

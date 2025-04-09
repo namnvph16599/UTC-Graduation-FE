@@ -479,6 +479,7 @@ type Query {
   models(args: GetModelsRequest): [ModelEntity!]!
   motorcycle(id: String!): MotorcycleEntity!
   motorcycleCollection(filterArgs: MotorcycleCollectionFilter, pagination: PaginationArgs): MotorcycleConnection!
+  myMotorcycles: MotorcycleConnection!
   news(id: String!): NewsEntity!
   newsCollection(paginationArgs: PaginationArgs!): NewsConnection!
   notificationCollection(filter: NotificationCollectionFilter, pagination: PaginationArgs): NotificationUserConnection!

@@ -4,5 +4,13 @@ import { useAuth } from '@/src/contexts';
 
 export const Logout = () => {
   const { logout } = useAuth();
-  return <DropdownMenuItem onClick={() => logout()}>Đăng xuất</DropdownMenuItem>;
+  return (
+    <DropdownMenuItem
+      onClick={() => {
+        logout();
+        window.location.reload();
+      }}>
+      Đăng xuất
+    </DropdownMenuItem>
+  );
 };

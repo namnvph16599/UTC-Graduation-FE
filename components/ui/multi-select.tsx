@@ -103,6 +103,8 @@ interface MultiSelectProps
    * Optional, can be used to add custom styles.
    */
   className?: string;
+
+  isSelectedAll?: boolean;
 }
 
 export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
@@ -118,6 +120,7 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
       modalPopover = false,
       // asChild = false,
       className,
+      isSelectedAll = false,
       ...props
     },
     ref,
@@ -250,18 +253,20 @@ export const MultipleSelect = React.forwardRef<HTMLButtonElement, MultiSelectPro
             <CommandList>
               <CommandEmpty>Không tìm thấy kết quả phù hợp.</CommandEmpty>
               <CommandGroup>
-                <CommandItem className='cursor-pointer' key='all' onSelect={toggleAll}>
-                  <div
-                    className={cn(
-                      'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary text-[#262626]',
-                      selectedValues.length === options.length
-                        ? 'bg-primary text-primary-foreground'
-                        : 'opacity-50 [&_svg]:invisible',
-                    )}>
-                    <CheckIcon className='h-4 w-4' />
-                  </div>
-                  <span>(Chọn tất cả)</span>
-                </CommandItem>
+                {isSelectedAll && (
+                  <CommandItem className='cursor-pointer' key='all' onSelect={toggleAll}>
+                    <div
+                      className={cn(
+                        'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary text-[#262626]',
+                        selectedValues.length === options.length
+                          ? 'bg-primary text-primary-foreground'
+                          : 'opacity-50 [&_svg]:invisible',
+                      )}>
+                      <CheckIcon className='h-4 w-4' />
+                    </div>
+                    <span>(Chọn tất cả)</span>
+                  </CommandItem>
+                )}
                 {options.map((option) => {
                   const isSelected = selectedValues.includes(option.value);
                   return (

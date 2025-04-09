@@ -680,6 +680,7 @@ export type Query = {
   models: Array<ModelEntity>;
   motorcycle: MotorcycleEntity;
   motorcycleCollection: MotorcycleConnection;
+  myMotorcycles: MotorcycleConnection;
   news: NewsEntity;
   newsCollection: NewsConnection;
   notificationCollection: NotificationUserConnection;
