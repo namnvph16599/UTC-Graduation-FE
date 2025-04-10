@@ -170,6 +170,7 @@ export type CreateRepairInput = {
   service_ids?: InputMaybe<Array<Scalars['String']>>;
   staff_id?: InputMaybe<Scalars['String']>;
   status: RepairStatusEnum;
+  user_id?: InputMaybe<Scalars['String']>;
   vehicle_id?: InputMaybe<Scalars['String']>;
 };
 
@@ -1149,6 +1150,7 @@ export type UpdateRepairInput = {
   service_ids?: InputMaybe<Array<Scalars['String']>>;
   staff_id?: InputMaybe<Scalars['String']>;
   status: RepairStatusEnum;
+  user_id?: InputMaybe<Scalars['String']>;
   vehicle_id?: InputMaybe<Scalars['String']>;
 };
 

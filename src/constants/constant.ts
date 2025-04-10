@@ -17,6 +17,11 @@ export const AppRouter = {
         add: '/xe-cua-toi/tao-moi',
       },
       changePassword: '/thay-doi-mat-khau',
+      repairRequest: {
+        label: 'Yêu cầu sửa chữa',
+        path: '/yeu-cau-sua-chua',
+        detail: (id: string) => '/yeu-cau-sua-chua/' + id,
+      },
     },
   },
   admin: {

@@ -31,7 +31,7 @@ import { RepairDocument, useRepairQuery } from '@/src/graphql/queries/repair.gen
 import { RepairCollectionDocument } from '@/src/graphql/queries/repairCollection.generated';
 import { useServicesQuery } from '@/src/graphql/queries/services.generated';
 import { useUserCollectionByAdminQuery } from '@/src/graphql/queries/userCollectionByAdmin.generated';
-import { RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
+import { RepairEntity, RepairStatusEnum, UserType } from '@/src/graphql/type.interface';
 import { TDetailPageProps } from '@/src/types';
 import { convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 
@@ -112,6 +112,9 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
       paginationArgs: {
         limit: 1000000,
         page: 1,
+      },
+      filterArgs: {
+        type: UserType.STAFF,
       },
     },
   });

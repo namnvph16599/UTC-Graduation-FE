@@ -37,6 +37,9 @@ export type RepairCollectionQueryResponse = (
           { __typename?: 'ServicesEntity' }
           & Pick<Types.ServicesEntity, 'name'>
         ) }
+      )>, motorcycle?: Types.Maybe<(
+        { __typename?: 'MotorcycleEntity' }
+        & Pick<Types.MotorcycleEntity, 'name'>
       )> }
     )>, meta: (
       { __typename?: 'PageMeta' }
@@ -85,6 +88,9 @@ export const RepairCollectionDocument = gql`
         service {
           name
         }
+      }
+      motorcycle {
+        name
       }
       status
       updatedAt

@@ -37,7 +37,9 @@ query repairCollection($input: RepairCollectionFilter, $pagination: PaginationAr
           name
         }
       }
-
+      motorcycle {
+        name
+      }
       status
       updatedAt
     }

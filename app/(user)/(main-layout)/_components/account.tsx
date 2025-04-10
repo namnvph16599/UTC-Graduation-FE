@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppRouter } from '@/src/constants/constant';
+import { UserType } from '@/src/graphql/type.interface';
 import { meServerQuery } from '@/src/server-hooks/queries/use-me-server-query';
 import { Logout } from './logout';
 
@@ -39,8 +40,13 @@ export const Account = async () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className='w-56 text-secondary-default'>
           <DropdownMenuGroup>
+            {user?.type === UserType.ADMIN && (
+              <DropdownMenuItem>
+                <Link href={AppRouter.admin.dashboard}>Trang quản trị</Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem>
-              <Link href={'#'}>Sửa chữa</Link>
+              <Link href={AppRouter.user.authenticatePages.repairRequest.path}>Yêu cầu sửa chữa</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link href={AppRouter.user.authenticatePages.myVehicle.path}>Xe của tôi</Link>

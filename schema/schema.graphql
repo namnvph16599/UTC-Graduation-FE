@@ -145,6 +145,7 @@ input CreateRepairInput {
   service_ids: [String!]
   staff_id: String
   status: RepairStatusEnum!
+  user_id: String
   vehicle_id: String
 }
 
@@ -826,6 +827,7 @@ input UpdateRepairInput {
   service_ids: [String!]
   staff_id: String
   status: RepairStatusEnum!
+  user_id: String
   vehicle_id: String
 }
 

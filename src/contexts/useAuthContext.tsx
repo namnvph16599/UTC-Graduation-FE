@@ -78,8 +78,8 @@ export const AuthProvider = ({ children }: Props) => {
     Cookies.remove(LocalStorageKeyEnum.AccessToken);
     Cookies.remove(LocalStorageKeyEnum.RefreshToken);
 
-    router.refresh();
-  }, [router]);
+    window.location.reload();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, isLoading: loading, login, logout, user }}>

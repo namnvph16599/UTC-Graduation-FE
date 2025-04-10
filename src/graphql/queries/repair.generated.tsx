@@ -25,18 +25,18 @@ export type RepairQueryResponse = (
       & Pick<Types.RepairM2MProductEntity, 'id' | 'price' | 'quantity'>
       & { product: (
         { __typename?: 'ProductEntity' }
-        & Pick<Types.ProductEntity, 'id'>
+        & Pick<Types.ProductEntity, 'id' | 'name'>
       ) }
     )>, services: Array<(
       { __typename?: 'RepairM2MServiceEntity' }
       & Pick<Types.RepairM2MServiceEntity, 'id' | 'price'>
       & { service: (
         { __typename?: 'ServicesEntity' }
-        & Pick<Types.ServicesEntity, 'id'>
+        & Pick<Types.ServicesEntity, 'id' | 'name'>
       ) }
     )>, staff?: Types.Maybe<(
       { __typename?: 'UserEntity' }
-      & Pick<Types.UserEntity, 'id'>
+      & Pick<Types.UserEntity, 'id' | 'fullName' | 'phoneNumber'>
     )> }
   ) }
 );
@@ -74,6 +74,7 @@ export const RepairDocument = gql`
       quantity
       product {
         id
+        name
       }
       quantity
     }
@@ -82,10 +83,13 @@ export const RepairDocument = gql`
       price
       service {
         id
+        name
       }
     }
     staff {
       id
+      fullName
+      phoneNumber
     }
     status
   }
