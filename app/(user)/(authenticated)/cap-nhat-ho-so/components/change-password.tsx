@@ -1,11 +1,10 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { PasswordInput } from '@/components/ui/password-input';
@@ -81,69 +80,56 @@ export const ChangePassword = () => {
   );
 
   return (
-    <div className='container mx-auto'>
-      <AppBreadcrumb
-        className='px-0 mb-4'
-        isAdmin={false}
-        isUser={true}
-        items={[
-          {
-            label: 'Thay đổi mật khẩu',
-            href: '#',
-          },
-        ]}
-      />
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className='grid grid-cols-1 items-start gap-6'>
-            <FormField
-              control={form.control}
-              name='passwordOld'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Mật khẩu cũ</FormLabel>
-                  <FormControl>
-                    <PasswordInput placeholder='Nhập mật khẩu cũ' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='passwordNew'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Mật khẩu mới</FormLabel>
-                  <FormControl>
-                    <PasswordInput placeholder='Nhập mật khẩu mới' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='passwordConfirm'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Xác nhận mật khẩu</FormLabel>
-                  <FormControl>
-                    <PasswordInput placeholder='Nhập xác nhận mật khẩu' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className='grid grid-cols-1 items-start gap-6'>
+          <FormField
+            control={form.control}
+            name='passwordOld'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel required>Mật khẩu cũ</FormLabel>
+                <FormControl>
+                  <PasswordInput className='bg-white' placeholder='Nhập mật khẩu cũ' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='passwordNew'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel required>Mật khẩu mới</FormLabel>
+                <FormControl>
+                  <PasswordInput className='bg-white' placeholder='Nhập mật khẩu mới' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='passwordConfirm'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel required>Xác nhận mật khẩu</FormLabel>
+                <FormControl>
+                  <PasswordInput className='bg-white' placeholder='Nhập xác nhận mật khẩu' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-          <div className='flex justify-end items-center gap-5 mt-10'>
-            <Button className='px-10' loading={loading} size={'md'} type='submit'>
-              Lưu
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        <div className='flex justify-end items-center gap-5 mt-10'>
+          <Button className='px-10' loading={loading} size={'md'} type='submit'>
+            Lưu
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };

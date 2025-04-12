@@ -46,13 +46,13 @@ export const Account = async () => {
               </DropdownMenuItem>
             )}
             <DropdownMenuItem>
+              <Link href={AppRouter.user.authenticatePages.updateProfile}>Cập nhật hồ sơ</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
               <Link href={AppRouter.user.authenticatePages.repairRequest.path}>Yêu cầu sửa chữa</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link href={AppRouter.user.authenticatePages.myVehicle.path}>Xe của tôi</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href={AppRouter.user.authenticatePages.changePassword}>Đổi mật khẩu</Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
