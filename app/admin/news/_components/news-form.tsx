@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,15 +11,15 @@ import { LexicalEditor } from '@/components/lexical-editor/Lexical';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { UploadImage } from '@/components/ui/upload-image';
 import { AppRouter, validationMessages } from '@/src/constants/constant';
 import { IS_CLIENT } from '@/src/constants/env';
-import { REGEX } from '@/src/constants/regex';
 import { useCreateNewsMutation } from '@/src/graphql/mutations/createNews.generated';
 import { useUpdateNewsMutation } from '@/src/graphql/mutations/updateNews.generated';
 import { NewsDocument, useNewsQuery } from '@/src/graphql/queries/news.generated';
 import { NewsCollectionDocument } from '@/src/graphql/queries/newsCollection.generated';
+import { useUploadFileMutation } from '@/src/hooks/mutations/useUploadImageMutation';
 import { TDetailPageProps } from '@/src/types';
-import { checkValidImage } from '@/src/utils/test-image-address.util';
 
 const formSchema = z.object({
   title: z
@@ -46,10 +45,8 @@ const formSchema = z.object({
     })
     .min(1, {
       message: validationMessages.required,
-    })
-    .regex(REGEX.imageAddress, {
-      message: 'Đường dẫn không hợp lệ',
     }),
+  image: z.instanceof(File).optional(),
 });
 
 const NewsForm = ({ id }: TDetailPageProps) => {
@@ -74,9 +71,17 @@ const NewsForm = ({ id }: TDetailPageProps) => {
     },
   });
 
+  const { mutateAsync: uploadImage, isPending: uploadingImage } = useUploadFileMutation({
+    onError(error) {
+      toast.error('Tải ảnh thất bại', {
+        description: error.message,
+      });
+    },
+  });
+
   const [updateServiceMutation, { loading: updating }] = useUpdateNewsMutation({
     onCompleted() {
-      toast.error('Cập nhật thành công!');
+      toast.success('Cập nhật thành công!');
       router.push(AppRouter.admin.news.list);
     },
     onError(error) {
@@ -89,7 +94,7 @@ const NewsForm = ({ id }: TDetailPageProps) => {
 
   const [creatingServiceMutation, { loading: creating }] = useCreateNewsMutation({
     onCompleted() {
-      toast.error('Thêm mới thành công!');
+      toast.success('Thêm mới thành công!');
       router.push(AppRouter.admin.news.list);
     },
     onError(error) {
@@ -101,11 +106,23 @@ const NewsForm = ({ id }: TDetailPageProps) => {
   });
 
   const onSubmit = useCallback(
-    async (input: z.infer<typeof formSchema>) => {
+    async ({ image, ...input }: z.infer<typeof formSchema>) => {
+      let image_url = input.image_url;
+
+      if (image) {
+        const uploadedFile = await uploadImage({
+          file: image as File,
+        });
+
+        image_url = uploadedFile.url;
+      }
+
       const data = {
         ...input,
         content: JSON.stringify(input.content),
+        image_url,
       };
+
       if (id) {
         return await updateServiceMutation({
           variables: {
@@ -123,17 +140,8 @@ const NewsForm = ({ id }: TDetailPageProps) => {
         },
       });
     },
-    [creatingServiceMutation, id, updateServiceMutation],
+    [creatingServiceMutation, id, updateServiceMutation, uploadImage],
   );
-
-  const previewImage = useCallback(() => {
-    const formValues = form.getValues();
-    const image_url = formValues.image_url;
-
-    const isValid = checkValidImage(image_url);
-    if (!isValid) return null;
-    return <Image alt='' className='object-fill rounded' height={100} src={image_url} width={200} />;
-  }, [form]);
 
   if (!IS_CLIENT) return null;
 
@@ -191,16 +199,21 @@ const NewsForm = ({ id }: TDetailPageProps) => {
                   name='image_url'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel required>Hình ảnh</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Nhập hình ảnh' {...field} />
-                      </FormControl>
-                      <FormMessage />
+                      <UploadImage
+                        error={form.formState.errors.image_url?.message}
+                        field={{
+                          ...field,
+                          onChange: (v?: File) => {
+                            form.setValue('image_url', v?.name ?? '');
+                            form.setValue('image', v);
+                          },
+                        }}
+                        height={200}
+                        width={200}
+                      />
                     </FormItem>
                   )}
                 />
-
-                {previewImage()}
 
                 <FormField
                   control={form.control}
@@ -228,7 +241,7 @@ const NewsForm = ({ id }: TDetailPageProps) => {
           <Button onClick={() => router.back()} variant='outline'>
             Hủy
           </Button>
-          <Button disabled={updating || creating} form='repair-form'>
+          <Button disabled={updating || creating || uploadingImage} form='repair-form'>
             {id ? 'Lưu' : 'Thêm mới'}
           </Button>
         </div>

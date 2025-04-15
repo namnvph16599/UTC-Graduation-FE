@@ -6,6 +6,7 @@ import { useDropzone } from 'react-dropzone';
 import { FieldValues } from 'react-hook-form';
 import { FormControl, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { REGEX } from '@/src/constants/regex';
 
 type Props = {
   title?: string;
@@ -43,7 +44,7 @@ export const UploadImage = ({ title, error, field, width = 400, height = 400 }: 
   });
 
   useEffect(() => {
-    if (field.value && !preview) {
+    if (field.value && REGEX.imageAddress.test(field.value) && !preview) {
       setPreview(field.value);
     }
   }, [field.value, preview]);

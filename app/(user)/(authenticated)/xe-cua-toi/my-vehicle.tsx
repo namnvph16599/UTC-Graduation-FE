@@ -38,9 +38,10 @@ export const MyVehicle = () => {
       <AppBreadcrumb
         className='px-0 mb-4'
         isAdmin={false}
+        isUser={true}
         items={[
           {
-            label: 'Dịch vụ sửa chữa',
+            label: AppRouter.user.authenticatePages.myVehicle.label,
             href: '#',
           },
         ]}
