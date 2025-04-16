@@ -721,6 +721,7 @@ export type Query = {
   contactCollection: ContactConnection;
   countRepairsByStatuses: Array<CountRepairByStatus>;
   exportRepairs: Scalars['String'];
+  getActiveBanners: Array<BannerEntity>;
   getStaffByAdmin: UserEntity;
   getUserById: UserEntity;
   me?: Maybe<UserEntity>;

@@ -502,6 +502,7 @@ type Query {
   contactCollection(filterArgs: ContactCollectionInput, paginationArgs: PaginationArgs!): ContactConnection!
   countRepairsByStatuses: [CountRepairByStatus!]!
   exportRepairs(input: ExportRepairsInput!): String!
+  getActiveBanners: [BannerEntity!]!
   getStaffByAdmin(staffId: String!): UserEntity!
   getUserById(userId: String!): UserEntity!
   me: UserEntity

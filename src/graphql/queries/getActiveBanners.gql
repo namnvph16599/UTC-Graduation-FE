@@ -1,0 +1,6 @@
+query getActiveBanners {
+  getActiveBanners {
+    image
+    priority_number
+  }
+}

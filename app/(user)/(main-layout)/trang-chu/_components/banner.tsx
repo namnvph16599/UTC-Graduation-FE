@@ -3,15 +3,10 @@ import Link from 'next/link';
 import * as React from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { AppInformation, AppRouter } from '@/src/constants/constant';
+import { BannerEntity } from '@/src/graphql/type.interface';
 
-export function Banner() {
-  const banners = [
-    'https://picsum.photos/2000/2000',
-    'https://picsum.photos/2000/2000',
-    'https://picsum.photos/2000/2000',
-    'https://picsum.photos/2000/2000',
-    'https://picsum.photos/2000/2000',
-  ];
+export function Banner({ banners = [] }: { banners: BannerEntity[] }) {
+  const images = banners.map((b) => b.image);
 
   return (
     <div className='bg-[#f6f6f6] py-[40px]'>
@@ -65,7 +60,7 @@ export function Banner() {
         <div>
           <Carousel className='w-full'>
             <CarouselContent>
-              {banners.map((banner, index) => (
+              {images.map((banner, index) => (
                 <CarouselItem className='relative w-full h-[528px]  rounded-md' key={index}>
                   <Image alt='' className='object-cover rounded-md' fill={true} src={banner} />
                 </CarouselItem>
