@@ -1,4 +1,4 @@
-import { ContactStatusEnum, RepairStatusEnum, UserStatus } from '@/src/graphql/type.interface';
+import { ContactStatusEnum, RepairCancelEnum, RepairStatusEnum, UserStatus } from '@/src/graphql/type.interface';
 
 export const convertRepairStatusEnum = (status: RepairStatusEnum) => {
   switch (status) {
@@ -38,6 +38,18 @@ export const convertContactStatusEnum = (status: ContactStatusEnum) => {
       return 'Đã hủy';
     case ContactStatusEnum.HANDLED:
       return 'Đã xử lý';
+    default:
+      return 'Chưa xử lý';
+  }
+};
+
+export const convertRepairCalcelEnum = (status?: RepairCancelEnum | null) => {
+  if (!status) return;
+  switch (status) {
+    case RepairCancelEnum.ADMIN:
+      return 'Yêu cầu sữa chữa đã bị từ chối bởi quản trị viên';
+    case RepairCancelEnum.USER:
+      return 'Bạn đã hủy yêu cầu sửa chữa này';
     default:
       return 'Chưa xử lý';
   }

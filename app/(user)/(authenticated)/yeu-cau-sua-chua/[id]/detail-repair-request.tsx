@@ -4,11 +4,13 @@ import React, { useMemo } from 'react';
 import { RenderFeeOfRepair } from '@/app/admin/repairs/add/_components/render-fee-of-repair';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Loading } from '@/components/app-loading';
+import { Badge } from '@/components/ui/badge';
 import { AppRouter, DATE_FORMAT } from '@/src/constants/constant';
 import { useRepairQuery } from '@/src/graphql/queries/repair.generated';
 import { RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
 import { TDetailPageProps } from '@/src/types';
-import { convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
+import { convertRepairCalcelEnum, convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
+import { RepairAction } from './_components/repair-action';
 
 export const DetailRepairRequest = ({ id }: TDetailPageProps) => {
   const { data, loading } = useRepairQuery({
@@ -66,7 +68,27 @@ export const DetailRepairRequest = ({ id }: TDetailPageProps) => {
               href: '#',
             },
           ]}
+          rightContent={<RepairAction repair={repair as RepairEntity} />}
         />
+        {repair?.status === RepairStatusEnum.CANCELLED && (
+          <Badge className='w-full rounded py-2' variant={'error'}>
+            <div>
+              {convertRepairCalcelEnum(repair?.cancelBy)}
+              <br />
+              Lý do: {repair?.cancelled_description}
+            </div>
+          </Badge>
+        )}
+        {repair?.status === RepairStatusEnum.WAITING_FOR_CONFIRM && (
+          <Badge className='w-full rounded py-2' variant={'warning'}>
+            Yêu cầu sữa chữa đã được gửi đi. Vui lòng đợi xác nhận
+          </Badge>
+        )}
+        {repair?.status === RepairStatusEnum.WAITING_FOR_PAYMENT && (
+          <Badge className='w-full rounded py-2' variant={'success'}>
+            Yêu cầu sữa chữa đã hoàn thành. Bạn hãy đến thanh toán để nhận xe
+          </Badge>
+        )}
         <div className='grid grid-cols-7 gap-8 text-secondary-default'>
           <div className='col-span-5 py-5'>
             <h1 className='text-xl font-bold mb-5'>Thông tin</h1>

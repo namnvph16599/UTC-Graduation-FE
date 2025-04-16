@@ -378,6 +378,7 @@ export type Mutation = {
   updateUserInformation: UserEntity;
   updateUserPassword: UserEntity;
   updateUsername: UserEntity;
+  userCancelRepair: RepairEntity;
   userChangePassword: UserEntity;
   verifyOtpRegisterAccountByPhone: Scalars['Boolean'];
 };
@@ -552,6 +553,10 @@ export type MutationUpdateUserPasswordArgs = {
 
 export type MutationUpdateUsernameArgs = {
   username: Scalars['String'];
+};
+
+export type MutationUserCancelRepairArgs = {
+  input: CancelRepairInput;
 };
 
 export type MutationUserChangePasswordArgs = {
@@ -873,6 +878,11 @@ export type RemoveNotificationInput = {
   notificationUserIds: Array<Scalars['String']>;
 };
 
+export enum RepairCancelEnum {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
+
 export type RepairCollectionFilter = {
   endDate?: InputMaybe<Scalars['DateTime']>;
   startDate?: InputMaybe<Scalars['DateTime']>;
@@ -888,6 +898,7 @@ export type RepairConnection = {
 
 export type RepairEntity = {
   __typename?: 'RepairEntity';
+  cancelBy?: Maybe<RepairCancelEnum>;
   cancelled_description?: Maybe<Scalars['String']>;
   capacity: Scalars['Float'];
   createdAt: Scalars['DateTime'];

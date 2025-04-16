@@ -354,6 +354,7 @@ type Mutation {
   updateUserInformation(input: UpdateUserInformationInput!): UserEntity!
   updateUserPassword(input: UpdateUserPasswordInput!): UserEntity!
   updateUsername(username: String!): UserEntity!
+  userCancelRepair(input: CancelRepairInput!): RepairEntity!
   userChangePassword(input: UserChangePasswordInput!): UserEntity!
   verifyOtpRegisterAccountByPhone(input: VerifyOtpRegisterAccountByPhoneInput!): Boolean!
 }
@@ -544,6 +545,11 @@ input RemoveNotificationInput {
   notificationUserIds: [String!]!
 }
 
+enum RepairCancelEnum {
+  ADMIN
+  USER
+}
+
 input RepairCollectionFilter {
   endDate: DateTime
   startDate: DateTime
@@ -557,6 +563,7 @@ type RepairConnection {
 }
 
 type RepairEntity {
+  cancelBy: RepairCancelEnum
   cancelled_description: String
   capacity: Float!
   createdAt: DateTime!
