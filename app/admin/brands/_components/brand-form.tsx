@@ -85,7 +85,7 @@ export const BrandForm = ({ id }: TDetailPageProps) => {
 
   const [updateBrandMutation, { loading: updating }] = useUpdateBrandMutation({
     onCompleted() {
-      toast.error('Cập nhật thành công!');
+      toast.success('Cập nhật thành công!');
       router.back();
     },
     onError(error) {
@@ -98,7 +98,7 @@ export const BrandForm = ({ id }: TDetailPageProps) => {
 
   const [createBrandMutation, { loading: creating }] = useCreateBrandMutation({
     onCompleted() {
-      toast.error('Thêm mới thành công!');
+      toast.success('Thêm mới thành công!');
       router.back();
     },
     onError(error) {

@@ -67,7 +67,7 @@ export const StaffForm = ({ id }: { id?: string }) => {
 
   const [updateServiceMutation, { loading: updating }] = useUpdateUserByAdminMutation({
     onCompleted() {
-      toast.error('Cập nhật thành công!');
+      toast.success('Cập nhật thành công!');
       router.back();
     },
     onError(error) {
@@ -80,7 +80,7 @@ export const StaffForm = ({ id }: { id?: string }) => {
 
   const [creatingServiceMutation, { loading: creating }] = useCreateUserByAdminMutation({
     onCompleted() {
-      toast.error('Thêm mới thành công!');
+      toast.success('Thêm mới thành công!');
       router.back();
     },
     onError(error) {

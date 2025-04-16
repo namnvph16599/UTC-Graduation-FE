@@ -8,7 +8,7 @@ type Props = { id: string };
 export const CellRemove = (props: Props) => {
   const [removeProductMutation] = useRemoveNewsMutation({
     onCompleted() {
-      toast.error('Xóa thành công!');
+      toast.success('Xóa thành công!');
     },
     onError(error) {
       toast.error('Đã có lỗi xảy ra', {

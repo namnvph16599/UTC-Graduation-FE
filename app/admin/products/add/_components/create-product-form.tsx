@@ -57,7 +57,7 @@ export const CreateProductForm = ({ id }: TDetailPageProps) => {
 
   const [updateProductMutation, { loading: updating }] = useUpdateProductMutation({
     onCompleted() {
-      toast.error('Cập nhật thành công!');
+      toast.success('Cập nhật thành công!');
       router.back();
     },
     onError(error) {
@@ -70,7 +70,7 @@ export const CreateProductForm = ({ id }: TDetailPageProps) => {
 
   const [createProductMutation, { loading: creating }] = useCreateProductMutation({
     onCompleted() {
-      toast.error('Thêm mới thành công!');
+      toast.success('Thêm mới thành công!');
       router.back();
     },
     onError(error) {

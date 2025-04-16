@@ -53,7 +53,7 @@ export const CreateServiceForm = ({ id }: { id?: string }) => {
 
   const [updateServiceMutation, { loading: updating }] = useUpdateServiceMutation({
     onCompleted() {
-      toast.error('Cập nhật thành công!');
+      toast.success('Cập nhật thành công!');
       router.back();
     },
     onError(error) {
@@ -66,7 +66,7 @@ export const CreateServiceForm = ({ id }: { id?: string }) => {
 
   const [creatingServiceMutation, { loading: creating }] = useCreateServiceMutation({
     onCompleted() {
-      toast.error('Thêm mới thành công!');
+      toast.success('Thêm mới thành công!');
       router.back();
     },
     onError(error) {
