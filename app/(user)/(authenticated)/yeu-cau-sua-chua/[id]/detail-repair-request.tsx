@@ -1,6 +1,6 @@
 'use client';
 import dayjs from 'dayjs';
-import React, { useMemo } from 'react';
+import React, { Fragment, useMemo } from 'react';
 import { RenderFeeOfRepair } from '@/app/admin/repairs/add/_components/render-fee-of-repair';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Loading } from '@/components/app-loading';
@@ -34,17 +34,25 @@ export const DetailRepairRequest = ({ id }: TDetailPageProps) => {
         label: 'Thời gian dự kiến giao xe',
         value: repair?.estimated_delivery_time
           ? dayjs(repair?.estimated_delivery_time).format(DATE_FORMAT.dateTime)
-          : null,
+          : undefined,
       },
       {
         label: 'Thời gian dự kiến nhận xe',
         value: repair?.expected_receiving_time
           ? dayjs(repair?.expected_receiving_time).format(DATE_FORMAT.dateTime)
-          : null,
+          : undefined,
       },
-      { label: 'Dịch vụ sửa chữa', value: repair?.services?.map((s) => s.service.name).join(', ') },
-      { label: 'Phụ tùng thay thế', value: repair?.products?.map((s) => s.product.name).join(', ') },
-      { label: 'Ghi chú', value: repair?.description_of_customer },
+      {
+        label: 'Dịch vụ sửa chữa',
+        value:
+          (repair?.services ?? []).length > 0 ? repair?.services?.map((s) => s.service.name).join(', ') : undefined,
+      },
+      {
+        label: 'Phụ tùng thay thế',
+        value:
+          (repair?.products ?? []).length > 0 ? repair?.products?.map((s) => s.product.name).join(', ') : undefined,
+      },
+      { label: 'Ghi chú', value: repair?.description_of_customer ?? '--' },
       { label: 'Nhân viên phụ trách', value: repair?.staff?.fullName },
       { label: 'SĐT của nhân viên phụ trách', value: repair?.staff?.phoneNumber },
     ],
@@ -84,9 +92,24 @@ export const DetailRepairRequest = ({ id }: TDetailPageProps) => {
             Yêu cầu sữa chữa đã được gửi đi. Vui lòng đợi xác nhận
           </Badge>
         )}
+        {repair?.status === RepairStatusEnum.CONFIRMED && (
+          <Badge className='w-full rounded py-2' variant={'warning'}>
+            Yêu cầu sữa chữa đã được xác nhận. Hay giao xe đến để chúng tôi sửa chữa cho bạn
+          </Badge>
+        )}
+        {repair?.status === RepairStatusEnum.HANDLING && (
+          <Badge className='w-full rounded py-2' variant={'warning'}>
+            Xe của bạn đang được sửa chữa. Vui lòng đợi
+          </Badge>
+        )}
         {repair?.status === RepairStatusEnum.WAITING_FOR_PAYMENT && (
           <Badge className='w-full rounded py-2' variant={'success'}>
             Yêu cầu sữa chữa đã hoàn thành. Bạn hãy đến thanh toán để nhận xe
+          </Badge>
+        )}
+        {repair?.status === RepairStatusEnum.FINISHED && (
+          <Badge className='w-full rounded py-2' variant={'success'}>
+            Yêu cầu sửa chữa đã hoàn thành. Cảm ơn đã ủng hộ chúng tôi
           </Badge>
         )}
         <div className='grid grid-cols-7 gap-8 text-secondary-default'>
@@ -95,10 +118,10 @@ export const DetailRepairRequest = ({ id }: TDetailPageProps) => {
             <div className='grid grid-cols-5'>
               {rows.map((r) => {
                 return (
-                  <>
+                  <Fragment key={r.label}>
                     <div className='col-span-1 border border-[#eee] px-4 py-2 bg-[#F9F9F9]'>{r.label}</div>
                     <div className='col-span-4 border border-[#eee] px-4 py-2  font-medium'>{r?.value ?? '--'}</div>
-                  </>
+                  </Fragment>
                 );
               })}
             </div>

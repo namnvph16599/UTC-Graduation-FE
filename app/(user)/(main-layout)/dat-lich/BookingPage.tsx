@@ -91,6 +91,26 @@ const formSchema = z
   })
   .refine(
     (values) => {
+      if (!values.estimated_delivery_time) return true;
+      return dayjs(values.estimated_delivery_time).isAfter(dayjs());
+    },
+    {
+      message: 'Thời gian giao xe phải lớn hơn thời gian hiện tại',
+      path: ['estimated_delivery_time'], // path
+    },
+  )
+  .refine(
+    (values) => {
+      if (!values.expected_receiving_time) return true;
+      return dayjs(values.expected_receiving_time).isAfter(dayjs());
+    },
+    {
+      message: 'Thời gian nhận xe phải lớn hơn thời gian hiện tại',
+      path: ['expected_receiving_time'], // path
+    },
+  )
+  .refine(
+    (values) => {
       if (!values.expected_receiving_time || !values.estimated_delivery_time) return true;
       return dayjs(values.expected_receiving_time).isAfter(values.estimated_delivery_time);
     },
@@ -253,6 +273,24 @@ const BookingPage = ({ brands = [], services = [], myMotorcycles = [], user }: P
             />
             <FormField
               control={form.control}
+              name='service_ids'
+              render={({ field }) => (
+                <FormItem className='col-span-2'>
+                  <FormLabel required>Dịch vụ sửa chữa</FormLabel>
+                  <FormControl>
+                    <MultipleSelect
+                      className='block bg-white hover:bg-white'
+                      defaultValue={field.value}
+                      onValueChange={(val) => field.onChange(val)}
+                      options={serviceOptions}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name='estimated_delivery_time'
               render={({ field }) => (
                 <FormItem className='flex flex-col gap-1'>
@@ -269,24 +307,6 @@ const BookingPage = ({ brands = [], services = [], myMotorcycles = [], user }: P
                 <FormItem className='flex flex-col gap-1'>
                   <FormLabel>Thời gian dự kiến nhận xe</FormLabel>
                   <DateTimePickerForm field={field} />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='service_ids'
-              render={({ field }) => (
-                <FormItem className='col-span-2'>
-                  <FormLabel>Dịch vụ sửa chữa</FormLabel>
-                  <FormControl>
-                    <MultipleSelect
-                      className='block bg-white hover:bg-white'
-                      defaultValue={field.value}
-                      onValueChange={(val) => field.onChange(val)}
-                      options={serviceOptions}
-                    />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

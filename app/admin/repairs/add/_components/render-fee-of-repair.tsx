@@ -32,9 +32,9 @@ export const RenderFeeOfRepair = ({ repair, className }: Props) => {
         <div className='border border-[#eee] px-4 py-2 bg-[#F9F9F9]'>Dịch vụ</div>
         <div className='border border-[#eee] px-4 py-2 font-medium'>{formatVND(service, true)}</div>
         <div className='border border-[#eee] px-4 py-2 bg-[#F9F9F9]'>Thuế</div>
-        <div className='border border-[#eee] px-4 py-2'>10%</div>
+        <div className='border border-[#eee] px-4 py-2 font-medium'>10%</div>
         <div className='border border-[#eee] px-4 py-2 bg-[#F9F9F9]'>Giảm giá</div>
-        <div className='border border-[#eee] px-4 py-2'>-{formatVND(discount ?? 0, true)}</div>
+        <div className='border border-[#eee] px-4 py-2 font-medium'>{formatVND(discount ?? 0, true)}</div>
         <div className='border border-[#eee] px-4 py-2 bg-[#eee]'>Tổng tiền</div>
         <div className='border border-[#eee] px-4 py-2 font-medium'>{formatVND(repair?.total ?? 0, true)}</div>
       </div>
