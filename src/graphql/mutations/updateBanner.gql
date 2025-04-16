@@ -1,0 +1,5 @@
+mutation updateBanner($args: UpdateBannerInput!) {
+  updateBanner(args: $args) {
+    id
+  }
+}

@@ -14,9 +14,10 @@ type Props = {
   field: FieldValues;
   width?: number;
   height?: number;
+  required?: boolean;
 };
 
-export const UploadImage = ({ title, error, field, width = 400, height = 400 }: Props) => {
+export const UploadImage = ({ title, error, field, width = 400, height = 400, required }: Props) => {
   const [preview, setPreview] = React.useState<string | ArrayBuffer | null>('');
 
   const onDrop = React.useCallback(
@@ -51,7 +52,7 @@ export const UploadImage = ({ title, error, field, width = 400, height = 400 }: 
 
   return (
     <>
-      <FormLabel className={`${fileRejections.length !== 0 && 'text-destructive'}`}>
+      <FormLabel className={`${fileRejections.length !== 0 && 'text-destructive'}`} required={required}>
         {title ?? 'Tải ảnh lên'}
         <span className={error || fileRejections.length !== 0 ? 'text-destructive' : 'text-muted-foreground'} />
       </FormLabel>

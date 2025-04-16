@@ -113,4 +113,5 @@ export const validationMessages = {
   maxLength: (v: number) => `Vui lòng nhập tối đa ${v} ký tự`,
   minLength: (v: number) => `Vui lòng nhập tối thiểu ${v} ký tự`,
   equalLength: (v: number) => `Trường này bắt buộc ${v} ký tự`,
+  invalidNumber: 'Số không đúng định dạng',
 };

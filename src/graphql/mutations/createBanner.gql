@@ -1,0 +1,5 @@
+mutation createBanner($args: CreateBannerInput!) {
+  createBanner(args: $args) {
+    id
+  }
+}

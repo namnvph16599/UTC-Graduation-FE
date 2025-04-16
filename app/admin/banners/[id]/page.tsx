@@ -26,7 +26,7 @@ const Page = async ({ params }: Props) => {
           },
         ]}
       />
-      <BannerForm />
+      <BannerForm id={id} />
     </div>
   );
 };

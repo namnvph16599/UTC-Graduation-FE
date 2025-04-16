@@ -1,0 +1,9 @@
+query banner($id: String!) {
+  banner(id: $id) {
+    active
+    id
+    image
+    name
+    priority_number
+  }
+}

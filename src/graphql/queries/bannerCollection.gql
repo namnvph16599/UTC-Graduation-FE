@@ -1,0 +1,19 @@
+query bannerCollection($paginationArgs: PaginationArgs) {
+  bannerCollection(paginationArgs: $paginationArgs) {
+    items {
+      active
+      id
+      image
+      name
+      priority_number
+    }
+    meta {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      totalItem
+      totalPage
+    }
+  }
+}

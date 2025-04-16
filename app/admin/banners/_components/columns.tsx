@@ -15,15 +15,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
 import { AppRouter } from '@/src/constants/constant';
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type BannerEntity = {
-  id: string;
-  name: string;
-  priority_number: number;
-  image: string;
-  active: boolean;
-};
+import { BannerEntity } from '@/src/graphql/type.interface';
+import { CellRemove } from './cell-remove';
 
 export const serviceColumns: ColumnDef<BannerEntity>[] = [
   {
@@ -49,7 +42,7 @@ export const serviceColumns: ColumnDef<BannerEntity>[] = [
     cell: ({ row }) => {
       const banner = row.original;
 
-      return <Switch checked={banner.active} />;
+      return <Switch checked={banner.active} disabled />;
     },
   },
   {
@@ -67,12 +60,15 @@ export const serviceColumns: ColumnDef<BannerEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
+            {/* <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem> */}
+            {/* <DropdownMenuSeparator /> */}
             <DropdownMenuItem>
               <Link href={AppRouter.admin.banners.edit(payment.id)}>Chỉnh sửa</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <CellRemove id={payment.id} />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

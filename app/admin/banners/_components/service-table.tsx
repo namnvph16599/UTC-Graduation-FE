@@ -2,23 +2,16 @@
 
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+import { AppPagination } from '@/components/app-pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { TDataTablePagination } from '@/src/types';
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData, TValue> extends TDataTablePagination {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, onChangePage, pageMeta }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -64,30 +57,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-      <Pagination className='flex justify-end mt-3'>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href='#' />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#'>1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#' isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#'>3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href='#' />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <AppPagination
+        className='justify-end'
+        currentPage={pageMeta?.currentPage ?? 1}
+        onChangePage={onChangePage}
+        totalPage={pageMeta?.totalPage ?? 0}
+      />
     </div>
   );
 }

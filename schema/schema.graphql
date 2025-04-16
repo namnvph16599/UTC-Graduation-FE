@@ -10,6 +10,22 @@ type AuthEntity {
   user: UserEntity!
 }
 
+type BannerConnection {
+  items: [BannerEntity!]!
+  meta: PageMeta!
+}
+
+type BannerEntity {
+  active: Boolean!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  image: String!
+  name: String!
+  priority_number: Float!
+  updatedAt: DateTime!
+}
+
 type BrandConnection {
   items: [BrandEntity!]!
   meta: PageMeta!
@@ -75,6 +91,13 @@ enum ContactStatusEnum {
 type CountRepairByStatus {
   status: RepairStatusEnum!
   total: Float!
+}
+
+input CreateBannerInput {
+  active: Boolean!
+  image: String!
+  name: String!
+  priority_number: Float!
 }
 
 input CreateBrandInput {
@@ -290,6 +313,7 @@ type Mutation {
   adminLoginByPhone(input: LoginByPhoneInput!): AuthEntity!
   cancelRepair(input: CancelRepairInput!): RepairEntity!
   changeUserEmailOrPhone(input: UpdateUserNewEmailOrPhoneInput!): UserEntity!
+  createBanner(args: CreateBannerInput!): BannerEntity!
   createBrand(args: CreateBrandInput!): BrandEntity!
   createContact(input: CreateContactInput!): ContactEntity!
   createMotorcycle(input: CreateMotorcycleInput!): MotorcycleEntity!
@@ -302,6 +326,7 @@ type Mutation {
   logout: Boolean!
   refreshToken(refreshToken: String!): AuthEntity!
   registerByPhone(input: RegisterByPhoneInput!): UserEntity!
+  removeBanner(id: String!): Boolean!
   removeBrand(id: String!): Boolean!
   removeContact(id: String!): Boolean!
   removeMedias(input: RemoveMediasInput!): Boolean!
@@ -316,6 +341,7 @@ type Mutation {
   sendForgotPasswordOtp(input: CreateOtpInput!): String
   sendOtpVerifyEmailOrPhone(input: CreateOtpVerifyEmailOrPhone!): String
   sendRegisterOtp(input: CreateOtpInput!): String
+  updateBanner(args: UpdateBannerInput!): BannerEntity!
   updateBrand(args: UpdateBrandInput!): BrandEntity!
   updateContact(input: UpdateContactInput!): ContactEntity!
   updateMotorcycle(input: UpdateMotorcycleInput!): MotorcycleEntity!
@@ -423,6 +449,7 @@ type PageMeta {
 }
 
 input PaginationArgs {
+  isActive: Boolean
   limit: Int! = 20
   page: Int! = 1
   search: String
@@ -465,6 +492,8 @@ input ProductInput {
 }
 
 type Query {
+  banner(id: String!): BannerEntity!
+  bannerCollection(paginationArgs: PaginationArgs): BannerConnection!
   brand(id: String!): BrandEntity!
   brandCollection(pagination: PaginationArgs): BrandConnection!
   checkOtp(input: CheckOtpInput!): Boolean!
@@ -765,6 +794,14 @@ enum TaskReminderRepeatType {
 enum TaskStatus {
   Active
   Archived
+}
+
+input UpdateBannerInput {
+  active: Boolean
+  id: String!
+  image: String
+  name: String
+  priority_number: Float
 }
 
 input UpdateBrandInput {

@@ -29,6 +29,24 @@ export type AuthEntity = {
   user: UserEntity;
 };
 
+export type BannerConnection = {
+  __typename?: 'BannerConnection';
+  items: Array<BannerEntity>;
+  meta: PageMeta;
+};
+
+export type BannerEntity = {
+  __typename?: 'BannerEntity';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  image: Scalars['String'];
+  name: Scalars['String'];
+  priority_number: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type BrandConnection = {
   __typename?: 'BrandConnection';
   items: Array<BrandEntity>;
@@ -100,6 +118,13 @@ export type CountRepairByStatus = {
   __typename?: 'CountRepairByStatus';
   status: RepairStatusEnum;
   total: Scalars['Float'];
+};
+
+export type CreateBannerInput = {
+  active: Scalars['Boolean'];
+  image: Scalars['String'];
+  name: Scalars['String'];
+  priority_number: Scalars['Float'];
 };
 
 export type CreateBrandInput = {
@@ -312,6 +337,7 @@ export type Mutation = {
   adminLoginByPhone: AuthEntity;
   cancelRepair: RepairEntity;
   changeUserEmailOrPhone: UserEntity;
+  createBanner: BannerEntity;
   createBrand: BrandEntity;
   createContact: ContactEntity;
   createMotorcycle: MotorcycleEntity;
@@ -324,6 +350,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   refreshToken: AuthEntity;
   registerByPhone: UserEntity;
+  removeBanner: Scalars['Boolean'];
   removeBrand: Scalars['Boolean'];
   removeContact: Scalars['Boolean'];
   removeMedias: Scalars['Boolean'];
@@ -338,6 +365,7 @@ export type Mutation = {
   sendForgotPasswordOtp?: Maybe<Scalars['String']>;
   sendOtpVerifyEmailOrPhone?: Maybe<Scalars['String']>;
   sendRegisterOtp?: Maybe<Scalars['String']>;
+  updateBanner: BannerEntity;
   updateBrand: BrandEntity;
   updateContact: ContactEntity;
   updateMotorcycle: MotorcycleEntity;
@@ -364,6 +392,10 @@ export type MutationCancelRepairArgs = {
 
 export type MutationChangeUserEmailOrPhoneArgs = {
   input: UpdateUserNewEmailOrPhoneInput;
+};
+
+export type MutationCreateBannerArgs = {
+  args: CreateBannerInput;
 };
 
 export type MutationCreateBrandArgs = {
@@ -408,6 +440,10 @@ export type MutationRefreshTokenArgs = {
 
 export type MutationRegisterByPhoneArgs = {
   input: RegisterByPhoneInput;
+};
+
+export type MutationRemoveBannerArgs = {
+  id: Scalars['String'];
 };
 
 export type MutationRemoveBrandArgs = {
@@ -464,6 +500,10 @@ export type MutationSendOtpVerifyEmailOrPhoneArgs = {
 
 export type MutationSendRegisterOtpArgs = {
   input: CreateOtpInput;
+};
+
+export type MutationUpdateBannerArgs = {
+  args: UpdateBannerInput;
 };
 
 export type MutationUpdateBrandArgs = {
@@ -620,6 +660,7 @@ export type PageMeta = {
 };
 
 export type PaginationArgs = {
+  isActive?: InputMaybe<Scalars['Boolean']>;
   limit?: Scalars['Int'];
   page?: Scalars['Int'];
   search?: InputMaybe<Scalars['String']>;
@@ -666,6 +707,8 @@ export type ProductInput = {
 
 export type Query = {
   __typename?: 'Query';
+  banner: BannerEntity;
+  bannerCollection: BannerConnection;
   brand: BrandEntity;
   brandCollection: BrandConnection;
   checkOtp: Scalars['Boolean'];
@@ -698,6 +741,14 @@ export type Query = {
   services: Array<ServicesEntity>;
   userCollection: UserConnection;
   userCollectionByAdmin: UserConnection;
+};
+
+export type QueryBannerArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryBannerCollectionArgs = {
+  paginationArgs?: InputMaybe<PaginationArgs>;
 };
 
 export type QueryBrandArgs = {
@@ -1089,6 +1140,14 @@ export enum TaskStatus {
   ACTIVE = 'Active',
   ARCHIVED = 'Archived',
 }
+
+export type UpdateBannerInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  image?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  priority_number?: InputMaybe<Scalars['Float']>;
+};
 
 export type UpdateBrandInput = {
   id: Scalars['String'];

@@ -1,0 +1,3 @@
+mutation removeBanner($id: String!) {
+  removeBanner(id: $id)
+}
