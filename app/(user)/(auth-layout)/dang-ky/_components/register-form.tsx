@@ -20,8 +20,10 @@ import {
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { PasswordInput } from '@/components/ui/password-input';
 import { AppInformation, AppRouter, validationMessages } from '@/src/constants/constant';
 import { ErrorMessage } from '@/src/constants/error';
+import { REGEX } from '@/src/constants/regex';
 import { useRegisterByPhoneMutation } from '@/src/graphql/mutations/registerByPhone.generated';
 import { useVerifyOtpRegisterAccountByPhoneMutation } from '@/src/graphql/mutations/verifyOtpRegisterAccountByPhone.generated';
 
@@ -29,21 +31,24 @@ const formSchema = z
   .object({
     phone: z
       .string({
-        message: 'Số điện thoại là trường bắt buộc',
+        message: validationMessages.required,
       })
       .min(10, {
         message: 'Số điện thoại không đúng định dạng',
+      })
+      .regex(REGEX.phone, {
+        message: validationMessages.invalidPhone,
       }),
     password: z
       .string({
-        message: 'Mật khẩu là trường bắt buộc',
+        message: validationMessages.required,
       })
       .min(6, {
         message: 'Mật khẩu ít nhất 6 ký tự',
       }),
     passwordConfirm: z
       .string({
-        message: 'Nhập lại mật khẩu là trường bắt buộc',
+        message: validationMessages.required,
       })
       .min(6, {
         message: 'Mật khẩu ít nhất 6 ký tự',
@@ -57,11 +62,7 @@ const formSchema = z
 export function RegisterForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      password: 'vanhnam042',
-      passwordConfirm: 'vanhnam042',
-      phone: '0376021530',
-    },
+    defaultValues: {},
   });
 
   const [open, setOpen] = useState(false);
@@ -123,7 +124,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>Mật khẩu</FormLabel>
                 <FormControl>
-                  <Input placeholder='Nhập mật khẩu' type='password' {...field} />
+                  <PasswordInput placeholder='Nhập mật khẩu' type='password' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -137,7 +138,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>Nhập lại mật khẩu</FormLabel>
                 <FormControl>
-                  <Input placeholder='Nhập lại mật khẩu' type='password' {...field} />
+                  <PasswordInput placeholder='Nhập lại mật khẩu' type='password' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
