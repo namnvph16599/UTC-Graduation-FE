@@ -30,22 +30,6 @@ export const waitingStatusColumns: ColumnDef<RepairEntity>[] = [
     header: 'SĐT',
   },
   {
-    accessorKey: 'services',
-    header: 'Dịch vụ',
-    cell: ({ row }) => {
-      const services = row.original.services ?? [];
-      return services.map((s) => s.service.name).join(', ');
-    },
-  },
-  {
-    accessorKey: 'products',
-    header: 'Phụ tùng thay thế',
-    cell: ({ row }) => {
-      const products = row.original.products ?? [];
-      return products.map((s) => s.product.name).join(', ');
-    },
-  },
-  {
     accessorKey: 'brand',
     header: 'Hãng',
     cell: ({ row }) => {
@@ -85,7 +69,7 @@ export const waitingStatusColumns: ColumnDef<RepairEntity>[] = [
   },
   {
     accessorKey: 'description_of_customer',
-    header: 'KH ghi chú',
+    header: 'Nội dung sửa chữa',
   },
   {
     id: 'actions',
@@ -147,7 +131,7 @@ export const repairColumns: ColumnDef<RepairEntity>[] = [
   },
   {
     accessorKey: 'description_of_customer',
-    header: 'KH ghi chú',
+    header: 'Nội dung sửa chữa',
   },
   {
     accessorKey: 'status',
@@ -193,22 +177,6 @@ export const cancelledStatusColumns: ColumnDef<RepairEntity>[] = [
   {
     accessorKey: 'phone',
     header: 'SĐT',
-  },
-  {
-    accessorKey: 'services',
-    header: 'Dịch vụ',
-    cell: ({ row }) => {
-      const services = row.original.services ?? [];
-      return services.map((s) => s.service.name).join(', ');
-    },
-  },
-  {
-    accessorKey: 'products',
-    header: 'Phụ tùng thay thế',
-    cell: ({ row }) => {
-      const products = row.original.products ?? [];
-      return products.map((s) => s.product.name).join(', ');
-    },
   },
   {
     accessorKey: 'estimated_delivery_time',
