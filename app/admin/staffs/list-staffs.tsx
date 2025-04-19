@@ -8,7 +8,7 @@ import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Button } from '@/components/ui/button';
 import { AppRouter } from '@/src/constants/constant';
 import { useUserCollectionByAdminQuery } from '@/src/graphql/queries/userCollectionByAdmin.generated';
-import { PageMeta, UserEntity } from '@/src/graphql/type.interface';
+import { PageMeta, UserEntity, UserType } from '@/src/graphql/type.interface';
 
 export const ListStaffs = () => {
   const router = useRouter();
@@ -20,6 +20,9 @@ export const ListStaffs = () => {
       paginationArgs: {
         limit: 10,
         page: page,
+      },
+      filterArgs: {
+        type: UserType.STAFF,
       },
     },
   });
