@@ -11,7 +11,6 @@ import { Combobox } from '@/components/ui/combobox';
 import { DateTimePickerForm } from '@/components/ui/datetime-picker';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { MultipleSelect } from '@/components/ui/multi-select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { AppRouter, validationMessages } from '@/src/constants/constant';
@@ -25,7 +24,6 @@ import {
   CreateRepairInput,
   MotorcycleEntity,
   RepairStatusEnum,
-  ServicesEntity,
   UserEntity,
 } from '@/src/graphql/type.interface';
 
@@ -76,14 +74,13 @@ const formSchema = z
       .min(5, {
         message: validationMessages.minLength(5),
       }),
-    service_ids: z
-      .array(z.string(), {
-        required_error: validationMessages.required,
+    customer_description: z
+      .string({
+        message: validationMessages.required,
       })
       .min(1, {
         message: validationMessages.required,
       }),
-    customer_description: z.string().optional(),
     estimated_delivery_time: z.date().optional(),
     expected_receiving_time: z.date().optional(),
     showSelectingMyVehicle: z.string().optional(),
@@ -122,12 +119,11 @@ const formSchema = z
 
 type Props = {
   user?: UserEntity | null;
-  services?: ServicesEntity[];
   brands?: BrandEntity[];
   myMotorcycles?: MotorcycleEntity[];
 };
 
-const BookingPage = ({ brands = [], services = [], myMotorcycles = [], user }: Props) => {
+const BookingPage = ({ brands = [], myMotorcycles = [], user }: Props) => {
   const router = useRouter();
 
   const brandOptions = useMemo(
@@ -137,15 +133,6 @@ const BookingPage = ({ brands = [], services = [], myMotorcycles = [], user }: P
         value: s.id,
       })),
     [brands],
-  );
-
-  const serviceOptions = useMemo(
-    () =>
-      services.map((s) => ({
-        label: s.name,
-        value: s.id,
-      })),
-    [services],
   );
 
   const motorcycleOptions = useMemo(
@@ -211,7 +198,6 @@ const BookingPage = ({ brands = [], services = [], myMotorcycles = [], user }: P
         name: data.name,
         phone: data.phone,
         description_of_customer: data?.customer_description,
-        service_ids: data.service_ids,
         vehicle_id: data.vehicle_id,
         estimated_delivery_time: data.estimated_delivery_time,
         expected_receiving_time: data.expected_receiving_time,
@@ -273,24 +259,6 @@ const BookingPage = ({ brands = [], services = [], myMotorcycles = [], user }: P
             />
             <FormField
               control={form.control}
-              name='service_ids'
-              render={({ field }) => (
-                <FormItem className='col-span-2'>
-                  <FormLabel required>Dịch vụ sửa chữa</FormLabel>
-                  <FormControl>
-                    <MultipleSelect
-                      className='block bg-white hover:bg-white'
-                      defaultValue={field.value}
-                      onValueChange={(val) => field.onChange(val)}
-                      options={serviceOptions}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name='estimated_delivery_time'
               render={({ field }) => (
                 <FormItem className='flex flex-col gap-1'>
@@ -317,9 +285,14 @@ const BookingPage = ({ brands = [], services = [], myMotorcycles = [], user }: P
               name='customer_description'
               render={({ field }) => (
                 <FormItem className='col-span-2'>
-                  <FormLabel>Ghi chú</FormLabel>
+                  <FormLabel required>Nội dung sửa chữa</FormLabel>
                   <FormControl>
-                    <Textarea className='bg-white' placeholder='Nhập ghi chú' rows={4} {...field} />
+                    <Textarea
+                      className='bg-white'
+                      placeholder='Nhập nội dung sửa chữa'
+                      rows={!!user ? 7 : 4}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

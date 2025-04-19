@@ -12,7 +12,7 @@ const Page = async ({ params }: Props) => {
   }
   return (
     <div>
-      <CreateRepairForm id={id} />;
+      <CreateRepairForm id={id} />
     </div>
   );
 };

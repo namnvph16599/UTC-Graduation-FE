@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { ModalCancelRepair } from '@/app/admin/repairs/add/_components/modal-cancel-repair';
 import { RenderFeeOfRepair } from '@/app/admin/repairs/add/_components/render-fee-of-repair';
+import { RepairInvoice } from '@/app/admin/repairs/add/_components/repair-invoice';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Loading } from '@/components/app-loading';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@ import { DateTimePickerForm } from '@/components/ui/datetime-picker';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { MultipleSelect } from '@/components/ui/multi-select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { AppRouter, validationMessages } from '@/src/constants/constant';
 import { cn } from '@/src/constants/utils';
@@ -355,393 +357,409 @@ export const CreateRepairForm = ({ id }: TDetailPageProps) => {
       {openModalCancel && repair?.id && (
         <ModalCancelRepair id={repair?.id} open={openModalCancel} setOpen={setOpenModalCancel} />
       )}
-      <div className='p-5 bg-[#F9F9F9]'>
-        <div className='grid grid-cols-10 gap-8'>
-          <div
-            className={cn(' p-5 bg-white mb-[93px]', {
-              'col-span-8': !!id,
-              'col-span-10': !id,
-            })}>
-            <Form {...form}>
-              <form
-                className='grid grid-cols-2 items-start gap-6'
-                id='repair-form'
-                onSubmit={form.handleSubmit(onSubmit)}>
-                <div className='grid grid-cols-2 gap-6'>
-                  <FormField
-                    control={form.control}
-                    name='name'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Tên khách hàng</FormLabel>
-                        <FormControl>
-                          <Input placeholder='Nhập tên khách hàng' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='phone'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Số điện thoại</FormLabel>
-                        <FormControl>
-                          <Input placeholder='Số điện thoại' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='brand_id'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Hãng xe</FormLabel>
-                        <FormControl>
-                          <Combobox
-                            className='block'
-                            {...field}
-                            onChange={(val) => field.onChange(val)}
-                            options={brandOptions}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='model_id'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Dòng xe</FormLabel>
-                        <FormControl>
-                          <Combobox
-                            className='block'
-                            {...field}
-                            onChange={(val) => field.onChange(val)}
-                            options={modelOptions}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='capacity'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Dung tích</FormLabel>
-                        <FormControl>
-                          <Input placeholder='Nhập dung tích' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='manufacture_year'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Năm sản xuất</FormLabel>
-                        <FormControl>
-                          <Input placeholder='Nhập năm sản xuất' type='number' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='license_plate'
-                    render={({ field }) => (
-                      <FormItem className='col-span-2'>
-                        <FormLabel required>Biển số xe</FormLabel>
-                        <FormControl>
-                          <Input placeholder='Nhập biển số xe' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
 
-                  <FormField
-                    control={form.control}
-                    name='estimated_delivery_time'
-                    render={({ field }) => (
-                      <FormItem className='flex flex-col gap-1'>
-                        <FormLabel>Thời gian dự kiến giao xe</FormLabel>
-                        <DateTimePickerForm field={field} />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='expected_receiving_time'
-                    render={({ field }) => (
-                      <FormItem className='flex flex-col gap-1'>
-                        <FormLabel>Thời gian dự kiến nhận xe</FormLabel>
-                        <DateTimePickerForm field={field} />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+      <Tabs className='w-full p-o pt-3' defaultValue='account'>
+        <TabsList className='pl-5'>
+          <TabsTrigger className='text-base' value='account'>
+            Thông tin
+          </TabsTrigger>
+          <TabsTrigger className='text-base' value='password'>
+            Hóa đơn
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value='account'>
+          <div className='p-5 bg-[#F9F9F9]'>
+            <div className='grid grid-cols-10 gap-8'>
+              <div
+                className={cn(' p-5 bg-white mb-[93px]', {
+                  'col-span-8': !!id,
+                  'col-span-10': !id,
+                })}>
+                <Form {...form}>
+                  <form
+                    className='grid grid-cols-2 items-start gap-6'
+                    id='repair-form'
+                    onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className='grid grid-cols-2 gap-6'>
+                      <FormField
+                        control={form.control}
+                        name='name'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Tên khách hàng</FormLabel>
+                            <FormControl>
+                              <Input placeholder='Nhập tên khách hàng' {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='phone'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Số điện thoại</FormLabel>
+                            <FormControl>
+                              <Input placeholder='Số điện thoại' {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='brand_id'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Hãng xe</FormLabel>
+                            <FormControl>
+                              <Combobox
+                                className='block'
+                                {...field}
+                                onChange={(val) => field.onChange(val)}
+                                options={brandOptions}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='model_id'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Dòng xe</FormLabel>
+                            <FormControl>
+                              <Combobox
+                                className='block'
+                                {...field}
+                                onChange={(val) => field.onChange(val)}
+                                options={modelOptions}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='capacity'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Dung tích</FormLabel>
+                            <FormControl>
+                              <Input placeholder='Nhập dung tích' {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='manufacture_year'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Năm sản xuất</FormLabel>
+                            <FormControl>
+                              <Input placeholder='Nhập năm sản xuất' type='number' {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='license_plate'
+                        render={({ field }) => (
+                          <FormItem className='col-span-2'>
+                            <FormLabel required>Biển số xe</FormLabel>
+                            <FormControl>
+                              <Input placeholder='Nhập biển số xe' {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name='description_of_customer'
-                    render={({ field }) => (
-                      <FormItem className='col-span-2'>
-                        <FormLabel>Ghi chú của khách hàng</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder='Nhập ghi chú của khách hàng' rows={4} {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className='grid grid-cols-2 gap-6'>
-                  <div className='col-span-2'>
-                    <FormField
-                      control={form.control}
-                      name='staff_id'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Nhân viên phụ trách</FormLabel>
-                          <FormControl>
-                            <Combobox
-                              className='block'
-                              {...field}
-                              onChange={(val) => field.onChange(val)}
-                              options={staffOptions}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className='col-span-2'>
-                    <FormField
-                      control={form.control}
-                      name='status'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Trạng thái</FormLabel>
-                          <FormControl>
-                            <Combobox
-                              className='block'
-                              {...field}
-                              onChange={(val) => field.onChange(val)}
-                              options={[
-                                {
-                                  label: convertRepairStatusEnum(RepairStatusEnum.CANCELLED),
-                                  value: RepairStatusEnum.CANCELLED,
-                                  disable: true,
-                                },
-                                {
-                                  label: convertRepairStatusEnum(RepairStatusEnum.WAITING_FOR_CONFIRM),
-                                  value: RepairStatusEnum.WAITING_FOR_CONFIRM,
-                                },
-                                {
-                                  label: convertRepairStatusEnum(RepairStatusEnum.CONFIRMED),
-                                  value: RepairStatusEnum.CONFIRMED,
-                                },
-                                {
-                                  label: convertRepairStatusEnum(RepairStatusEnum.HANDLING),
-                                  value: RepairStatusEnum.HANDLING,
-                                },
-                                {
-                                  label: convertRepairStatusEnum(RepairStatusEnum.WAITING_FOR_PAYMENT),
-                                  value: RepairStatusEnum.WAITING_FOR_PAYMENT,
-                                },
-                                {
-                                  label: convertRepairStatusEnum(RepairStatusEnum.FINISHED),
-                                  value: RepairStatusEnum.FINISHED,
-                                },
-                              ]}
-                              removable={false}
-                              searchable={false}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                      <FormField
+                        control={form.control}
+                        name='estimated_delivery_time'
+                        render={({ field }) => (
+                          <FormItem className='flex flex-col gap-1'>
+                            <FormLabel>Thời gian dự kiến giao xe</FormLabel>
+                            <DateTimePickerForm field={field} />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='expected_receiving_time'
+                        render={({ field }) => (
+                          <FormItem className='flex flex-col gap-1'>
+                            <FormLabel>Thời gian dự kiến nhận xe</FormLabel>
+                            <DateTimePickerForm field={field} />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name='service_ids'
-                    render={({ field }) => (
-                      <FormItem className='col-span-2'>
-                        <FormLabel>Dịch vụ sửa chữa</FormLabel>
-                        <FormControl>
-                          <MultipleSelect
-                            className='block'
-                            defaultValue={field.value}
-                            onValueChange={(val) => field.onChange(val)}
-                            options={serviceOptions}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className='col-span-2'>
-                    <FormLabel required>Phụ tùng thay thế</FormLabel>
-                    {controlledFields.map((field, index) => {
-                      const product = (productData?.productCollection?.items ?? []).find((p) => p.id === field.id);
-                      const currentProduct = (repair?.products ?? []).find((p) => p.product.id === field.id);
-                      const maxQuantity = Number(product?.quantity ?? 0) + Number(currentProduct?.quantity ?? 0);
-
-                      return (
-                        <div className='grid grid-cols-9 items-center gap-4 mt-2' key={field.tempId}>
-                          <div className='col-span-6'>
-                            <FormField
-                              control={form.control}
-                              name={`products.${index}.id`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Combobox
-                                      className='block'
-                                      {...field}
-                                      onChange={(val) => field.onChange(val)}
-                                      options={productOptions}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          <div className='col-span-2'>
-                            <FormField
-                              control={form.control}
-                              name={`products.${index}.quantity`}
-                              render={({ field }) => (
-                                <FormItem className='w-full'>
-                                  <FormControl>
-                                    <Input
-                                      max={maxQuantity}
-                                      min={1}
-                                      placeholder='Nhập số lượng'
-                                      type='number'
-                                      {...field}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                              rules={{
-                                min: {
-                                  value: 1,
-                                  message: 'Số lượng tối thiểu là 1',
-                                },
-                                max: {
-                                  value: maxQuantity,
-                                  message: `Số lượng tối đa là ${maxQuantity}`,
-                                },
-                              }}
-                            />
-                          </div>
-                          <CircleX
-                            className={cn({
-                              'hover:cursor-pointer': controlledFields?.length > 1,
-                              'hover:cursor-not-allowed': controlledFields?.length <= 1,
-                            })}
-                            color='rgb(32,44,56)'
-                            onClick={() => {
-                              if (controlledFields?.length < 1) return;
-                              remove(index);
-                            }}
-                          />
-                        </div>
-                      );
-                    })}
-                    <div className='flex justify-end mt-2'>
-                      <Button
-                        onClick={() =>
-                          append({
-                            id: '',
-                            quantity: '',
-                          })
-                        }
-                        size={'md'}
-                        type='button'>
-                        Thêm phụ tùng
-                      </Button>
+                      <FormField
+                        control={form.control}
+                        name='description_of_customer'
+                        render={({ field }) => (
+                          <FormItem className='col-span-2'>
+                            <FormLabel>Ghi chú của khách hàng</FormLabel>
+                            <FormControl>
+                              <Textarea placeholder='Nhập ghi chú của khách hàng' rows={4} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                  </div>
+                    <div className='grid grid-cols-2 gap-6'>
+                      <div className='col-span-2'>
+                        <FormField
+                          control={form.control}
+                          name='staff_id'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel required>Nhân viên phụ trách</FormLabel>
+                              <FormControl>
+                                <Combobox
+                                  className='block'
+                                  {...field}
+                                  onChange={(val) => field.onChange(val)}
+                                  options={staffOptions}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className='col-span-2'>
+                        <FormField
+                          control={form.control}
+                          name='status'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel required>Trạng thái</FormLabel>
+                              <FormControl>
+                                <Combobox
+                                  className='block'
+                                  {...field}
+                                  onChange={(val) => field.onChange(val)}
+                                  options={[
+                                    {
+                                      label: convertRepairStatusEnum(RepairStatusEnum.CANCELLED),
+                                      value: RepairStatusEnum.CANCELLED,
+                                      disable: true,
+                                    },
+                                    {
+                                      label: convertRepairStatusEnum(RepairStatusEnum.WAITING_FOR_CONFIRM),
+                                      value: RepairStatusEnum.WAITING_FOR_CONFIRM,
+                                    },
+                                    {
+                                      label: convertRepairStatusEnum(RepairStatusEnum.CONFIRMED),
+                                      value: RepairStatusEnum.CONFIRMED,
+                                    },
+                                    {
+                                      label: convertRepairStatusEnum(RepairStatusEnum.HANDLING),
+                                      value: RepairStatusEnum.HANDLING,
+                                    },
+                                    {
+                                      label: convertRepairStatusEnum(RepairStatusEnum.WAITING_FOR_PAYMENT),
+                                      value: RepairStatusEnum.WAITING_FOR_PAYMENT,
+                                    },
+                                    {
+                                      label: convertRepairStatusEnum(RepairStatusEnum.FINISHED),
+                                      value: RepairStatusEnum.FINISHED,
+                                    },
+                                  ]}
+                                  removable={false}
+                                  searchable={false}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
-                  <div className='col-span-2'>
-                    <FormField
-                      control={form.control}
-                      name='discount_percent'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Giảm giá(%)</FormLabel>
-                          <FormControl>
-                            <Input placeholder='Nhập giảm giá' type='input' {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                      <FormField
+                        control={form.control}
+                        name='service_ids'
+                        render={({ field }) => (
+                          <FormItem className='col-span-2'>
+                            <FormLabel>Dịch vụ sửa chữa</FormLabel>
+                            <FormControl>
+                              <MultipleSelect
+                                className='block'
+                                defaultValue={field.value}
+                                onValueChange={(val) => field.onChange(val)}
+                                options={serviceOptions}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name='description'
-                    render={({ field }) => (
-                      <FormItem className='col-span-2'>
-                        <FormLabel>Ghi chú</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder='Nhập ghi chú' rows={4} {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {id && (
-                    <FormField
-                      control={form.control}
-                      name='cancelled_description'
-                      render={({ field }) => (
-                        <FormItem className='col-span-2'>
-                          <FormLabel>Lý do hủy (nếu có)</FormLabel>
-                          <FormControl>
-                            <Textarea disabled placeholder='Nhập lý do' rows={4} {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
+                      <div className='col-span-2'>
+                        <FormLabel required>Phụ tùng thay thế</FormLabel>
+                        {controlledFields.map((field, index) => {
+                          const product = (productData?.productCollection?.items ?? []).find((p) => p.id === field.id);
+                          const currentProduct = (repair?.products ?? []).find((p) => p.product.id === field.id);
+                          const maxQuantity = Number(product?.quantity ?? 0) + Number(currentProduct?.quantity ?? 0);
+
+                          return (
+                            <div className='grid grid-cols-9 items-center gap-4 mt-2' key={field.tempId}>
+                              <div className='col-span-6'>
+                                <FormField
+                                  control={form.control}
+                                  name={`products.${index}.id`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormControl>
+                                        <Combobox
+                                          className='block'
+                                          {...field}
+                                          onChange={(val) => field.onChange(val)}
+                                          options={productOptions}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                              <div className='col-span-2'>
+                                <FormField
+                                  control={form.control}
+                                  name={`products.${index}.quantity`}
+                                  render={({ field }) => (
+                                    <FormItem className='w-full'>
+                                      <FormControl>
+                                        <Input
+                                          max={maxQuantity}
+                                          min={1}
+                                          placeholder='Nhập số lượng'
+                                          type='number'
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                  rules={{
+                                    min: {
+                                      value: 1,
+                                      message: 'Số lượng tối thiểu là 1',
+                                    },
+                                    max: {
+                                      value: maxQuantity,
+                                      message: `Số lượng tối đa là ${maxQuantity}`,
+                                    },
+                                  }}
+                                />
+                              </div>
+                              <CircleX
+                                className={cn({
+                                  'hover:cursor-pointer': controlledFields?.length > 1,
+                                  'hover:cursor-not-allowed': controlledFields?.length <= 1,
+                                })}
+                                color='rgb(32,44,56)'
+                                onClick={() => {
+                                  if (controlledFields?.length < 1) return;
+                                  remove(index);
+                                }}
+                              />
+                            </div>
+                          );
+                        })}
+                        <div className='flex justify-end mt-2'>
+                          <Button
+                            onClick={() =>
+                              append({
+                                id: '',
+                                quantity: '',
+                              })
+                            }
+                            size={'md'}
+                            type='button'>
+                            Thêm phụ tùng
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className='col-span-2'>
+                        <FormField
+                          control={form.control}
+                          name='discount_percent'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Giảm giá(%)</FormLabel>
+                              <FormControl>
+                                <Input placeholder='Nhập giảm giá' type='input' {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name='description'
+                        render={({ field }) => (
+                          <FormItem className='col-span-2'>
+                            <FormLabel>Ghi chú</FormLabel>
+                            <FormControl>
+                              <Textarea placeholder='Nhập ghi chú' rows={4} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      {id && (
+                        <FormField
+                          control={form.control}
+                          name='cancelled_description'
+                          render={({ field }) => (
+                            <FormItem className='col-span-2'>
+                              <FormLabel>Lý do hủy (nếu có)</FormLabel>
+                              <FormControl>
+                                <Textarea disabled placeholder='Nhập lý do' rows={4} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       )}
-                    />
-                  )}
-                </div>
-              </form>
-            </Form>
+                    </div>
+                  </form>
+                </Form>
+              </div>
+              {id && <RenderFeeOfRepair repair={repair as RepairEntity} />}
+            </div>
           </div>
-          {id && <RenderFeeOfRepair repair={repair as RepairEntity} />}
-        </div>
-      </div>
-      <div className='fixed left-0 right-0 bottom-0 flex items-center justify-end gap-4 px-6 py-3 border-t border-[#eee] bg-white'>
-        <Button onClick={() => router.back()} variant='outline'>
-          Hủy
-        </Button>
-        <Button form='repair-form' loading={creating || updating} type='submit'>
-          Lưu
-        </Button>
-      </div>
+          <div className='fixed left-0 right-0 bottom-0 flex items-center justify-end gap-4 px-6 py-3 border-t border-[#eee] bg-white'>
+            <Button onClick={() => router.back()} variant='outline'>
+              Hủy
+            </Button>
+            <Button form='repair-form' loading={creating || updating} type='submit'>
+              Lưu
+            </Button>
+          </div>
+        </TabsContent>
+        <TabsContent value='password'>
+          <RepairInvoice repair={repair as RepairEntity} />
+        </TabsContent>
+      </Tabs>
     </Loading>
   );
 };
