@@ -94,12 +94,12 @@ export const DetailRepairRequest = ({ id }: TDetailPageProps) => {
         )}
         {repair?.status === RepairStatusEnum.CONFIRMED && (
           <Badge className='w-full rounded py-2' variant={'warning'}>
-            Yêu cầu sữa chữa đã được xác nhận. Hay giao xe đến để chúng tôi sửa chữa cho bạn
+            Yêu cầu sữa chữa đã được xác nhận. Hãy giao xe đến để chúng tôi sửa chữa cho bạn
           </Badge>
         )}
         {repair?.status === RepairStatusEnum.HANDLING && (
           <Badge className='w-full rounded py-2' variant={'warning'}>
-            Xe của bạn đang được sửa chữa. Vui lòng đợi
+            Xe của bạn đang được sửa chữa.
           </Badge>
         )}
         {repair?.status === RepairStatusEnum.WAITING_FOR_PAYMENT && (
