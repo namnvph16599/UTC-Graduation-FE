@@ -1,6 +1,7 @@
 'use client';
 import { useMemo, useState } from 'react';
 import { RepairForm } from './repair-form';
+import { RepairReview } from './repair-review';
 import { ModalCancelRepair } from '@/app/admin/repairs/add/_components/modal-cancel-repair';
 import { RepairInvoice } from '@/app/admin/repairs/add/_components/repair-invoice';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
@@ -51,27 +52,37 @@ export const DetailRepair = ({ id }: TDetailPageProps) => {
         <ModalCancelRepair id={repair?.id} open={openModalCancel} setOpen={setOpenModalCancel} />
       )}
 
-      <Tabs className='w-full p-o pt-3' defaultValue='account'>
-        <TabsList className='pl-5'>
-          <TabsTrigger className='text-base' value='account'>
-            Thông tin
-          </TabsTrigger>
-          <TabsTrigger className='text-base' value='password'>
-            Hóa đơn
-          </TabsTrigger>
-        </TabsList>
-        {repair?.cancelBy === RepairCancelEnum.USER && (
-          <Badge className='w-full rounded-none py-2' variant={'warning'}>
-            Yêu cầu sửa chữa đã bị hủy bởi khách hàng
-          </Badge>
-        )}
-        <TabsContent value='account'>
-          <RepairForm repair={repair as RepairEntity} />
-        </TabsContent>
-        <TabsContent value='password'>
-          <RepairInvoice repair={repair as RepairEntity} />
-        </TabsContent>
-      </Tabs>
+      {!id ? (
+        <RepairForm repair={repair as RepairEntity} />
+      ) : (
+        <Tabs className='w-full p-o pt-3' defaultValue='account'>
+          <TabsList className='pl-5'>
+            <TabsTrigger className='text-base' value='account'>
+              Thông tin
+            </TabsTrigger>
+            <TabsTrigger className='text-base' value='password'>
+              Hóa đơn
+            </TabsTrigger>
+            <TabsTrigger className='text-base' value='review'>
+              Đánh giá
+            </TabsTrigger>
+          </TabsList>
+          {repair?.cancelBy === RepairCancelEnum.USER && (
+            <Badge className='w-full rounded-none py-2' variant={'warning'}>
+              Yêu cầu sửa chữa đã bị hủy bởi khách hàng
+            </Badge>
+          )}
+          <TabsContent value='account'>
+            <RepairForm repair={repair as RepairEntity} />
+          </TabsContent>
+          <TabsContent value='password'>
+            <RepairInvoice repair={repair as RepairEntity} />
+          </TabsContent>
+          <TabsContent value='review'>
+            <RepairReview repair={repair as RepairEntity} />
+          </TabsContent>
+        </Tabs>
+      )}
     </Loading>
   );
 };
