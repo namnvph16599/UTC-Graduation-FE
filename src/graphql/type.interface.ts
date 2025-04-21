@@ -380,6 +380,7 @@ export type Mutation = {
   updateUsername: UserEntity;
   userCancelRepair: RepairEntity;
   userChangePassword: UserEntity;
+  userReviewRepair: Scalars['Boolean'];
   verifyOtpRegisterAccountByPhone: Scalars['Boolean'];
 };
 
@@ -561,6 +562,10 @@ export type MutationUserCancelRepairArgs = {
 
 export type MutationUserChangePasswordArgs = {
   input: UserChangePasswordInput;
+};
+
+export type MutationUserReviewRepairArgs = {
+  input: UserReviewRepairInput;
 };
 
 export type MutationVerifyOtpRegisterAccountByPhoneArgs = {
@@ -917,6 +922,7 @@ export type RepairEntity = {
   name: Scalars['String'];
   phone: Scalars['String'];
   products: Array<RepairM2MProductEntity>;
+  review?: Maybe<Scalars['String']>;
   services: Array<RepairM2MServiceEntity>;
   staff?: Maybe<UserEntity>;
   status: RepairStatusEnum;
@@ -1300,6 +1306,11 @@ export type UserEntity = {
   updatedAt: Scalars['DateTime'];
   username?: Maybe<Scalars['String']>;
   uuid?: Maybe<Scalars['String']>;
+};
+
+export type UserReviewRepairInput = {
+  content: Scalars['String'];
+  repairId: Scalars['String'];
 };
 
 export enum UserStatus {

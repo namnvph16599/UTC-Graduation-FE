@@ -356,6 +356,7 @@ type Mutation {
   updateUsername(username: String!): UserEntity!
   userCancelRepair(input: CancelRepairInput!): RepairEntity!
   userChangePassword(input: UserChangePasswordInput!): UserEntity!
+  userReviewRepair(input: UserReviewRepairInput!): Boolean!
   verifyOtpRegisterAccountByPhone(input: VerifyOtpRegisterAccountByPhoneInput!): Boolean!
 }
 
@@ -582,6 +583,7 @@ type RepairEntity {
   name: String!
   phone: String!
   products: [RepairM2MProductEntity!]!
+  review: String
   services: [RepairM2MServiceEntity!]!
   staff: UserEntity
   status: RepairStatusEnum!
@@ -951,6 +953,11 @@ type UserEntity {
   updatedAt: DateTime!
   username: String
   uuid: String
+}
+
+input UserReviewRepairInput {
+  content: String!
+  repairId: String!
 }
 
 enum UserStatus {

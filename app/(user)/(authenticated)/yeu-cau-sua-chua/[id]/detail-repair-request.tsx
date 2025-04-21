@@ -11,6 +11,7 @@ import { RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
 import { TDetailPageProps } from '@/src/types';
 import { convertRepairCalcelEnum, convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 import { RepairAction } from './_components/repair-action';
+import { RepairNotification } from './_components/repair-notification';
 
 export const DetailRepairRequest = ({ id }: TDetailPageProps) => {
   const { data, loading } = useRepairQuery({
@@ -78,40 +79,7 @@ export const DetailRepairRequest = ({ id }: TDetailPageProps) => {
           ]}
           rightContent={<RepairAction repair={repair as RepairEntity} />}
         />
-        {repair?.status === RepairStatusEnum.CANCELLED && (
-          <Badge className='w-full rounded py-2' variant={'error'}>
-            <div>
-              {convertRepairCalcelEnum(repair?.cancelBy)}
-              <br />
-              Lý do: {repair?.cancelled_description}
-            </div>
-          </Badge>
-        )}
-        {repair?.status === RepairStatusEnum.WAITING_FOR_CONFIRM && (
-          <Badge className='w-full rounded py-2' variant={'warning'}>
-            Yêu cầu sữa chữa đã được gửi đi. Vui lòng đợi xác nhận
-          </Badge>
-        )}
-        {repair?.status === RepairStatusEnum.CONFIRMED && (
-          <Badge className='w-full rounded py-2' variant={'warning'}>
-            Yêu cầu sữa chữa đã được xác nhận. Hãy giao xe đến để chúng tôi sửa chữa cho bạn
-          </Badge>
-        )}
-        {repair?.status === RepairStatusEnum.HANDLING && (
-          <Badge className='w-full rounded py-2' variant={'warning'}>
-            Xe của bạn đang được sửa chữa.
-          </Badge>
-        )}
-        {repair?.status === RepairStatusEnum.WAITING_FOR_PAYMENT && (
-          <Badge className='w-full rounded py-2' variant={'success'}>
-            Yêu cầu sữa chữa đã hoàn thành. Bạn hãy đến thanh toán để nhận xe
-          </Badge>
-        )}
-        {repair?.status === RepairStatusEnum.FINISHED && (
-          <Badge className='w-full rounded py-2' variant={'success'}>
-            Yêu cầu sửa chữa đã hoàn thành. Cảm ơn đã ủng hộ chúng tôi
-          </Badge>
-        )}
+        <RepairNotification repair={repair as RepairEntity} />
         <div className='grid grid-cols-7 gap-8 text-secondary-default'>
           <div className='col-span-5 py-5'>
             <h1 className='text-xl font-bold mb-5'>Thông tin</h1>
