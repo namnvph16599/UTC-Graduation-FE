@@ -85,7 +85,9 @@ const Invoice = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
             <tr key={part.id}>
               <td style={{ padding: '8px', border: '1px solid black' }}>{part.service.name}</td>
               <td style={{ padding: '8px', textAlign: 'center', border: '1px solid black' }}>1</td>
-              <td style={{ padding: '8px', textAlign: 'right', border: '1px solid black' }}></td>
+              <td style={{ padding: '8px', textAlign: 'right', border: '1px solid black' }}>
+                {formatVND(part.price, true)}
+              </td>
               <td style={{ padding: '8px', textAlign: 'right', border: '1px solid black' }}>
                 {formatVND(part.price, true)}
               </td>
@@ -104,7 +106,7 @@ const Invoice = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
         <span style={{ display: 'inline-block', width: '150px', textAlign: 'left' }}>
           <strong>Tiền phụ tùng:</strong>
         </span>
-        <span style={{ display: 'inline-block', minWidth: '150px' }}>{formatVND(totalPriceOfProducts, true)} VND</span>
+        <span style={{ display: 'inline-block', minWidth: '150px' }}>{formatVND(totalPriceOfProducts, true)}</span>
       </p>
       <p style={{ textAlign: 'right' }}>
         <span style={{ display: 'inline-block', width: '150px', textAlign: 'left' }}>
