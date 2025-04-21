@@ -1,9 +1,9 @@
-import { CreateRepairForm } from '@/app/admin/repairs/add/_components/repair-form';
+import { DetailRepair } from '../_components/admin-detail-repair';
 
 export const CreateRepair = () => {
   return (
     <div className='relative'>
-      <CreateRepairForm />
+      <DetailRepair />
     </div>
   );
 };

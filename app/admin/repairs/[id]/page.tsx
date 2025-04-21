@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { CreateRepairForm } from '@/app/admin/repairs/add/_components/repair-form';
+import { DetailRepair } from '../_components/admin-detail-repair';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -12,7 +12,7 @@ const Page = async ({ params }: Props) => {
   }
   return (
     <div>
-      <CreateRepairForm id={id} />
+      <DetailRepair id={id} />
     </div>
   );
 };
