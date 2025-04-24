@@ -344,6 +344,7 @@ export type Mutation = {
   createNews: NewsEntity;
   createProduct: ProductEntity;
   createRepairRequest: RepairEntity;
+  createReview: ReviewEntity;
   createService: ServicesEntity;
   createUserByAdmin: UserEntity;
   loginByPhone: AuthEntity;
@@ -380,7 +381,6 @@ export type Mutation = {
   updateUsername: UserEntity;
   userCancelRepair: RepairEntity;
   userChangePassword: UserEntity;
-  userReviewRepair: Scalars['Boolean'];
   verifyOtpRegisterAccountByPhone: Scalars['Boolean'];
 };
 
@@ -422,6 +422,10 @@ export type MutationCreateProductArgs = {
 
 export type MutationCreateRepairRequestArgs = {
   input: CreateRepairInput;
+};
+
+export type MutationCreateReviewArgs = {
+  input: UserCreateReviewInput;
 };
 
 export type MutationCreateServiceArgs = {
@@ -562,10 +566,6 @@ export type MutationUserCancelRepairArgs = {
 
 export type MutationUserChangePasswordArgs = {
   input: UserChangePasswordInput;
-};
-
-export type MutationUserReviewRepairArgs = {
-  input: UserReviewRepairInput;
 };
 
 export type MutationVerifyOtpRegisterAccountByPhoneArgs = {
@@ -745,6 +745,8 @@ export type Query = {
   repair: RepairEntity;
   repairCollection: RepairConnection;
   revenueRepair: Array<RevenueRepair>;
+  review: ReviewEntity;
+  reviewCollection: ReviewConnection;
   sample: Array<SampleEntity>;
   sayHello: Scalars['String'];
   service: ServicesEntity;
@@ -846,6 +848,15 @@ export type QueryRevenueRepairArgs = {
   input: RevenueRepairInput;
 };
 
+export type QueryReviewArgs = {
+  repairId: Scalars['String'];
+};
+
+export type QueryReviewCollectionArgs = {
+  filterArgs: ReviewConnectionFilterArgs;
+  paginationArgs: PaginationArgs;
+};
+
 export type QuerySampleArgs = {
   id: Scalars['String'];
 };
@@ -922,7 +933,7 @@ export type RepairEntity = {
   name: Scalars['String'];
   phone: Scalars['String'];
   products: Array<RepairM2MProductEntity>;
-  review?: Maybe<Scalars['String']>;
+  review?: Maybe<ReviewEntity>;
   services: Array<RepairM2MServiceEntity>;
   staff?: Maybe<UserEntity>;
   status: RepairStatusEnum;
@@ -981,6 +992,27 @@ export enum RevenueRepairTypeEnum {
   MONTH = 'MONTH',
   YEAR = 'YEAR',
 }
+
+export type ReviewConnection = {
+  __typename?: 'ReviewConnection';
+  items: Array<ReviewEntity>;
+  meta: PageMeta;
+};
+
+export type ReviewConnectionFilterArgs = {
+  rating?: InputMaybe<Scalars['Float']>;
+};
+
+export type ReviewEntity = {
+  __typename?: 'ReviewEntity';
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  rating: Scalars['Float'];
+  repair: RepairEntity;
+  updatedAt: Scalars['DateTime'];
+};
 
 export type RoleEntity = {
   __typename?: 'RoleEntity';
@@ -1291,6 +1323,12 @@ export type UserConnection = {
   meta: PageMeta;
 };
 
+export type UserCreateReviewInput = {
+  content: Scalars['String'];
+  rating: Scalars['Float'];
+  repairId: Scalars['String'];
+};
+
 export type UserEntity = {
   __typename?: 'UserEntity';
   avatar?: Maybe<MediaEntity>;
@@ -1306,11 +1344,6 @@ export type UserEntity = {
   updatedAt: Scalars['DateTime'];
   username?: Maybe<Scalars['String']>;
   uuid?: Maybe<Scalars['String']>;
-};
-
-export type UserReviewRepairInput = {
-  content: Scalars['String'];
-  repairId: Scalars['String'];
 };
 
 export enum UserStatus {

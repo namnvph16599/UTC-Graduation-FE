@@ -9,10 +9,11 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import RatingStar from '@/components/ui/rating';
 import { Textarea } from '@/components/ui/textarea';
 import { validationMessages } from '@/src/constants/constant';
 import { ErrorMessage } from '@/src/constants/error';
-import { useUserReviewRepairMutation } from '@/src/graphql/mutations/userReviewRepair.generated';
+import { useCreateReviewMutation } from '@/src/graphql/mutations/createReview.generated';
 import { ProductCollectionDocument } from '@/src/graphql/queries/productCollection.generated';
 import { RepairDocument } from '@/src/graphql/queries/repair.generated';
 import { RepairCollectionDocument } from '@/src/graphql/queries/repairCollection.generated';
@@ -20,6 +21,13 @@ import { RepairCollectionDocument } from '@/src/graphql/queries/repairCollection
 const schema = z.object({
   content: z
     .string({
+      message: validationMessages.required,
+    })
+    .min(1, {
+      message: validationMessages.required,
+    }),
+  rating: z
+    .number({
       message: validationMessages.required,
     })
     .min(1, {
@@ -41,7 +49,7 @@ export const ModalReviewRepairRequest = ({ open, setOpen, id }: Props) => {
     defaultValues: {},
   });
 
-  const [adminCancelRepairRequest, { loading }] = useUserReviewRepairMutation({
+  const [adminCancelRepairRequest, { loading }] = useCreateReviewMutation({
     onCompleted() {
       toast.success('Đánh giá yêu cầu sửa chữa thành công!');
       setOpen(false);
@@ -61,6 +69,7 @@ export const ModalReviewRepairRequest = ({ open, setOpen, id }: Props) => {
         variables: {
           input: {
             content: data.content,
+            rating: data.rating,
             repairId: id,
           },
         },
@@ -77,6 +86,19 @@ export const ModalReviewRepairRequest = ({ open, setOpen, id }: Props) => {
         </DialogHeader>
         <Form {...form}>
           <form id='confirm-otp-form' onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name='rating'
+              render={({ field }) => (
+                <FormItem className='mb-5'>
+                  <FormLabel required>Điểm</FormLabel>
+                  <FormControl>
+                    <RatingStar initialRating={field.value} onChange={field.onChange} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name='content'

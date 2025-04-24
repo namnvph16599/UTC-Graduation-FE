@@ -1,7 +1,5 @@
 'use client';
 import { useMemo, useState } from 'react';
-import { RepairForm } from './repair-form';
-import { RepairReview } from './repair-review';
 import { ModalCancelRepair } from '@/app/admin/repairs/add/_components/modal-cancel-repair';
 import { RepairInvoice } from '@/app/admin/repairs/add/_components/repair-invoice';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
@@ -13,6 +11,8 @@ import { AppRouter } from '@/src/constants/constant';
 import { useRepairQuery } from '@/src/graphql/queries/repair.generated';
 import { RepairCancelEnum, RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
 import { TDetailPageProps } from '@/src/types';
+import { RepairForm } from './repair-form';
+import { RepairReview } from './repair-review';
 
 export const DetailRepair = ({ id }: TDetailPageProps) => {
   const { data, loading } = useRepairQuery({
@@ -57,15 +57,9 @@ export const DetailRepair = ({ id }: TDetailPageProps) => {
       ) : (
         <Tabs className='w-full p-o pt-3' defaultValue='account'>
           <TabsList className='pl-5'>
-            <TabsTrigger className='text-base' value='account'>
-              Thông tin
-            </TabsTrigger>
-            <TabsTrigger className='text-base' value='password'>
-              Hóa đơn
-            </TabsTrigger>
-            <TabsTrigger className='text-base' value='review'>
-              Đánh giá
-            </TabsTrigger>
+            <TabsTrigger value='account'>Thông tin</TabsTrigger>
+            <TabsTrigger value='password'>Hóa đơn</TabsTrigger>
+            <TabsTrigger value='review'>Đánh giá</TabsTrigger>
           </TabsList>
           {repair?.cancelBy === RepairCancelEnum.USER && (
             <Badge className='w-full rounded-none py-2' variant={'warning'}>
@@ -73,7 +67,7 @@ export const DetailRepair = ({ id }: TDetailPageProps) => {
             </Badge>
           )}
           <TabsContent value='account'>
-            <RepairForm repair={repair as RepairEntity} />
+            <RepairForm id={id} repair={repair as RepairEntity} />
           </TabsContent>
           <TabsContent value='password'>
             <RepairInvoice repair={repair as RepairEntity} />

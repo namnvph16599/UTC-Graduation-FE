@@ -12,8 +12,11 @@ export type RepairQueryResponse = (
   { __typename?: 'Query' }
   & { repair: (
     { __typename?: 'RepairEntity' }
-    & Pick<Types.RepairEntity, 'review' | 'cancelBy' | 'total' | 'cancelled_description' | 'capacity' | 'createdAt' | 'deletedAt' | 'description' | 'description_of_customer' | 'discount_percent' | 'estimated_delivery_time' | 'expected_receiving_time' | 'id' | 'license_plate' | 'manufacture_year' | 'name' | 'phone' | 'status'>
-    & { model?: Types.Maybe<(
+    & Pick<Types.RepairEntity, 'cancelBy' | 'total' | 'cancelled_description' | 'capacity' | 'createdAt' | 'deletedAt' | 'description' | 'description_of_customer' | 'discount_percent' | 'estimated_delivery_time' | 'expected_receiving_time' | 'id' | 'license_plate' | 'manufacture_year' | 'name' | 'phone' | 'status'>
+    & { review?: Types.Maybe<(
+      { __typename?: 'ReviewEntity' }
+      & Pick<Types.ReviewEntity, 'rating' | 'content' | 'createdAt'>
+    )>, model?: Types.Maybe<(
       { __typename?: 'ModelEntity' }
       & Pick<Types.ModelEntity, 'id' | 'name'>
       & { brand?: Types.Maybe<(
@@ -45,7 +48,11 @@ export type RepairQueryResponse = (
 export const RepairDocument = gql`
     query repair($id: String!) {
   repair(id: $id) {
-    review
+    review {
+      rating
+      content
+      createdAt
+    }
     cancelBy
     total
     cancelled_description

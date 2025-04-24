@@ -234,7 +234,7 @@ export const RepairForm = ({ id, repair }: Props) => {
   });
 
   const onSubmit = useCallback(
-    async ({ brand_id: _, ...data }: z.infer<typeof formSchema>) => {
+    async ({ brand_id: _, cancelled_description: __, ...data }: z.infer<typeof formSchema>) => {
       if (id) {
         return await updateRepairRequestMutation({
           variables: {

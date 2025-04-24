@@ -1,3 +1,0 @@
-mutation userReviewRepair($input: UserReviewRepairInput!){
-    userReviewRepair(input: $input)
-}

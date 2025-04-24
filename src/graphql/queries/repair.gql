@@ -1,6 +1,10 @@
 query repair($id: String!) {
   repair(id: $id) {
-    review
+    review {
+      rating
+      content
+      createdAt
+    }
     cancelBy
     total
     cancelled_description

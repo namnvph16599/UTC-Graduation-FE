@@ -320,6 +320,7 @@ type Mutation {
   createNews(input: CreateNewsInput!): NewsEntity!
   createProduct(args: CreateProductInput!): ProductEntity!
   createRepairRequest(input: CreateRepairInput!): RepairEntity!
+  createReview(input: UserCreateReviewInput!): ReviewEntity!
   createService(args: CreateServiceInput!): ServicesEntity!
   createUserByAdmin(input: CreateUserByAdminInput!): UserEntity!
   loginByPhone(input: LoginByPhoneInput!): AuthEntity!
@@ -356,7 +357,6 @@ type Mutation {
   updateUsername(username: String!): UserEntity!
   userCancelRepair(input: CancelRepairInput!): RepairEntity!
   userChangePassword(input: UserChangePasswordInput!): UserEntity!
-  userReviewRepair(input: UserReviewRepairInput!): Boolean!
   verifyOtpRegisterAccountByPhone(input: VerifyOtpRegisterAccountByPhoneInput!): Boolean!
 }
 
@@ -522,6 +522,8 @@ type Query {
   repair(id: String!): RepairEntity!
   repairCollection(input: RepairCollectionFilter, pagination: PaginationArgs): RepairConnection!
   revenueRepair(input: RevenueRepairInput!): [RevenueRepair!]!
+  review(repairId: String!): ReviewEntity!
+  reviewCollection(filterArgs: ReviewConnectionFilterArgs!, paginationArgs: PaginationArgs!): ReviewConnection!
   sample(id: String!): [SampleEntity!]!
   sayHello: String!
   service(id: String!): ServicesEntity!
@@ -583,7 +585,7 @@ type RepairEntity {
   name: String!
   phone: String!
   products: [RepairM2MProductEntity!]!
-  review: String
+  review: ReviewEntity
   services: [RepairM2MServiceEntity!]!
   staff: UserEntity
   status: RepairStatusEnum!
@@ -638,6 +640,25 @@ input RevenueRepairInput {
 enum RevenueRepairTypeEnum {
   MONTH
   YEAR
+}
+
+type ReviewConnection {
+  items: [ReviewEntity!]!
+  meta: PageMeta!
+}
+
+input ReviewConnectionFilterArgs {
+  rating: Float
+}
+
+type ReviewEntity {
+  content: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  rating: Float!
+  repair: RepairEntity!
+  updatedAt: DateTime!
 }
 
 type RoleEntity {
@@ -939,6 +960,12 @@ type UserConnection {
   meta: PageMeta!
 }
 
+input UserCreateReviewInput {
+  content: String!
+  rating: Float!
+  repairId: String!
+}
+
 type UserEntity {
   avatar: MediaEntity
   createdAt: DateTime!
@@ -953,11 +980,6 @@ type UserEntity {
   updatedAt: DateTime!
   username: String
   uuid: String
-}
-
-input UserReviewRepairInput {
-  content: String!
-  repairId: String!
 }
 
 enum UserStatus {

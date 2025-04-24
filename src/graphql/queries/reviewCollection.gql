@@ -1,0 +1,21 @@
+query reviewCollection($filterArgs: ReviewConnectionFilterArgs!, $paginationArgs: PaginationArgs!) {
+  reviewCollection(filterArgs: $filterArgs, paginationArgs: $paginationArgs) {
+    items {
+      content
+      id
+      rating
+      repair {
+        id
+      }
+      updatedAt
+    }
+    meta {
+      currentPage
+      hasNextPage
+      hasPreviousPage
+      limit
+      totalItem
+      totalPage
+    }
+  }
+}
