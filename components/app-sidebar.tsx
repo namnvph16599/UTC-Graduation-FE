@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   UsersRound,
   BadgeJapaneseYen,
+  Star,
 } from 'lucide-react';
 
 import Image from 'next/image';
@@ -56,6 +57,11 @@ const items = [
     title: AppRouter.admin.brands.label,
     url: AppRouter.admin.brands.list,
     icon: Bike,
+  },
+  {
+    title: AppRouter.admin.reviews.label,
+    url: AppRouter.admin.reviews.list,
+    icon: Star,
   },
   {
     title: AppRouter.admin.staff.label,

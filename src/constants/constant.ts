@@ -76,6 +76,10 @@ export const AppRouter = {
       add: '/admin/staffs/add',
       edit: (id: string) => '/admin/staffs/' + id,
     },
+    reviews: {
+      label: 'Đánh giá YCSC',
+      list: '/admin/reviews',
+    },
   },
 };
 

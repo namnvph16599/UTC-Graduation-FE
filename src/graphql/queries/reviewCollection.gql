@@ -6,6 +6,8 @@ query reviewCollection($filterArgs: ReviewConnectionFilterArgs!, $paginationArgs
       rating
       repair {
         id
+        name 
+        phone
       }
       updatedAt
     }

@@ -18,7 +18,7 @@ export type ReviewCollectionQueryResponse = (
       & Pick<Types.ReviewEntity, 'content' | 'id' | 'rating' | 'updatedAt'>
       & { repair: (
         { __typename?: 'RepairEntity' }
-        & Pick<Types.RepairEntity, 'id'>
+        & Pick<Types.RepairEntity, 'id' | 'name' | 'phone'>
       ) }
     )>, meta: (
       { __typename?: 'PageMeta' }
@@ -37,6 +37,8 @@ export const ReviewCollectionDocument = gql`
       rating
       repair {
         id
+        name
+        phone
       }
       updatedAt
     }
