@@ -1,8 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Button } from '@/components/ui/button';
+import { AppFilteringButtonActions } from '@/components/app-filtering-button-actions';
 import { Combobox } from '@/components/ui/combobox';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -15,12 +14,13 @@ export const filterRepairSchema = z.object({
 });
 
 type Props = {
-  onRefresh: () => void;
   onRemoveFilter: () => void;
   onFilter: (values: z.infer<typeof filterRepairSchema>) => void;
 };
 
-export const RepairFormFilter = ({ onFilter, onRefresh, onRemoveFilter }: Props) => {
+const repairFilterFormId = 'repair-filter-form';
+
+export const RepairFormFilter = ({ onFilter, onRemoveFilter }: Props) => {
   const form = useForm<z.infer<typeof filterRepairSchema>>({
     resolver: zodResolver(filterRepairSchema),
     defaultValues: {},
@@ -29,7 +29,10 @@ export const RepairFormFilter = ({ onFilter, onRefresh, onRemoveFilter }: Props)
   return (
     <div className='bg-white p-5 rounded mb-6'>
       <Form {...form}>
-        <form className='flex justify-between items-center' onSubmit={form.handleSubmit(onFilter)}>
+        <form
+          className='flex justify-between items-center'
+          id={repairFilterFormId}
+          onSubmit={form.handleSubmit(onFilter)}>
           <div className='flex justify-between items-center gap-3'>
             <FormField
               control={form.control}
@@ -71,23 +74,7 @@ export const RepairFormFilter = ({ onFilter, onRefresh, onRemoveFilter }: Props)
             />
           </div>
 
-          <div className='flex justify-between items-center gap-3'>
-            <Button onClick={() => onRefresh()} size={'md'}>
-              Làm mới
-            </Button>
-            <Button
-              onClick={() => {
-                form.reset();
-                form.setValue('search', '');
-                onRemoveFilter();
-              }}
-              size={'md'}>
-              Xóa lọc
-            </Button>
-            <Button size={'md'} type='submit'>
-              Lọc
-            </Button>
-          </div>
+          <AppFilteringButtonActions form={form} formId={repairFilterFormId} onRemoveFilterAction={onRemoveFilter} />
         </form>
       </Form>
     </div>
