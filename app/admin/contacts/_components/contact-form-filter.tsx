@@ -40,7 +40,17 @@ export const ContactFormFilter = ({ onFilter, onRemoveFilter }: Props) => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input className='min-w-[300px] h-9' placeholder='Tìm kiếm theo tên, sđt khách hàng' {...field} />
+                    <Input
+                      className='min-w-[300px] h-9'
+                      placeholder='Tìm kiếm theo tên, sđt khách hàng'
+                      {...field}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          form.handleSubmit(onFilter)();
+                        }
+                      }}
+                    />
                   </FormControl>
                 </FormItem>
               )}

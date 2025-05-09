@@ -44,6 +44,12 @@ export const RepairFormFilter = ({ onFilter, onRemoveFilter }: Props) => {
                       className='min-w-[300px] h-9'
                       placeholder='Tìm kiếm theo tên, sđt, biển kiểm soát'
                       {...field}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          form.handleSubmit(onFilter)();
+                        }
+                      }}
                     />
                   </FormControl>
                 </FormItem>
