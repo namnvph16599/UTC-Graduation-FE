@@ -56,7 +56,12 @@ export const FormFastContact = memo(({}: Props) => {
   const [createAsync, { loading }] = useCreateContactMutation({
     onCompleted() {
       toast.success('Gửi liên hệ thành công!');
-      form.reset();
+      form.reset({
+        content: '',
+        email: '',
+        name: '',
+        phone: '',
+      });
     },
     onError(error) {
       toast.error('Đã có lỗi xảy ra', {
