@@ -50,8 +50,10 @@ export function LoginForm() {
     onCompleted(data) {
       login(data);
 
-      router.prefetch(AppRouter.user.home);
-      router.push(AppRouter.user.home);
+      setTimeout(() => {
+        router.prefetch(AppRouter.user.home);
+        router.push(AppRouter.user.home);
+      }, 500);
     },
     onError(error) {
       toast.error('Đăng nhập thất bại!', {

@@ -177,7 +177,9 @@ const BookingPage = ({ brands = [], myMotorcycles = [], user }: Props) => {
       if (user) {
         router.push(AppRouter.user.authenticatePages.repairRequest.path);
       } else {
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
       }
     },
     onError(error) {

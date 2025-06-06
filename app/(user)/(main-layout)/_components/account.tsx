@@ -32,6 +32,7 @@ export const Account = async () => {
       </div>
     );
   }
+
   return (
     <div>
       <DropdownMenu>
@@ -45,15 +46,19 @@ export const Account = async () => {
                 <Link href={AppRouter.admin.dashboard}>Trang quản trị</Link>
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem>
-              <Link href={AppRouter.user.authenticatePages.updateProfile}>Cập nhật hồ sơ</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href={AppRouter.user.authenticatePages.repairRequest.path}>Yêu cầu sửa chữa</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href={AppRouter.user.authenticatePages.myVehicle.path}>Xe của tôi</Link>
-            </DropdownMenuItem>
+            {user?.type === UserType.USER && (
+              <>
+                <DropdownMenuItem>
+                  <Link href={AppRouter.user.authenticatePages.updateProfile}>Cập nhật hồ sơ</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={AppRouter.user.authenticatePages.repairRequest.path}>Yêu cầu sửa chữa</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={AppRouter.user.authenticatePages.myVehicle.path}>Xe của tôi</Link>
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <Logout />
