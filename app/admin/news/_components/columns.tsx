@@ -36,11 +36,11 @@ export const newsColumn: ColumnDef<NewsEntity>[] = [
   },
   {
     accessorKey: 'id',
-    header: 'Xem trước',
+    header: 'Xem bài viết',
     cell: ({ row }) => {
       const id = row.original.id;
       return (
-        <Link className='text-primary-default' href={AppRouter.user.news + '/' + id}>
+        <Link className='text-primary-default' href={AppRouter.user.news + '/' + id} target='_blank'>
           Xem
         </Link>
       );
@@ -61,15 +61,12 @@ export const newsColumn: ColumnDef<NewsEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={AppRouter.admin.news.edit(payment.id)}>Chỉnh sửa</Link>
+              <Link href={AppRouter.admin.news.edit(payment.id)}>Xem chi tiết</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <CellRemove id={payment.id} />
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       );

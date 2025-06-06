@@ -60,12 +60,9 @@ export const serviceColumns: ColumnDef<BannerEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            {/* <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem> */}
-            {/* <DropdownMenuSeparator /> */}
             <DropdownMenuItem>
-              <Link href={AppRouter.admin.banners.edit(payment.id)}>Chỉnh sửa</Link>
+              <Link href={AppRouter.admin.banners.edit(payment.id)}>Xem chi tiết</Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
               <CellRemove id={payment.id} />
             </DropdownMenuItem>

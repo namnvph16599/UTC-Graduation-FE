@@ -40,15 +40,12 @@ export const staffColumns: ColumnDef<UserEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={AppRouter.admin.staff.edit(payment.id)}>Chỉnh sửa</Link>
+              <Link href={AppRouter.admin.staff.edit(payment.id)}>Xem chi tiết</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <CellRemove id={payment.id} />
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       );

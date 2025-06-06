@@ -70,12 +70,9 @@ export const contactColumns: ColumnDef<ContactEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            {/* <DropdownMenuItem onClick={() => navigator.clipboard.writeText(entity.id)}>Sao chép ID</DropdownMenuItem> */}
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={AppRouter.admin.contacts.edit(entity.id)}>Chỉnh sửa</Link>
+              <Link href={AppRouter.admin.contacts.edit(entity.id)}>Xem chi tiết</Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       );
