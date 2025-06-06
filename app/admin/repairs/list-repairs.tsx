@@ -20,7 +20,7 @@ export const ListRepairs = () => {
   const [args, setArgs] = useState<RepairCollectionFilter | null>();
   const [search, setSearch] = useState<string | null>(null);
 
-  const { data, refetch, loading } = useRepairCollectionQuery({
+  const { data, loading } = useRepairCollectionQuery({
     variables: {
       input: {
         status: args?.status,
@@ -43,8 +43,6 @@ export const ListRepairs = () => {
     setSearch(values?.search ?? '');
     setPage(1);
   }, []);
-
-  const handlRefresh = useCallback(async () => await refetch(), [refetch]);
 
   const handleRemoveFilter = useCallback(() => {
     setArgs({
@@ -75,7 +73,7 @@ export const ListRepairs = () => {
       />
 
       <div className='p-5 bg-[#F9F9F9]'>
-        <RepairFormFilter onFilter={handleFilter} onRefresh={handlRefresh} onRemoveFilter={handleRemoveFilter} />
+        <RepairFormFilter onFilter={handleFilter} onRemoveFilter={handleRemoveFilter} />
         <div className='p-5 bg-white'>
           <p className='font-semibold text-[#202C38] mt-0 mb-5'>{pageMeta?.totalItem ?? 0} yêu cầu</p>
           <DataTable
