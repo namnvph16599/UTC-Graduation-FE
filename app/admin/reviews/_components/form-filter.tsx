@@ -44,6 +44,7 @@ export const ReviewFormFilter = ({ onFilter, onRemoveFilter }: Props) => {
                         { label: '5 sao', value: '5' },
                       ]}
                       placeholderSelect='Chọn sao'
+                      removable={false}
                       searchable={false}
                     />
                   </FormControl>
@@ -59,7 +60,8 @@ export const ReviewFormFilter = ({ onFilter, onRemoveFilter }: Props) => {
                 form.setValue('rating', '');
                 onRemoveFilter();
               }}
-              size={'md'}>
+              size={'md'}
+              variant={'outline'}>
               Xóa lọc
             </Button>
             <Button size={'md'} type='submit'>
