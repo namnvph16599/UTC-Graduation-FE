@@ -2,13 +2,13 @@
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
+import { Loading } from '@/components/app-loading';
+import { AppRouter } from '@/src/constants/constant';
+import { useRepairCollectionQuery } from '@/src/graphql/queries/repairCollection.generated';
 import { PageMeta, RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
 import { Title } from './title';
 import { waitingStatusColumns } from '../../repairs/_components/columns';
 import { DataTable } from '../../repairs/_components/repairs-table';
-import { Loading } from '@/components/app-loading';
-import { AppRouter } from '@/src/constants/constant';
-import { useRepairCollectionQuery } from '@/src/graphql/queries/repairCollection.generated';
 
 interface Props {
   status: RepairStatusEnum;

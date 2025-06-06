@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -72,16 +71,14 @@ export const RepairFormFilter = ({ onFilter, onRefresh, onRemoveFilter }: Props)
           </div>
 
           <div className='flex justify-between items-center gap-3'>
-            <Button onClick={() => onRefresh()} size={'md'}>
-              Làm mới
-            </Button>
             <Button
               onClick={() => {
                 form.reset();
                 form.setValue('search', '');
                 onRemoveFilter();
               }}
-              size={'md'}>
+              size={'md'}
+              variant={'outline'}>
               Xóa lọc
             </Button>
             <Button size={'md'} type='submit'>

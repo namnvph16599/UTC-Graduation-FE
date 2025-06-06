@@ -85,12 +85,9 @@ export const waitingStatusColumns: ColumnDef<RepairEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Chỉnh sửa</Link>
+              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Xem chi tiết</Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -156,12 +153,9 @@ export const repairColumns: ColumnDef<RepairEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Chỉnh sửa</Link>
+              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Xem chi tiết</Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -214,12 +208,9 @@ export const cancelledStatusColumns: ColumnDef<RepairEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Chỉnh sửa</Link>
+              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Xem chi tiết</Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -278,12 +269,9 @@ export const finishedStatusColumns: ColumnDef<RepairEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Chỉnh sửa</Link>
+              <Link href={AppRouter.admin.repairs.edit(payment.id)}>Xem chi tiết</Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       );
