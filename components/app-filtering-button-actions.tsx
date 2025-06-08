@@ -17,7 +17,8 @@ export const AppFilteringButtonActions = ({ formId, onRemoveFilterAction, form }
           form.setValue('search', '');
           onRemoveFilterAction();
         }}
-        size={'md'}>
+        size={'md'}
+        variant={'outline'}>
         Xóa lọc
       </Button>
       <Button form={formId} size={'md'} type='submit'>
