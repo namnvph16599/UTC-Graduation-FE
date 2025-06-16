@@ -8,7 +8,7 @@ export const Logout = () => {
     <DropdownMenuItem
       onClick={() => {
         logout();
-        window.location.reload();
+        window.location.replace('/');
       }}>
       Đăng xuất
     </DropdownMenuItem>

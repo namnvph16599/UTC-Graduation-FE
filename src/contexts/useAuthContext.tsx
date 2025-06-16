@@ -1,7 +1,5 @@
 'use client';
-import { useApolloClient } from '@apollo/client';
 import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import { createContext, PropsWithChildren, useCallback, useContext, useState } from 'react';
 import { useMeQuery } from '@/src/graphql/queries/me.generated';
 import { UserEntity } from '@/src/graphql/type.interface';
@@ -32,9 +30,9 @@ export const useAuth = () => useContext(AuthContext);
 type Props = PropsWithChildren;
 
 export const AuthProvider = ({ children }: Props) => {
-  const router = useRouter();
+  // const router = useRouter();
 
-  const client = useApolloClient();
+  // const client = useApolloClient();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -67,8 +65,7 @@ export const AuthProvider = ({ children }: Props) => {
       sameSite: 'Lax',
     });
 
-    setUser(data.loginByPhone.user as UserEntity);
-    setIsLoggedIn(true);
+    window.location.replace('/');
   }, []);
 
   const logout = useCallback(async () => {
@@ -77,8 +74,6 @@ export const AuthProvider = ({ children }: Props) => {
 
     Cookies.remove(LocalStorageKeyEnum.AccessToken);
     Cookies.remove(LocalStorageKeyEnum.RefreshToken);
-
-    window.location.reload();
   }, []);
 
   return (

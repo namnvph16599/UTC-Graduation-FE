@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -11,7 +10,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { AppRouter } from '@/src/constants/constant';
+import { PasswordInput } from '@/components/ui/password-input';
 import { useAuth } from '@/src/contexts';
 import { useLoginByPhoneMutation } from '@/src/graphql/mutations/loginByPhone.generated';
 import { Platform } from '@/src/graphql/type.interface';
@@ -34,8 +33,6 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const router = useRouter();
-
   const { login } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,11 +46,6 @@ export function LoginForm() {
   const [loginMutation, { loading }] = useLoginByPhoneMutation({
     onCompleted(data) {
       login(data);
-
-      setTimeout(() => {
-        router.prefetch(AppRouter.user.home);
-        router.push(AppRouter.user.home);
-      }, 500);
     },
     onError(error) {
       toast.error('Đăng nhập thất bại!', {
@@ -103,7 +95,7 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Mật khẩu</FormLabel>
               <FormControl>
-                <Input placeholder='Nhập mật khẩu' type='password' {...field} />
+                <PasswordInput placeholder='Nhập mật khẩu' type='password' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

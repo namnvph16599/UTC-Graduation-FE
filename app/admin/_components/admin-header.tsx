@@ -1,17 +1,12 @@
 'use client';
 import { ChevronDown } from 'lucide-react';
-import React from 'react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Logout } from '@/app/(user)/(main-layout)/_components/logout';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth } from '@/src/contexts';
 
 export const AdminHeader = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   return (
     <div className='bg-white flex justify-between items-center px-6 py-2 border-b border-solid border-[#eeeeee]'>
       <SidebarTrigger />
@@ -24,7 +19,7 @@ export const AdminHeader = () => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel onClick={() => logout()}>Đăng xuất</DropdownMenuLabel>
+          <Logout />
           {/* <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Billing</DropdownMenuItem>
