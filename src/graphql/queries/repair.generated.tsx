@@ -40,7 +40,10 @@ export type RepairQueryResponse = (
     )>, staff?: Types.Maybe<(
       { __typename?: 'UserEntity' }
       & Pick<Types.UserEntity, 'id' | 'fullName' | 'phoneNumber'>
-    )> }
+    )>, statusHistories?: Types.Maybe<Array<(
+      { __typename?: 'RepairRequestsStatusHistoryEntity' }
+      & Pick<Types.RepairRequestsStatusHistoryEntity, 'createdAt' | 'newStatus' | 'oldStatus'>
+    )>> }
   ) }
 );
 
@@ -101,6 +104,11 @@ export const RepairDocument = gql`
       phoneNumber
     }
     status
+    statusHistories {
+      createdAt
+      newStatus
+      oldStatus
+    }
   }
 }
     `;

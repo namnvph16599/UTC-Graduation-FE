@@ -4,27 +4,18 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 
 import Link from 'next/link';
+import RepairRequestStatus from '@/app/admin/repairs/_components/repair-request-status';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppRouter } from '@/src/constants/constant';
 import { RepairEntity } from '@/src/graphql/type.interface';
-import { convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 
 export const motorcycleColumns: ColumnDef<RepairEntity>[] = [
-  {
-    accessorKey: 'status',
-    header: 'Trạng thái',
-    cell: ({ row }) => {
-      const status = row.original.status;
-      return convertRepairStatusEnum(status);
-    },
-  },
   {
     accessorKey: 'model',
     header: 'Hãng xe',
@@ -52,6 +43,14 @@ export const motorcycleColumns: ColumnDef<RepairEntity>[] = [
   {
     accessorKey: 'license_plate',
     header: 'Biển kiểm soát',
+  },
+  {
+    accessorKey: 'status',
+    header: 'Trạng thái',
+    cell: ({ row }) => {
+      const status = row.original.status;
+      return <RepairRequestStatus status={status} />;
+    },
   },
   {
     id: 'actions',

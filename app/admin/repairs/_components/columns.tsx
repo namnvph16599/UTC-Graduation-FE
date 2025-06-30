@@ -130,15 +130,23 @@ export const repairColumns: ColumnDef<RepairEntity>[] = [
     accessorKey: 'description_of_customer',
     header: 'Nội dung sửa chữa',
   },
+  // {
+  //   accessorKey: 'status',
+  //   header: 'Trạng thái',
+  //   cell: ({ row }) => {
+  //     const status = row.original.status;
+  //     return convertRepairStatusEnum(status);
+  //   },
+  // },
   {
-    accessorKey: 'status',
-    header: 'Trạng thái',
+    accessorKey: 'createdAt',
+    header: 'Ngày tạo',
     cell: ({ row }) => {
-      const status = row.original.status;
-      return convertRepairStatusEnum(status);
+      const createdAt = row.original.createdAt;
+      if (!createdAt) return '';
+      return dayjs(createdAt).format('HH:mm DD/MM/YYYY');
     },
   },
-
   {
     id: 'actions',
     cell: ({ row }) => {
