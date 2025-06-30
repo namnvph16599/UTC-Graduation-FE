@@ -10,7 +10,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppRouter } from '@/src/constants/constant';
@@ -53,15 +52,12 @@ export const serviceColumns: ColumnDef<ProductEntity>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Sao chép ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link href={AppRouter.admin.products.edit(payment.id)}>Chỉnh sửa</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <CellRemove id={payment.id} />
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       );
