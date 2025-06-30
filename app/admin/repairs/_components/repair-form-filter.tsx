@@ -82,7 +82,7 @@ export const RepairFormFilter = ({ onFilter, onRemoveFilter }: Props) => {
                               !field.value && 'text-muted-foreground',
                             )}
                             size={'md'}
-                            variant='outline'>
+                            variant='normalOutline'>
                             {field.value?.from ? (
                               <>
                                 {format(field.value.from, 'dd/MM/yyyy')} -{' '}
