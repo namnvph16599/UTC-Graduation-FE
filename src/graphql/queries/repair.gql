@@ -53,5 +53,10 @@ query repair($id: String!) {
       phoneNumber
     }
     status
+    statusHistories {
+      createdAt
+      newStatus
+      oldStatus
+    }
   }
 }

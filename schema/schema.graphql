@@ -589,6 +589,7 @@ type RepairEntity {
   services: [RepairM2MServiceEntity!]!
   staff: UserEntity
   status: RepairStatusEnum!
+  statusHistories: [RepairRequestsStatusHistoryEntity!]
   total: Float!
   updatedAt: DateTime!
   user: UserEntity
@@ -612,6 +613,16 @@ type RepairM2MServiceEntity {
   price: Float!
   repair: RepairEntity!
   service: ServicesEntity!
+  updatedAt: DateTime!
+}
+
+type RepairRequestsStatusHistoryEntity {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  newStatus: RepairStatusEnum!
+  oldStatus: RepairStatusEnum!
+  repair: RepairEntity!
   updatedAt: DateTime!
 }
 

@@ -937,6 +937,7 @@ export type RepairEntity = {
   services: Array<RepairM2MServiceEntity>;
   staff?: Maybe<UserEntity>;
   status: RepairStatusEnum;
+  statusHistories?: Maybe<Array<RepairRequestsStatusHistoryEntity>>;
   total: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
   user?: Maybe<UserEntity>;
@@ -962,6 +963,17 @@ export type RepairM2MServiceEntity = {
   price: Scalars['Float'];
   repair: RepairEntity;
   service: ServicesEntity;
+  updatedAt: Scalars['DateTime'];
+};
+
+export type RepairRequestsStatusHistoryEntity = {
+  __typename?: 'RepairRequestsStatusHistoryEntity';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  newStatus: RepairStatusEnum;
+  oldStatus: RepairStatusEnum;
+  repair: RepairEntity;
   updatedAt: Scalars['DateTime'];
 };
 

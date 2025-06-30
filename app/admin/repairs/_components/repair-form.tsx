@@ -700,7 +700,7 @@ export const RepairForm = ({ id, repair }: Props) => {
               </form>
             </Form>
           </div>
-          {id && <RenderFeeOfRepair repair={repair as RepairEntity} />}
+          {id && <RenderFeeOfRepair className='mb-5' repair={repair as RepairEntity} />}
         </div>
       </div>
       <div className='fixed left-0 right-0 bottom-0 flex items-center justify-end gap-4 px-6 py-3 border-t border-[#eee] bg-white'>
