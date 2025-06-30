@@ -36,12 +36,12 @@ type Props = {
 
 export const RepairsTabs = ({ activeTab, onChangeTab }: Props) => {
   return (
-    <div className='flex items-center bg-white pt-4 pl-6'>
+    <div className='flex items-center bg-white pl-6'>
       {tabs.map((tab) => {
         const isActive = tab.value === activeTab;
         return (
           <div
-            className={cn('px-6 py-3', {
+            className={cn('px-6 py-3 text-base', {
               'font-semibold text-[#F5B102] border-b border-[#F5B102]': isActive,
               'text-[#202C38]hover:text-[#F5B102] hover:cursor-pointer': !isActive,
             })}
