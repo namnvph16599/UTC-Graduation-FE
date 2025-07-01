@@ -1,0 +1,5 @@
+mutation userRestoreRepairRequest($id: String!) {
+  userRestoreRepairRequest(id: $id) {
+    id
+  }
+}

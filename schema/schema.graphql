@@ -357,6 +357,7 @@ type Mutation {
   updateUsername(username: String!): UserEntity!
   userCancelRepair(input: CancelRepairInput!): RepairEntity!
   userChangePassword(input: UserChangePasswordInput!): UserEntity!
+  userRestoreRepairRequest(id: String!): RepairEntity!
   verifyOtpRegisterAccountByPhone(input: VerifyOtpRegisterAccountByPhoneInput!): Boolean!
 }
 

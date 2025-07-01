@@ -381,6 +381,7 @@ export type Mutation = {
   updateUsername: UserEntity;
   userCancelRepair: RepairEntity;
   userChangePassword: UserEntity;
+  userRestoreRepairRequest: RepairEntity;
   verifyOtpRegisterAccountByPhone: Scalars['Boolean'];
 };
 
@@ -566,6 +567,10 @@ export type MutationUserCancelRepairArgs = {
 
 export type MutationUserChangePasswordArgs = {
   input: UserChangePasswordInput;
+};
+
+export type MutationUserRestoreRepairRequestArgs = {
+  id: Scalars['String'];
 };
 
 export type MutationVerifyOtpRegisterAccountByPhoneArgs = {
