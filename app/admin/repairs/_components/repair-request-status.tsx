@@ -5,7 +5,7 @@ import { RepairStatusEnum } from '@/src/graphql/type.interface';
 import { convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 
 type Props = {
-  status: RepairStatusEnum;
+  status?: RepairStatusEnum;
 };
 
 const configs = [
@@ -42,6 +42,7 @@ const configs = [
 ];
 
 export const RepairRequestStatus = ({ status }: Props) => {
+  if (!status) return null;
   const config = configs.find((c) => c.status == status);
 
   if (!config)

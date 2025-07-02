@@ -1,15 +1,14 @@
 'use client';
 import dayjs from 'dayjs';
-import React, { Fragment, useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
+import RepairRequestStatus from '@/app/admin/repairs/_components/repair-request-status';
 import { RenderFeeOfRepair } from '@/app/admin/repairs/add/_components/render-fee-of-repair';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { Loading } from '@/components/app-loading';
-import { Badge } from '@/components/ui/badge';
 import { AppRouter, DATE_FORMAT } from '@/src/constants/constant';
 import { useRepairQuery } from '@/src/graphql/queries/repair.generated';
-import { RepairEntity, RepairStatusEnum } from '@/src/graphql/type.interface';
+import { RepairEntity } from '@/src/graphql/type.interface';
 import { TDetailPageProps } from '@/src/types';
-import { convertRepairCalcelEnum, convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 import { RepairAction } from './_components/repair-action';
 import { RepairNotification } from './_components/repair-notification';
 
@@ -25,7 +24,7 @@ export const DetailRepairRequest = ({ id }: TDetailPageProps) => {
 
   const rows = useMemo(
     () => [
-      { label: 'Trạng thái', value: convertRepairStatusEnum(repair?.status as RepairStatusEnum) },
+      { label: 'Trạng thái', value: <RepairRequestStatus status={repair?.status} /> },
       { label: 'Hãng xe', value: repair?.model?.brand?.name },
       { label: 'Dòng xe', value: repair?.model?.name },
       { label: 'Dung tích', value: repair?.capacity },
