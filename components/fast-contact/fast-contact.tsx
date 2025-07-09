@@ -2,9 +2,12 @@ import Image from 'next/image';
 
 import { AppInformation } from '@/src/constants/constant';
 import { cn } from '@/src/constants/utils';
+import { meServerQuery } from '@/src/server-hooks/queries/use-me-server-query';
 import { FormFastContact } from './form';
 
 export const FastContact = async ({ className }: { defaultOptionId?: string; className?: string }) => {
+  const meQuery = await meServerQuery();
+
   return (
     <div className={cn('w-full mt-10 py-[80px] flex justify-center p-4 xl:p-0', className)}>
       <div
@@ -26,7 +29,7 @@ export const FastContact = async ({ className }: { defaultOptionId?: string; cla
             Chúng tôi áp dụng công nghệ quản lý tiên tiến, giúp khách hàng theo dõi lịch sử sửa chữa, đặt lịch hẹn dễ
             dàng và nhận tư vấn trực tuyến!
           </span>
-          <FormFastContact />
+          <FormFastContact meData={meQuery?.data} />
         </div>
       </div>
     </div>

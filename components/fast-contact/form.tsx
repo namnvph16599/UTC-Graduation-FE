@@ -12,7 +12,9 @@ import { validationMessages } from '@/src/constants/constant';
 import { REGEX } from '@/src/constants/regex';
 import { useCreateContactMutation } from '@/src/graphql/mutations/createContact.generated';
 import { ContactCollectionDocument } from '@/src/graphql/queries/contactCollection.generated';
+import { MeQueryResponse } from '@/src/graphql/queries/me.generated';
 import { ContactStatusEnum } from '@/src/graphql/type.interface';
+
 const validationSchema = z.object({
   email: z
     .string()
@@ -39,17 +41,19 @@ const validationSchema = z.object({
 
 type Props = {
   onFinishSubmit?: () => void;
+  meData?: MeQueryResponse | null;
 };
 
-export const FormFastContact = memo(({}: Props) => {
+export const FormFastContact = memo(({ meData }: Props) => {
+  const defaultValues = meData?.me;
+
   const form = useForm({
     resolver: zodResolver(validationSchema),
     mode: 'onSubmit',
     defaultValues: {
-      //   email: userAuth?.email ?? undefined,
-      //   name: userAuth?.name ?? undefined,
-      //   phone: userAuth?.phone ?? undefined,
-      //   serviceTypeId: defaultOptionId ?? undefined,
+      email: defaultValues?.email ?? undefined,
+      name: defaultValues?.fullName ?? undefined,
+      phone: defaultValues?.phoneNumber ?? undefined,
     },
   });
 
