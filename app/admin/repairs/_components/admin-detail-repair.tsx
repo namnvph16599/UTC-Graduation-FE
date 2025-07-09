@@ -15,7 +15,7 @@ import { RepairForm } from './repair-form';
 import { RepairReview } from './repair-review';
 
 export const DetailRepair = ({ id }: TDetailPageProps) => {
-  const { data, loading } = useRepairQuery({
+  const { data, loading, refetch } = useRepairQuery({
     variables: {
       id: id as string,
     },
@@ -67,7 +67,7 @@ export const DetailRepair = ({ id }: TDetailPageProps) => {
             </Badge>
           )}
           <TabsContent value='account'>
-            <RepairForm id={id} repair={repair as RepairEntity} />
+            <RepairForm id={id} refetch={refetch} repair={repair as RepairEntity} />
           </TabsContent>
           <TabsContent value='password'>
             <RepairInvoice repair={repair as RepairEntity} />

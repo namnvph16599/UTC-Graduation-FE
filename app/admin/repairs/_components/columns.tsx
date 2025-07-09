@@ -10,13 +10,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { AppRouter } from '@/src/constants/constant';
+import { AppRouter, DATE_FORMAT } from '@/src/constants/constant';
 import { formatVND } from '@/src/constants/utils';
 import { RepairEntity } from '@/src/graphql/type.interface';
-import { convertRepairStatusEnum } from '@/src/utils/convert-enum.util';
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -114,7 +112,7 @@ export const repairColumns: ColumnDef<RepairEntity>[] = [
     cell: ({ row }) => {
       const estimated_delivery_time = row.original.estimated_delivery_time;
       if (!estimated_delivery_time) return '';
-      return dayjs(estimated_delivery_time).format('HH:mm DD/MM/YYYY');
+      return dayjs(estimated_delivery_time).format(DATE_FORMAT.dateTime);
     },
   },
   {
@@ -123,7 +121,7 @@ export const repairColumns: ColumnDef<RepairEntity>[] = [
     cell: ({ row }) => {
       const expected_receiving_time = row.original.expected_receiving_time;
       if (!expected_receiving_time) return '';
-      return dayjs(expected_receiving_time).format('HH:mm DD/MM/YYYY');
+      return dayjs(expected_receiving_time).format(DATE_FORMAT.dateTime);
     },
   },
   {

@@ -101,9 +101,9 @@ const formSchema = z.object({
   }),
 });
 
-type Props = { repair?: RepairEntity } & TDetailPageProps;
+type Props = { repair?: RepairEntity; refetch?: () => void } & TDetailPageProps;
 
-export const RepairForm = ({ id, repair }: Props) => {
+export const RepairForm = ({ id, repair, refetch }: Props) => {
   const router = useRouter();
 
   const { data: staffData } = useUserCollectionByAdminQuery({
@@ -210,7 +210,7 @@ export const RepairForm = ({ id, repair }: Props) => {
   const [updateRepairRequestMutation, { loading: updating }] = useUpdateRepairRequestMutation({
     onCompleted() {
       toast.success('Cập nhật thành công!');
-      router.push(AppRouter.admin.repairs.list);
+      refetch?.();
     },
     onError(error) {
       toast.error('Đã có lỗi xảy ra', {
@@ -566,7 +566,7 @@ export const RepairForm = ({ id, repair }: Props) => {
                   />
 
                   <div className='col-span-2'>
-                    <FormLabel required>Phụ tùng thay thế</FormLabel>
+                    <FormLabel>Phụ tùng thay thế</FormLabel>
                     {controlledFields.map((field, index) => {
                       const product = (productData?.productCollection?.items ?? []).find((p) => p.id === field.id);
                       const currentProduct = (repair?.products ?? []).find((p) => p.product.id === field.id);
